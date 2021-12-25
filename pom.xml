@@ -7,13 +7,13 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Clef workflow</name>
-    <description>Clef workflow engine</description>
-    <url>https://github.com/arkitik-io/clef-workflow</url>
+    <name>Job scheduler framework</name>
+    <description>Job clustered scheduling framework</description>
+    <url>https://github.com/arkitik/travako</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <developers>
@@ -29,7 +29,7 @@
         </developer>
     </developers>
     <scm>
-        <url>https://github.com/arkitik-io/travako.git</url>
+        <url>https://github.com/arkitik/travako.git</url>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
