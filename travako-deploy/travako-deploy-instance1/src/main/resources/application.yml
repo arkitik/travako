@@ -33,10 +33,11 @@ spring:
 #      mode: always
 #      schema-locations: ignore.sql
 #      continue-on-error: on
-travako:
-  config:
-    server-key: travako-server
-    runner-key: travako-runner-1
+arkitik:
+  travako:
+    config:
+      server-key: travako-server
+      runner-key: travako-runner-1
 logging:
   level:
     io:

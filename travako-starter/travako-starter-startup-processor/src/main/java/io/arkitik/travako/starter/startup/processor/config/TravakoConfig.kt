@@ -10,7 +10,7 @@ import java.time.Duration
  * Created At 28 8:43 PM, **Tue, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-@ConfigurationProperties(prefix = "travako.config")
+@ConfigurationProperties(prefix = "arkitik.travako.config")
 @ConstructorBinding
 data class TravakoConfig(
     val serverKey: String,

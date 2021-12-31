@@ -6,6 +6,7 @@ import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.starter.startup.processor.config.TravakoConfig
+import io.arkitik.travako.starter.startup.processor.logger.logger
 import io.arkitik.travako.starter.startup.processor.scheduler.fixedRateJob
 import org.springframework.scheduling.TaskScheduler
 
@@ -19,15 +20,22 @@ class RunnerHeartbeatProcess(
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val taskScheduler: TaskScheduler,
 ) : Processor<SchedulerRunnerDomain> {
+    private val logger = logger<RunnerHeartbeatProcess>()
     override val type = SchedulerRunnerDomain::class.java
 
     override fun process() {
         travakoConfig.heartbeat
             .fixedRateJob(taskScheduler) {
-                schedulerRunnerSdk.logRunnerHeartbeat.runOperation(RunnerKeyDto(
-                    travakoConfig.serverKey,
-                    travakoConfig.runnerKey,
-                ))
+                schedulerRunnerSdk.runCatching {
+                    logRunnerHeartbeat.runOperation(RunnerKeyDto(
+                        travakoConfig.serverKey,
+                        travakoConfig.runnerKey,
+                    ))
+                }.onFailure {
+                    logger.error("Error while logging heartbeat message for {} , error: ",
+                        travakoConfig.runnerKey,
+                        it.message)
+                }
             }
     }
 }
