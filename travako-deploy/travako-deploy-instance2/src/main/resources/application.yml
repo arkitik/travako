@@ -1,0 +1,44 @@
+server:
+  port: 9080
+spring:
+  datasource:
+    url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
+    username: ${database_user:travako}
+    password: ${database_password:travako}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        storage_engine: innodb
+        enable_lazy_load_no_trans: true
+  #  banner:
+  #    image:
+  #      location: banner.txt
+  profiles:
+    active: mysql
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: ignore.sql
+#      continue-on-error: on
+travako:
+  config:
+    server-key: travako-server
+    runner-key: travako-runner-2
+logging:
+  level:
+    io:
+      arkitik:
+        travako: debug

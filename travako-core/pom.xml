@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>travako</artifactId>
+        <groupId>io.arkitik.travako</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>travako-core</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>travako-core-adapter</module>
+        <module>travako-core-domain</module>
+        <module>travako-core-entity</module>
+        <module>travako-core-operation</module>
+        <module>travako-core-sdk</module>
+        <module>travako-core-store</module>
+        <module>travako-core-port</module>
+        <module>travako-core-function</module>
+        <module>travako-core-sdk-domain</module>
+    </modules>
+
+</project>
