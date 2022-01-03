@@ -3,6 +3,7 @@ package io.arkitik.travako.starter.startup.processor.runner
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.function.processor.Processor
+import io.arkitik.travako.function.transaction.TransactionalExecutor
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.starter.startup.processor.config.TravakoConfig
@@ -19,6 +20,7 @@ class RunnerHeartbeatProcess(
     private val travakoConfig: TravakoConfig,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val taskScheduler: TaskScheduler,
+    private val transactionalExecutor: TransactionalExecutor,
 ) : Processor<SchedulerRunnerDomain> {
     private val logger = logger<RunnerHeartbeatProcess>()
     override val type = SchedulerRunnerDomain::class.java
@@ -26,15 +28,18 @@ class RunnerHeartbeatProcess(
     override fun process() {
         travakoConfig.heartbeat
             .fixedRateJob(taskScheduler) {
-                schedulerRunnerSdk.runCatching {
-                    logRunnerHeartbeat.runOperation(RunnerKeyDto(
-                        travakoConfig.serverKey,
-                        travakoConfig.runnerKey,
-                    ))
-                }.onFailure {
-                    logger.error("Error while logging heartbeat message for {} , error: ",
-                        travakoConfig.runnerKey,
-                        it.message)
+                transactionalExecutor.runOnTransaction {
+                    schedulerRunnerSdk.runCatching {
+                        logRunnerHeartbeat.runOperation(RunnerKeyDto(
+                            travakoConfig.serverKey,
+                            travakoConfig.runnerKey,
+                        ))
+                    }.onFailure {
+                        it.printStackTrace()
+                        logger.error("Error while logging heartbeat message for {} , error: ",
+                            travakoConfig.runnerKey,
+                            it.message)
+                    }
                 }
             }
     }

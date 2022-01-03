@@ -30,7 +30,7 @@ class LeaderRegistrationProcess(
         transactionalExecutor.runOnTransaction {
             LOGGER.error(
                 "Start Registering Leader: [Key: {}]",
-                travakoConfig.runnerKey
+                travakoConfig.serverKey
             )
             try {
                 leaderSdk.registerLeaderServer.runOperation(
@@ -40,7 +40,8 @@ class LeaderRegistrationProcess(
                     ))
             } catch (e: UnprocessableEntityException) {
                 LOGGER.error(
-                    "Error while registering the Leader: [Key: {}] [Error: {}]",
+                    "Error while registering the Leader: [Server: {}] [Runner: {}] [Error: {}]",
+                    travakoConfig.serverKey,
                     travakoConfig.runnerKey,
                     e.error
                 )

@@ -129,10 +129,12 @@ class TravakoStartupStarter {
         travakoConfig: TravakoConfig,
         schedulerRunnerSdk: SchedulerRunnerSdk,
         taskScheduler: TaskScheduler,
+        transactionalExecutor: TransactionalExecutor,
     ) = RunnerHeartbeatProcess(
         travakoConfig = travakoConfig,
         schedulerRunnerSdk = schedulerRunnerSdk,
         taskScheduler = taskScheduler,
+        transactionalExecutor = transactionalExecutor
     )
 
     @Bean
