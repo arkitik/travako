@@ -27,4 +27,7 @@ class SampleJobsContext {
 
     @Bean
     fun job5() = Job5()
+
+    @Bean
+    fun job6() = Job6()
 }

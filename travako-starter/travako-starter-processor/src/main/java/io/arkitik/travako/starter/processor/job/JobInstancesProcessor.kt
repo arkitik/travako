@@ -53,7 +53,10 @@ class JobInstancesProcessor(
                         }
                         is PeriodicTrigger -> {
                             val trigger = job.trigger as PeriodicTrigger
-                            "${trigger.period}${timeUnitsMapper[trigger.timeUnit]}" to true
+                            "${
+                                trigger.timeUnit.convert(trigger.period,
+                                    TimeUnit.MILLISECONDS)
+                            }${timeUnitsMapper[trigger.timeUnit]}" to true
                         }
                         else -> {
                             throw InternalException(Error("INTERNAL-ERROR",
