@@ -8,6 +8,7 @@ import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
+import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.JobInstanceStore
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -34,9 +35,11 @@ class JobInstancePortContext {
         jobInstanceStore: JobInstanceStore,
         serverDomainSdk: ServerDomainSdk,
         schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+        jobEventSdk: JobEventSdk,
     ): JobInstanceSdk = JobInstanceSdkImpl(
         jobInstanceStore = jobInstanceStore,
         serverDomainSdk = serverDomainSdk,
-        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+        jobEventSdk = jobEventSdk
     )
 }

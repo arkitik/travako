@@ -16,5 +16,6 @@
         <module>travako-core-adapter-job</module>
         <module>travako-core-adapter-leader</module>
         <module>travako-core-adapter-server</module>
+        <module>travako-core-adapter-job-event</module>
     </modules>
 </project>

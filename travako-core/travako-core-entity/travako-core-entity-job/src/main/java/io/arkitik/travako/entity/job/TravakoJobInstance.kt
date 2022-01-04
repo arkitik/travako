@@ -1,6 +1,7 @@
 package io.arkitik.travako.entity.job
 
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.server.TravakoServer
@@ -38,6 +39,11 @@ data class TravakoJobInstance(
         name = "serverUuid"
     )
     override val server: TravakoServer,
+    @Column(nullable = false)
+    override var jobTrigger: String,
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    override var jobTriggerType: JobInstanceTriggerType,
     @ManyToOne
     @JoinColumn(
         foreignKey = ForeignKey(name = "travako_job_instance_runner_fk"),

@@ -7,4 +7,6 @@ package io.arkitik.travako.function.transaction
  */
 interface TransactionalExecutor {
     fun <T> runOnTransaction(function: () -> T): T?
+
+    fun runUnitTransaction(function: () -> Unit) = runOnTransaction(function)
 }

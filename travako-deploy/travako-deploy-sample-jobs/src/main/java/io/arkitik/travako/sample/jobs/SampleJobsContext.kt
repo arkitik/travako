@@ -12,13 +12,19 @@ import org.springframework.context.annotation.Configuration
 class SampleJobsContext {
     @Bean
     fun job0() = Job0()
+
     @Bean
     fun job4() = Job4()
+
     @Bean
     fun job2() = Job2()
+
     @Bean
     fun job1() = Job1()
 
     @Bean
     fun job3() = Job3()
+
+    @Bean
+    fun job5() = Job5()
 }

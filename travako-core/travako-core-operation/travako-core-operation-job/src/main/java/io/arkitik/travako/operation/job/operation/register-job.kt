@@ -1,12 +1,15 @@
 package io.arkitik.travako.operation.job.operation
 
+import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeCreator
+import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.operation.job.roles.CheckRegisteredJobRole
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
+import io.arkitik.travako.sdk.job.dto.CreateJobDto
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.store.job.JobInstanceStore
 
@@ -19,8 +22,10 @@ class RegisterJobOperationProvider(
     private val jobInstanceStore: JobInstanceStore,
     private val serverDomainSdk: ServerDomainSdk,
 ) {
-    val registerJob = operationBuilder<JobKeyDto, Unit> {
-        install(CheckRegisteredJobRole(jobInstanceStore.storeQuery))
+    val registerJob = operationBuilder<CreateJobDto, Unit> {
+        install {
+            CheckRegisteredJobRole(jobInstanceStore.storeQuery).operateRole(JobKeyDto(serverKey, jobKey))
+        }
         mainOperation {
             val serverDomain = serverDomainSdk.fetchServer.runOperation(
                 ServerDomainDto(serverKey)
@@ -30,6 +35,9 @@ class RegisterJobOperationProvider(
                     jobKey.jobKey()
                     JobStatus.WAITING.jobStatus()
                     serverDomain.server()
+                    jobTrigger.jobTrigger()
+                    (JobInstanceTriggerType.DURATION.takeIf { isDuration }
+                        ?: JobInstanceTriggerType.CRON).jobTriggerType()
                     create()
                 }.save()
             }

@@ -12,9 +12,10 @@
     <artifactId>travako-starter</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>travako-starter-spring-jpa</module>
-        <module>travako-starter-startup-processor</module>
+        <module>travako-starter-processor</module>
         <module>travako-starter-job-bean</module>
+        <module>travako-starter-spring-jpa-default</module>
+        <module>travako-starter-spring-jpa-custom</module>
     </modules>
 
     <properties>

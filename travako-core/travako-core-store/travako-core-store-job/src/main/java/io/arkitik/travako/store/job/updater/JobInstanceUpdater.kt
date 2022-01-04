@@ -2,6 +2,7 @@ package io.arkitik.travako.store.job.updater
 
 import io.arkitik.radix.develop.store.updater.StoreIdentityUpdater
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import java.time.LocalDateTime
@@ -17,4 +18,7 @@ interface JobInstanceUpdater : StoreIdentityUpdater<String, JobInstanceDomain> {
 
     fun JobStatus.status(): JobInstanceUpdater
     fun LocalDateTime.lastRunningTime(): JobInstanceUpdater
+
+    fun String.jobTrigger(): JobInstanceUpdater
+    fun JobInstanceTriggerType.jobTriggerType(): JobInstanceUpdater
 }

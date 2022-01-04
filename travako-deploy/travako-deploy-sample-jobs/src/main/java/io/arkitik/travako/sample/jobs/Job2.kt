@@ -1,7 +1,7 @@
 package io.arkitik.travako.sample.jobs
 
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
-import io.arkitik.travako.starter.startup.processor.logger.logger
+import io.arkitik.travako.starter.processor.logger.logger
 import org.springframework.scheduling.support.PeriodicTrigger
 
 /**

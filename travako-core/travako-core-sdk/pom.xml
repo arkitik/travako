@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>travako-core-sdk-job</module>
+        <module>travako-core-sdk-job-event</module>
         <module>travako-core-sdk-runner</module>
         <module>travako-core-sdk-leader</module>
         <module>travako-core-sdk-server</module>

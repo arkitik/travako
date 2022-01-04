@@ -1,5 +1,6 @@
 package io.arkitik.travako.adapter.job.updater
 
+import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
@@ -32,6 +33,16 @@ class JobInstanceUpdaterImpl(
 
     override fun LocalDateTime.lastRunningTime(): JobInstanceUpdater {
         entity.lastRunningTime = this
+        return this@JobInstanceUpdaterImpl
+    }
+
+    override fun String.jobTrigger(): JobInstanceUpdater {
+        entity.jobTrigger = this
+        return this@JobInstanceUpdaterImpl
+    }
+
+    override fun JobInstanceTriggerType.jobTriggerType(): JobInstanceUpdater {
+        entity.jobTriggerType = this
         return this@JobInstanceUpdaterImpl
     }
 

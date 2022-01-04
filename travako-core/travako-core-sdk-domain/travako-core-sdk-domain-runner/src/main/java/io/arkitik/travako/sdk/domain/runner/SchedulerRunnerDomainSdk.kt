@@ -12,5 +12,6 @@ import io.arkitik.travako.sdk.domain.runner.dto.RunnerServerDomainDto
  */
 interface SchedulerRunnerDomainSdk {
     val fetchSchedulerRunner: Operation<RunnerDomainDto, SchedulerRunnerDomain>
+    val fetchServerSchedulerRunners: Operation<RunnerServerDomainDto, List<SchedulerRunnerDomain>>
     val fetchOldestHeartbeatRunner: Operation<RunnerServerDomainDto, SchedulerRunnerDomain>
 }

@@ -16,6 +16,7 @@
         <module>travako-core-operation-job</module>
         <module>travako-core-operation-server</module>
         <module>travako-core-operation-leader</module>
+        <module>travako-core-operation-job-event</module>
     </modules>
 
     <properties>

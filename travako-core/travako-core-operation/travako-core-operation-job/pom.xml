@@ -23,6 +23,16 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-store-job</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-function-transaction</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>travako-core-sdk-domain-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -38,12 +48,7 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-store-job</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-function-transaction</artifactId>
+            <artifactId>travako-core-sdk-job-event</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

@@ -17,5 +17,6 @@
         <module>travako-core-port-shared</module>
         <module>travako-core-port-server</module>
         <module>travako-core-port-leader</module>
+        <module>travako-core-port-job-event</module>
     </modules>
 </project>

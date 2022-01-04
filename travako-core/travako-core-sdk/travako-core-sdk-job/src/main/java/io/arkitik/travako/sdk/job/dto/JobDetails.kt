@@ -10,5 +10,7 @@ import java.time.LocalDateTime
 data class JobDetails(
     val jobKey: String,
     val isRunning: Boolean,
+    val jobTrigger: String,
+    val isDuration: Boolean,
     val lastRunningTime: LocalDateTime?,
 )

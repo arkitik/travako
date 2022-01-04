@@ -1,6 +1,7 @@
 package io.arkitik.travako.core.domain.job
 
 import io.arkitik.radix.develop.identity.Identity
+import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.server.ServerDomain
@@ -16,6 +17,8 @@ interface JobInstanceDomain : Identity<String> {
     val jobKey: String
     val server: ServerDomain
     val jobStatus: JobStatus
+    val jobTrigger: String
+    val jobTriggerType: JobInstanceTriggerType
     val assignedTo: SchedulerRunnerDomain?
     val lastRunningTime: LocalDateTime?
 }

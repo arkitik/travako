@@ -10,7 +10,8 @@ import io.arkitik.travako.sdk.job.dto.*
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface JobInstanceSdk {
-    val registerJob: Operation<JobKeyDto, Unit>
+    val registerJob: Operation<CreateJobDto, Unit>
+    val updateJobTrigger: Operation<CreateJobDto, Unit>
     val removeRunnerJobsAssignee: Operation<JobRunnerKeyDto, Unit>
 
     val markJobAsWaiting: Operation<JobKeyDto, Unit>

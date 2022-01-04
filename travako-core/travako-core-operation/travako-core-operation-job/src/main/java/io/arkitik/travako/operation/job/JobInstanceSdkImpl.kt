@@ -4,6 +4,7 @@ import io.arkitik.travako.operation.job.operation.*
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
+import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.JobInstanceStore
 
 /**
@@ -15,6 +16,7 @@ class JobInstanceSdkImpl(
     jobInstanceStore: JobInstanceStore,
     serverDomainSdk: ServerDomainSdk,
     schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+    jobEventSdk: JobEventSdk,
 ) : JobInstanceSdk {
 
     override val registerJob =
@@ -22,6 +24,11 @@ class JobInstanceSdkImpl(
             jobInstanceStore = jobInstanceStore,
             serverDomainSdk = serverDomainSdk
         ).registerJob
+    override val updateJobTrigger =
+        UpdateJobTriggerOperationProvider(
+            jobInstanceStore,
+            jobEventSdk
+        ).updateJobTrigger
 
     override val removeRunnerJobsAssignee =
         RemoveRunnerJobsAssigneeOperationProvider(

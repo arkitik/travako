@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>travako-core-entity-job</module>
+        <module>travako-core-entity-job-event</module>
         <module>travako-core-entity-leader</module>
         <module>travako-core-entity-runner</module>
         <module>travako-core-entity-server</module>

@@ -16,6 +16,7 @@
         <module>travako-core-store-runner</module>
         <module>travako-core-store-leader</module>
         <module>travako-core-store-server</module>
+        <module>travako-core-store-job-event</module>
     </modules>
 
 </project>
