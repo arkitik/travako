@@ -1,8 +1,6 @@
 application:
   title: travako
   version: v1.0.0
-server:
-  port: 9080
 spring:
   datasource:
     url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
@@ -13,7 +11,7 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     open-in-view: false
     properties:

@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-starter-spring-jpa-custom</artifactId>
+            <artifactId>travako-starter-spring-jpa-default</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

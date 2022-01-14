@@ -31,14 +31,15 @@ class RunnerHeartbeatProcess(
                 transactionalExecutor.runOnTransaction {
                     schedulerRunnerSdk.runCatching {
                         logRunnerHeartbeat.runOperation(RunnerKeyDto(
-                            travakoConfig.serverKey,
-                            travakoConfig.runnerKey,
+                            serverKey = travakoConfig.serverKey,
+                            runnerKey = travakoConfig.runnerKey,
                         ))
                     }.onFailure {
-                        it.printStackTrace()
-                        logger.error("Error while logging heartbeat message for {} , error: ",
+                        logger.error(
+                            "Error while logging heartbeat message for {} , error: ",
                             travakoConfig.runnerKey,
-                            it.message)
+                            it.message
+                        )
                     }
                 }
             }
