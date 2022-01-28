@@ -53,8 +53,7 @@ class JobInstancesProcessor(
                         }
                         is PeriodicTrigger -> {
                             val trigger = job.trigger as PeriodicTrigger
-                            "${
-                                trigger.timeUnit.convert(trigger.period,
+                            "${trigger.timeUnit.convert(trigger.period,
                                     TimeUnit.MILLISECONDS)
                             }${timeUnitsMapper[trigger.timeUnit]}" to true
                         }
@@ -73,7 +72,7 @@ class JobInstancesProcessor(
                                 isDuration = jobTrigger.second
                             ))
                 } catch (e: UnprocessableEntityException) {
-                    LOGGER.error(
+                    LOGGER.warn(
                         "Error while registering the Job Instance: [Key: {}] [Error: {}]",
                         job.jobKey,
                         e.error

@@ -35,7 +35,7 @@ class RunnerHeartbeatProcess(
                             runnerKey = travakoConfig.runnerKey,
                         ))
                     }.onFailure {
-                        logger.error(
+                        logger.warn(
                             "Error while logging heartbeat message for {} , error: ",
                             travakoConfig.runnerKey,
                             it.message

@@ -46,29 +46,33 @@ class RunnerJobRestartProcessor(
     override fun process() {
         travakoConfig.jobsEvent
             .fixedRateJob(taskScheduler) {
-                jobEventSdk.pendingEventsForRunner
-                    .runOperation(
+                jobEventSdk.pendingEventsForRunner.runCatching {
+                    runOperation(
                         JobEventRunnerKeyDto(
                             serverKey = travakoConfig.serverKey,
                             runnerKey = travakoConfig.runnerKey
                         )
                     ).events
-                    .forEach { event ->
-                        transactionalExecutor.runUnitTransaction {
-                            eventProcessors[event.eventType]?.let { function ->
-                                logger.debug("Start {} process for [Job-Key {}]", event.eventType, event.jobKey)
-                                function(event)
-                                jobEventSdk.markEventProcessedForRunner.runOperation(
-                                    JobEventRunnerKeyAndUuidDto(
-                                        serverKey = travakoConfig.serverKey,
-                                        runnerKey = travakoConfig.runnerKey,
-                                        eventUuid = event.eventUuid
+                        .forEach { event ->
+                            transactionalExecutor.runUnitTransaction {
+                                eventProcessors[event.eventType]?.let { function ->
+                                    logger.debug("Start {} process for [Job-Key {}]", event.eventType, event.jobKey)
+                                    function(event)
+                                    jobEventSdk.markEventProcessedForRunner.runOperation(
+                                        JobEventRunnerKeyAndUuidDto(
+                                            serverKey = travakoConfig.serverKey,
+                                            runnerKey = travakoConfig.runnerKey,
+                                            eventUuid = event.eventUuid
+                                        )
                                     )
-                                )
+                                }
                             }
-
                         }
-                    }
+                }.onFailure {
+                    logger.warn("Error while fetching pending events for runner {}, cause {}",
+                        travakoConfig.runnerKey,
+                        it.message)
+                }
             }
     }
 }

@@ -36,7 +36,7 @@ class ServerRegistrationProcess(
                         serverSdk.registerServer.runOperation(serverKeyDto)
                     }
             } catch (e: UnprocessableEntityException) {
-                LOGGER.error(
+                LOGGER.warn(
                     "Error while registering the Server: [Key: {}] [Error: {}]",
                     travakoConfig.serverKey,
                     e.error

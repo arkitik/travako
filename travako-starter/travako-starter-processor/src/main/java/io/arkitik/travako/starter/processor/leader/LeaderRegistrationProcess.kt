@@ -28,7 +28,7 @@ class LeaderRegistrationProcess(
 
     override fun process() {
         transactionalExecutor.runOnTransaction {
-            LOGGER.error(
+            LOGGER.debug(
                 "Start Registering Leader: [Key: {}]",
                 travakoConfig.serverKey
             )
@@ -39,7 +39,7 @@ class LeaderRegistrationProcess(
                         travakoConfig.runnerKey
                     ))
             } catch (e: UnprocessableEntityException) {
-                LOGGER.error(
+                LOGGER.warn(
                     "Error while registering the Leader: [Server: {}] [Runner: {}] [Error: {}]",
                     travakoConfig.serverKey,
                     travakoConfig.runnerKey,

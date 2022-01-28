@@ -19,7 +19,10 @@ import io.arkitik.travako.port.job.event.JobEventPortContext
 import io.arkitik.travako.port.runner.RunnerPortContext
 import io.arkitik.travako.port.server.ServerPortContext
 import io.arkitik.travako.port.shared.SharedPortContext
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
+import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties
@@ -31,7 +34,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.orm.jpa.JpaVendorAdapter
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager
+import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import javax.persistence.EntityManager
 import javax.sql.DataSource
@@ -80,6 +87,38 @@ class CustomTravakoSpringJpaStarter {
         .build()
 
     @Bean
+    @ConditionalOnMissingBean
+    fun jpaVendorAdapter(
+        travakoJpaProperties: JpaProperties,
+    ): JpaVendorAdapter {
+        val adapter: AbstractJpaVendorAdapter = HibernateJpaVendorAdapter()
+        adapter.setShowSql(travakoJpaProperties.isShowSql)
+        if (travakoJpaProperties.database != null) {
+            adapter.setDatabase(travakoJpaProperties.database)
+        }
+        if (travakoJpaProperties.databasePlatform != null) {
+            adapter.setDatabasePlatform(travakoJpaProperties.databasePlatform)
+        }
+        adapter.setGenerateDdl(travakoJpaProperties.isGenerateDdl)
+        return adapter
+    }
+
+    @Bean
+    fun entityManagerFactoryBuilder(
+        jpaVendorAdapter: JpaVendorAdapter,
+        travakoJpaProperties: JpaProperties,
+        persistenceUnitManager: ObjectProvider<PersistenceUnitManager?>,
+        customizers: ObjectProvider<EntityManagerFactoryBuilderCustomizer>,
+    ): EntityManagerFactoryBuilder? {
+        val builder = EntityManagerFactoryBuilder(jpaVendorAdapter,
+            travakoJpaProperties.properties, persistenceUnitManager.ifAvailable)
+        customizers.orderedStream().forEach { customizer: EntityManagerFactoryBuilderCustomizer ->
+            customizer.customize(builder)
+        }
+        return builder
+    }
+
+    @Bean
     @Primary
     fun travakoEntityManagerFactory(
         builder: EntityManagerFactoryBuilder,
@@ -91,7 +130,9 @@ class CustomTravakoSpringJpaStarter {
             .properties(
                 travakoHibernateProperties.determineHibernateProperties(
                     travakoJpaProperties.properties,
-                    HibernateSettings()
+                    HibernateSettings().ddlAuto {
+                        travakoHibernateProperties.ddlAuto
+                    }
                 )
             )
             .packages(

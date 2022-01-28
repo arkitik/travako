@@ -35,7 +35,7 @@ class SchedulerRunnerRegistrationProcess(
                         runnerKey = travakoConfig.runnerKey
                     ))
             } catch (e: UnprocessableEntityException) {
-                LOGGER.error("Error while registering the Scheduler-Runner: [Key: {}] [Error: {}]",
+                LOGGER.warn("Error while registering the Scheduler-Runner: [Key: {}] [Error: {}]",
                     travakoConfig.runnerKey,
                     e.error)
             }
