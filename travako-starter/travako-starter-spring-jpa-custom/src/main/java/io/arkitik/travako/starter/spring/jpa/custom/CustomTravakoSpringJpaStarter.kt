@@ -88,7 +88,7 @@ class CustomTravakoSpringJpaStarter {
 
     @Bean
     @ConditionalOnMissingBean
-    fun jpaVendorAdapter(
+    fun travakoJpaVendorAdapter(
         travakoJpaProperties: JpaProperties,
     ): JpaVendorAdapter {
         val adapter: AbstractJpaVendorAdapter = HibernateJpaVendorAdapter()
@@ -104,13 +104,13 @@ class CustomTravakoSpringJpaStarter {
     }
 
     @Bean
-    fun entityManagerFactoryBuilder(
-        jpaVendorAdapter: JpaVendorAdapter,
+    fun travakoEntityManagerFactoryBuilder(
+        travakoJpaVendorAdapter: JpaVendorAdapter,
         travakoJpaProperties: JpaProperties,
         persistenceUnitManager: ObjectProvider<PersistenceUnitManager?>,
         customizers: ObjectProvider<EntityManagerFactoryBuilderCustomizer>,
     ): EntityManagerFactoryBuilder? {
-        val builder = EntityManagerFactoryBuilder(jpaVendorAdapter,
+        val builder = EntityManagerFactoryBuilder(travakoJpaVendorAdapter,
             travakoJpaProperties.properties, persistenceUnitManager.ifAvailable)
         customizers.orderedStream().forEach { customizer: EntityManagerFactoryBuilderCustomizer ->
             customizer.customize(builder)
@@ -121,12 +121,12 @@ class CustomTravakoSpringJpaStarter {
     @Bean
     @Primary
     fun travakoEntityManagerFactory(
-        builder: EntityManagerFactoryBuilder,
+        travakoEntityManagerFactoryBuilder: EntityManagerFactoryBuilder,
         travakoAppDataSource: DataSource,
         travakoJpaProperties: JpaProperties,
         travakoHibernateProperties: HibernateProperties,
     ): LocalContainerEntityManagerFactoryBean =
-        builder.dataSource(travakoAppDataSource)
+        travakoEntityManagerFactoryBuilder.dataSource(travakoAppDataSource)
             .properties(
                 travakoHibernateProperties.determineHibernateProperties(
                     travakoJpaProperties.properties,
