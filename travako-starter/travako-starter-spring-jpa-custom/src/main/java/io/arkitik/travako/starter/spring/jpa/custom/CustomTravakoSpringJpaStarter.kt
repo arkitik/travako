@@ -7,6 +7,7 @@ import io.arkitik.travako.port.job.event.JobEventPortContext
 import io.arkitik.travako.port.runner.RunnerPortContext
 import io.arkitik.travako.port.server.ServerPortContext
 import io.arkitik.travako.port.shared.SharedPortContext
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings
@@ -59,6 +60,7 @@ class CustomTravakoSpringJpaStarter {
     @Primary
     fun travakoEntityManagerFactory(
         builder: EntityManagerFactoryBuilder,
+        @Qualifier("travakoAppDataSource")
         travakoAppDataSource: DataSource,
         jpaProperties: JpaProperties,
         hibernateProperties: HibernateProperties,
