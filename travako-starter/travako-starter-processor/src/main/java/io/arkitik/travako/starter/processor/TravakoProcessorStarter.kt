@@ -176,7 +176,6 @@ class TravakoProcessorStarter {
         transactionalExecutor: TransactionalExecutor,
         jobInstances: List<JobInstanceBean>,
         jobsSchedulerRegistry: JobsSchedulerRegistry,
-        jobInstanceSdk: JobInstanceSdk,
     ) = RunnerJobRestartProcessor(
         travakoConfig = travakoConfig,
         taskScheduler = taskScheduler,
@@ -184,7 +183,6 @@ class TravakoProcessorStarter {
         transactionalExecutor = transactionalExecutor,
         jobInstances = jobInstances,
         jobsSchedulerRegistry = jobsSchedulerRegistry,
-        jobInstanceSdk = jobInstanceSdk,
     )
 
     @Bean
@@ -202,9 +200,11 @@ class TravakoProcessorStarter {
     fun jobInstanceRestartProcessor(
         travakoConfig: TravakoConfig,
         jobEventSdk: JobEventSdk,
+        jobInstanceSdk: JobInstanceSdk,
     ): JobInstanceRestartProcessor =
         JobInstanceRestartProcessorImpl(
             travakoConfig = travakoConfig,
             jobEventSdk = jobEventSdk,
+            jobInstanceSdk = jobInstanceSdk,
         )
 }

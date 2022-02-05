@@ -50,6 +50,8 @@ class LeaderRunnersAvailabilityProcessor(
                     runners.filter {
                         it.isRunning
                     }.filter {
+                        it.runnerKey != travakoConfig.runnerKey
+                    }.filter {
                         it.heartbeatLessThanExpectedTime()
                     }.forEach {
                         logger.debug("Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
