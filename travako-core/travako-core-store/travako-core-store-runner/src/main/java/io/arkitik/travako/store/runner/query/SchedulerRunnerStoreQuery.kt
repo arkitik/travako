@@ -3,6 +3,7 @@ package io.arkitik.travako.store.runner.query
 import io.arkitik.radix.develop.store.query.StoreQuery
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -10,28 +11,31 @@ import io.arkitik.travako.core.domain.runner.embedded.InstanceState
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface SchedulerRunnerStoreQuery : StoreQuery<String, SchedulerRunnerDomain> {
-    fun findByRunnerKeyAndServerKey(
+    fun findByServerAndRunnerKeyWithHost(
+        server: ServerDomain,
         runnerKey: String,
-        serverKey: String,
+        runnerHost: String,
     ): SchedulerRunnerDomain?
 
-    fun existsRunnerByKeyAndServerKey(
+    fun existsServerAndRunnerByKeyWithHost(
+        server: ServerDomain,
         runnerKey: String,
-        serverKey: String,
+        runnerHost: String,
     ): Boolean
 
-    fun existsRunnerByKeyAndServerKeyAndStatus(
+    fun existsServerAndRunnerByKeyAndHostAndStatus(
+        server: ServerDomain,
         runnerKey: String,
-        serverKey: String,
+        runnerHost: String,
         status: InstanceState,
     ): Boolean
 
-    fun findOldestRunnerByHeartbeatAndStatus(
-        serverKey: String,
+    fun findServerOldestRunnerByHeartbeatAndStatus(
+        server: ServerDomain,
         status: InstanceState,
     ): SchedulerRunnerDomain?
 
-    fun findAllByServerKey(
-        serverKey: String,
+    fun findAllByServer(
+        server: ServerDomain,
     ): List<SchedulerRunnerDomain>
 }

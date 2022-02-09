@@ -2,6 +2,8 @@ package io.arkitik.travako.adapter.job.repository
 
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.entity.job.TravakoJobInstance
+import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
+import io.arkitik.travako.entity.server.TravakoServer
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -9,21 +11,24 @@ import io.arkitik.travako.entity.job.TravakoJobInstance
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface TravakoJobInstanceRepository : RadixRepository<String, TravakoJobInstance> {
-    fun findAllByServerServerKey(serverKey: String): List<TravakoJobInstance>
+    fun findAllByServer(server: TravakoServer): List<TravakoJobInstance>
 
-    fun findAllByServerServerKeyAndAssignedToRunnerKey(serverKey: String, runnerKey: String): List<TravakoJobInstance>
+    fun findAllByServerAndAssignedTo(
+        server: TravakoServer,
+        runner: TravakoSchedulerRunner,
+    ): List<TravakoJobInstance>
 
-    fun existsByServerServerKeyAndJobKey(serverKey: String, jobKey: String): Boolean
+    fun existsByServerAndJobKey(server: TravakoServer, jobKey: String): Boolean
 
-    fun existsAllByServerServerKeyAndJobKeyIn(serverKey: String, jobKeys: List<String>): Boolean
+    fun existsAllByServerAndJobKeyIn(server: TravakoServer, jobKeys: List<String>): Boolean
 
-    fun findAllByServerServerKeyAndJobKeyIn(serverKey: String, jobKeys: List<String>): List<TravakoJobInstance>
+    fun findAllByServerAndJobKeyIn(server: TravakoServer, jobKeys: List<String>): List<TravakoJobInstance>
 
-    fun findByServerServerKeyAndJobKey(serverKey: String, jobKey: String): TravakoJobInstance?
+    fun findByServerAndJobKey(server: TravakoServer, jobKey: String): TravakoJobInstance?
 
-    fun existsByServerServerKeyAndAssignedToRunnerKeyAndJobKey(
-        serverKey: String,
-        runnerKey: String,
+    fun existsByServerAndAssignedToAndJobKey(
+        server: TravakoServer,
+        runner: TravakoSchedulerRunner,
         jobKey: String,
     ): Boolean
 }

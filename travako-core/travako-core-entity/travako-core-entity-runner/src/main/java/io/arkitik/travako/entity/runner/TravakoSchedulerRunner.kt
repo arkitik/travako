@@ -17,7 +17,7 @@ import javax.persistence.*
         UniqueConstraint(
             name = "travako_scheduler_runner_key_server_unique",
             columnNames = [
-                "runnerKey", "serverUuid"
+                "runnerKey", "serverUuid", "runnerHost"
             ]
         )
     ]
@@ -28,6 +28,8 @@ data class TravakoSchedulerRunner(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     override var instanceState: InstanceState,
+    @Column(nullable = false)
+    override val runnerHost: String,
     @Id
     override val uuid: String,
     @ManyToOne(optional = false)

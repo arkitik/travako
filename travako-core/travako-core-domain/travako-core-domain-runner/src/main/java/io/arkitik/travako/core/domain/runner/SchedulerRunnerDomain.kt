@@ -18,6 +18,7 @@ interface SchedulerRunnerDomain : Identity<String> {
     override val uuid: String
     val server: ServerDomain
     val runnerKey: String
+    val runnerHost: String
     val instanceState: InstanceState
     val lastHeartbeatTime: LocalDateTime?
 }

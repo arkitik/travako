@@ -2,16 +2,11 @@ application:
   title: travako
   version: v1.0.0
 spring:
-  datasource:
-    url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
-    username: ${database_user:travako}
-    password: ${database_password:travako}
-    driver-class-name: com.mysql.cj.jdbc.Driver
   main:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: false
     open-in-view: false
     properties:
@@ -39,6 +34,12 @@ arkitik:
     config:
       server-key: travako-server
       runner-key: travako-runner-1
+    database:
+      datasource:
+        url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
+        username: ${database_user:travako}
+        password: ${database_password:travako}
+        driver-class-name: com.mysql.cj.jdbc.Driver
 logging:
   level:
     io:

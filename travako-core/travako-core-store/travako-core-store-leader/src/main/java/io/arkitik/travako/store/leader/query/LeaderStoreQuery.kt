@@ -2,6 +2,8 @@ package io.arkitik.travako.store.leader.query
 
 import io.arkitik.radix.develop.store.query.StoreQuery
 import io.arkitik.travako.core.domain.leader.LeaderDomain
+import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
 import java.time.LocalDateTime
 
 /**
@@ -10,17 +12,17 @@ import java.time.LocalDateTime
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface LeaderStoreQuery : StoreQuery<String, LeaderDomain> {
-    fun findByServerKey(
-        serverKey: String,
+    fun findByServer(
+        server: ServerDomain,
     ): LeaderDomain?
 
-    fun existsByServerKey(
-        serverKey: String,
+    fun existsByServer(
+        server: ServerDomain,
     ): Boolean
 
-    fun existsByServerKeyAndRunnerKeyAndBefore(
-        serverKey: String,
-        runnerKey: String,
+    fun existsByServerAndRunnerAndBefore(
+        server: ServerDomain,
+        runner: SchedulerRunnerDomain,
         beforeDate: LocalDateTime,
     ): Boolean
 }

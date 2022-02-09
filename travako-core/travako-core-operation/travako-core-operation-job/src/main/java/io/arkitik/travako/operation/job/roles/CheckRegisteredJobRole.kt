@@ -1,8 +1,11 @@
 package io.arkitik.travako.operation.job.roles
 
 import io.arkitik.radix.develop.operation.OperationRole
+import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.ext.unprocessableEntity
 import io.arkitik.travako.operation.job.errors.JobErrors
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 
@@ -13,11 +16,14 @@ import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
  */
 class CheckRegisteredJobRole(
     private val jobInstanceStoreQuery: JobInstanceStoreQuery,
+    private val serverDomainSdk: ServerDomainSdk,
 ) : OperationRole<JobKeyDto, Unit> {
     override fun JobKeyDto.operateRole() {
-        jobInstanceStoreQuery.existsByServerKeyAndJobKey(serverKey, jobKey)
-            .takeIf { it }?.also {
-                throw JobErrors.JOB_ALREADY_REGISTERED.unprocessableEntity()
-            }
+        val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+        jobInstanceStoreQuery.existsByServerAndJobKey(
+            server = server, jobKey = jobKey
+        ).takeIf { it }?.also {
+            throw JobErrors.JOB_ALREADY_REGISTERED.unprocessableEntity()
+        }
     }
 }

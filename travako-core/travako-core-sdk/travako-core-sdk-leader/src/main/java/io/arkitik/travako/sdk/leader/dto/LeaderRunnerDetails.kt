@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 data class LeaderRunnerDetails(
     val serverKey: String,
     val runnerKey: String,
+    val runnerHost: String,
     val lastHeartbeat: LocalDateTime?,
     val isRunning: Boolean,
 )

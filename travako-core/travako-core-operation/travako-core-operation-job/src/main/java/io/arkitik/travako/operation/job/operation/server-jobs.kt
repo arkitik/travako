@@ -1,8 +1,11 @@
 package io.arkitik.travako.operation.job.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
+import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobServerDto
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
@@ -14,10 +17,12 @@ import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
  */
 class ServerJobsOperationProvider(
     private val jobInstanceStoreQuery: JobInstanceStoreQuery,
+    private val serverDomainSdk: ServerDomainSdk,
 ) {
     val serverJobs = operationBuilder<JobServerDto, List<JobDetails>> {
         mainOperation {
-            jobInstanceStoreQuery.findAllByServerKey(serverKey)
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+            jobInstanceStoreQuery.findAllByServer(server)
                 .map { job ->
                     JobDetails(
                         jobKey = job.jobKey,

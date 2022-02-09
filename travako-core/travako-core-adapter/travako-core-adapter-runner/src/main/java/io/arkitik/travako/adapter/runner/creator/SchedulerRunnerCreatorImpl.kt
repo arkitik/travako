@@ -16,12 +16,18 @@ import java.util.*
  */
 class SchedulerRunnerCreatorImpl : SchedulerRunnerCreator {
     private lateinit var instanceKey: String
+    private lateinit var runnerHost: String
     private lateinit var server: ServerDomain
     private var instanceState: InstanceState = InstanceState.UP
     private var uuid: String = UUID.randomUUID().toString().replace("-", "")
 
     override fun String.runnerKey(): SchedulerRunnerCreator {
         instanceKey = this
+        return this@SchedulerRunnerCreatorImpl
+    }
+
+    override fun String.runnerHost(): SchedulerRunnerCreator {
+        runnerHost = this
         return this@SchedulerRunnerCreatorImpl
     }
 
@@ -45,6 +51,7 @@ class SchedulerRunnerCreatorImpl : SchedulerRunnerCreator {
             runnerKey = instanceKey,
             instanceState = instanceState,
             uuid = uuid,
-            server = server as TravakoServer
+            server = server as TravakoServer,
+            runnerHost = runnerHost
         )
 }

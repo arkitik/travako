@@ -18,8 +18,10 @@ class FetchSchedulerRunnerOperationProvider(
     val fetchSchedulerRunner = operationBuilder<RunnerDomainDto, SchedulerRunnerDomain> {
         mainOperation {
             with(schedulerRunnerStoreQuery) {
-                findByRunnerKeyAndServerKey(
-                    runnerKey, serverKey
+                findByServerAndRunnerKeyWithHost(
+                    server = server,
+                    runnerKey = runnerKey,
+                    runnerHost = runnerHost,
                 ) ?: throw RunnerErrors.RUNNER_IS_NOT_REGISTERED.unprocessableEntity()
             }
         }

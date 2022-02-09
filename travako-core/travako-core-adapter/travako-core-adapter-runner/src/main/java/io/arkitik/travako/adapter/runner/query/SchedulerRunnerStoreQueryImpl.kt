@@ -4,7 +4,9 @@ import io.arkitik.radix.adapter.shared.query.StoreQueryImpl
 import io.arkitik.travako.adapter.runner.repository.TravakoSchedulerRunnerRepository
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
+import io.arkitik.travako.entity.server.TravakoServer
 import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 
 /**
@@ -17,34 +19,41 @@ class SchedulerRunnerStoreQueryImpl(
 ) : StoreQueryImpl<String, SchedulerRunnerDomain, TravakoSchedulerRunner>(travakoSchedulerRunnerRepository),
     SchedulerRunnerStoreQuery {
 
-    override fun findByRunnerKeyAndServerKey(runnerKey: String, serverKey: String) =
-        travakoSchedulerRunnerRepository.findByRunnerKeyAndServerServerKey(
+    override fun findByServerAndRunnerKeyWithHost(server: ServerDomain, runnerKey: String, runnerHost: String) =
+        travakoSchedulerRunnerRepository.findByServerAndRunnerKeyAndRunnerHost(
+            server = server as TravakoServer,
             runnerKey = runnerKey,
-            serverKey = serverKey
+            runnerHost = runnerHost,
         )
 
-    override fun existsRunnerByKeyAndServerKey(runnerKey: String, serverKey: String) =
-        travakoSchedulerRunnerRepository.existsByRunnerKeyAndServerServerKey(
+    override fun existsServerAndRunnerByKeyWithHost(server: ServerDomain, runnerKey: String, runnerHost: String) =
+        travakoSchedulerRunnerRepository.existsByServerAndRunnerKeyAndRunnerHost(
             runnerKey = runnerKey,
-            serverKey = serverKey
+            server = server as TravakoServer,
+            runnerHost = runnerHost,
         )
 
-    override fun existsRunnerByKeyAndServerKeyAndStatus(runnerKey: String, serverKey: String, status: InstanceState) =
-        travakoSchedulerRunnerRepository.existsByRunnerKeyAndServerServerKeyAndInstanceState(
-            runnerKey = runnerKey,
-            serverKey = serverKey,
+    override fun existsServerAndRunnerByKeyAndHostAndStatus(
+        server: ServerDomain,
+        runnerKey: String,
+        runnerHost: String,
+        status: InstanceState,
+    ) = travakoSchedulerRunnerRepository.existsByServerAndRunnerKeyAndRunnerHostAndInstanceState(
+        server = server as TravakoServer,
+        runnerKey = runnerKey,
+        runnerHost = runnerHost,
+        instanceState = status
+    )
+
+    override fun findServerOldestRunnerByHeartbeatAndStatus(server: ServerDomain, status: InstanceState) =
+        travakoSchedulerRunnerRepository.findTopByServerAndInstanceStateOrderByLastHeartbeatTimeAsc(
+            server = server as TravakoServer,
             instanceState = status
         )
 
-    override fun findOldestRunnerByHeartbeatAndStatus(serverKey: String, status: InstanceState) =
-        travakoSchedulerRunnerRepository.findTopByServerServerKeyAndInstanceStateOrderByLastHeartbeatTimeAsc(
-            serverKey = serverKey,
-            instanceState = status
-        )
-
-    override fun findAllByServerKey(
-        serverKey: String,
-    ) = travakoSchedulerRunnerRepository.findAllByServerServerKey(
-        serverKey
+    override fun findAllByServer(
+        server: ServerDomain,
+    ) = travakoSchedulerRunnerRepository.findAllByServer(
+        server = server as TravakoServer
     )
 }

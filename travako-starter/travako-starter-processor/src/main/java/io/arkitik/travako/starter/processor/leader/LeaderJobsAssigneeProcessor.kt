@@ -43,8 +43,9 @@ class LeaderJobsAssigneeProcessor(
             .fixedRateJob(taskScheduler) {
                 leaderSdk.isLeaderBefore
                     .operateRole(IsLeaderBeforeDto(
-                        serverKey = travakoConfig.serverKey,
-                        runnerKey = travakoConfig.runnerKey,
+                        serverKey = travakoConfig.keyDto.serverKey,
+                        runnerKey = travakoConfig.keyDto.runnerKey,
+                        runnerHost = travakoConfig.keyDto.runnerHost,
                         dateBefore = LocalDateTime.now()
                     )).takeIf { it }?.let {
                         transactionalExecutor.runOnTransaction {
@@ -63,20 +64,21 @@ class LeaderJobsAssigneeProcessor(
                             jobs.filter { it.isRunning.not() }
                                 .map { job ->
                                     runners[Random().nextInt(runners.size)] to job
-                                }.groupBy { it.first.runnerKey }
+                                }.groupBy { it.first.runnerKey to it.first.runnerHost }
                                 .forEach { entry ->
                                     val jobKeys = entry.value.map {
                                         it.second.jobKey
                                     }
                                     jobInstanceSdk.assignJobsToRunner.runOperation(
                                         AssignJobsToRunnerDto(
-                                            travakoConfig.serverKey,
-                                            entry.key,
-                                            jobKeys
+                                            serverKey = travakoConfig.serverKey,
+                                            runnerKey = entry.key.first,
+                                            runnerHost = entry.key.second,
+                                            jobKeys = jobKeys
                                         )
                                     )
                                     logger.info("Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
-                                        entry.key,
+                                        "${entry.key.first}-${entry.key.second}",
                                         jobKeys)
                                 }
                         }

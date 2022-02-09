@@ -6,6 +6,8 @@ import io.arkitik.radix.develop.store.storeCreator
 import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.job.dto.JobDomainDto
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.event.dto.JobEventKeyDto
 import io.arkitik.travako.store.job.event.JobEventStore
 
@@ -18,13 +20,15 @@ class InsertJobEventOperationProvider(
     private val jobEventType: JobEventType,
     private val jobDomainSdk: JobDomainSdk,
     private val jobEventStore: JobEventStore,
+    private val serverDomainSdk: ServerDomainSdk,
 ) {
     val insertJobEvent = operationBuilder<JobEventKeyDto, Unit> {
         mainOperation {
-            val jobInstanceDomain = jobDomainSdk.fetchJobInstance.runOperation(JobDomainDto(serverKey, jobKey))
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+            val jobInstance = jobDomainSdk.fetchJobInstance.runOperation(JobDomainDto(server, jobKey))
             with(jobEventStore) {
                 storeCreator(identityCreator()) {
-                    jobInstanceDomain.jobInstance()
+                    jobInstance.jobInstance()
                     jobEventType.eventType()
                     create()
                 }.save()

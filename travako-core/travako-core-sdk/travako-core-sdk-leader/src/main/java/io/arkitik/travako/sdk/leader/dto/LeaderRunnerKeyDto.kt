@@ -8,4 +8,5 @@ package io.arkitik.travako.sdk.leader.dto
 data class LeaderRunnerKeyDto(
     val serverKey: String,
     val runnerKey: String,
+    val runnerHost: String,
 )

@@ -18,7 +18,7 @@ class FetchServerLeaderOperationProvider(
     val fetchServerLeader = operationBuilder<LeaderDomainServerDto, LeaderDomain> {
         mainOperation {
             with(leaderStoreQuery) {
-                findByServerKey(serverKey) ?: throw LeaderErrors.SERVER_LEADER_NOT_REGISTERED.unprocessableEntity()
+                findByServer(server) ?: throw LeaderErrors.SERVER_LEADER_NOT_REGISTERED.unprocessableEntity()
             }
         }
     }

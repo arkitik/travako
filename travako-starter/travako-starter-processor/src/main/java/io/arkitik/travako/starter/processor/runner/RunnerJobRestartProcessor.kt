@@ -49,19 +49,21 @@ class RunnerJobRestartProcessor(
                 jobEventSdk.pendingEventsForRunner.runCatching {
                     runOperation(
                         JobEventRunnerKeyDto(
-                            serverKey = travakoConfig.serverKey,
-                            runnerKey = travakoConfig.runnerKey
+                            serverKey = travakoConfig.keyDto.serverKey,
+                            runnerKey = travakoConfig.keyDto.runnerKey,
+                            runnerHost = travakoConfig.keyDto.runnerHost
                         )
                     ).events
                         .forEach { event ->
                             transactionalExecutor.runUnitTransaction {
                                 eventProcessors[event.eventType]?.let { function ->
-                                    logger.debug("Start {} process for [Job-Key {}]", event.eventType, event.jobKey)
+                                    logger.debug("Start {} processor for [Job-Key {}]", event.eventType, event.jobKey)
                                     function(event)
                                     jobEventSdk.markEventProcessedForRunner.runOperation(
                                         JobEventRunnerKeyAndUuidDto(
-                                            serverKey = travakoConfig.serverKey,
-                                            runnerKey = travakoConfig.runnerKey,
+                                            serverKey = travakoConfig.keyDto.serverKey,
+                                            runnerKey = travakoConfig.keyDto.runnerKey,
+                                            runnerHost = travakoConfig.keyDto.runnerHost,
                                             eventUuid = event.eventUuid
                                         )
                                     )
@@ -70,7 +72,7 @@ class RunnerJobRestartProcessor(
                         }
                 }.onFailure {
                     logger.warn("Error while fetching pending events for runner {}, cause {}",
-                        travakoConfig.runnerKey,
+                        "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
                         it.message)
                 }
             }

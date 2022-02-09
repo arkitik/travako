@@ -33,9 +33,11 @@ class LeaderPortContext {
         leaderStore: LeaderStore,
         serverDomainSdk: ServerDomainSdk,
         schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+        leaderDomainSdk: LeaderDomainSdk,
     ): LeaderSdk = LeaderSdkImpl(
         leaderStore = leaderStore,
         serverDomainSdk = serverDomainSdk,
         schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+        leaderDomainSdk = leaderDomainSdk,
     )
 }

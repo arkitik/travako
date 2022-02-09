@@ -2,6 +2,8 @@ package io.arkitik.travako.adapter.leader.repository
 
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.entity.leader.TravakoLeader
+import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
+import io.arkitik.travako.entity.server.TravakoServer
 import java.time.LocalDateTime
 
 /**
@@ -10,12 +12,12 @@ import java.time.LocalDateTime
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface TravakoLeaderRepository : RadixRepository<String, TravakoLeader> {
-    fun findByServerServerKey(serverKey: String): TravakoLeader?
-    fun existsByServerServerKey(serverKey: String): Boolean
+    fun findByServer(server: TravakoServer): TravakoLeader?
+    fun existsByServer(server: TravakoServer): Boolean
 
-    fun existsByServerServerKeyAndRunnerRunnerKeyAndLastModifiedDateBefore(
-        serverKey: String,
-        runnerKey: String,
+    fun existsByServerAndRunnerAndLastModifiedDateBefore(
+        server: TravakoServer,
+        runner: TravakoSchedulerRunner,
         lastModifiedDate: LocalDateTime,
     ): Boolean
 }

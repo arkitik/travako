@@ -9,6 +9,7 @@ import java.time.LocalDateTime
  */
 data class RunnerDetails(
     val runnerKey: String,
+    val runnerHost: String,
     val isRunning: Boolean,
     val isLeader: Boolean,
     val lastHeartbeatTime: LocalDateTime?,

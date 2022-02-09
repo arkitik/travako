@@ -5,7 +5,6 @@ import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TransactionalExecutor
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
-import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.starter.processor.config.TravakoConfig
 import io.arkitik.travako.starter.processor.logger.logger
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
@@ -30,14 +29,11 @@ class RunnerHeartbeatProcess(
             .fixedRateJob(taskScheduler) {
                 transactionalExecutor.runOnTransaction {
                     schedulerRunnerSdk.runCatching {
-                        logRunnerHeartbeat.runOperation(RunnerKeyDto(
-                            serverKey = travakoConfig.serverKey,
-                            runnerKey = travakoConfig.runnerKey,
-                        ))
+                        logRunnerHeartbeat.runOperation(travakoConfig.keyDto)
                     }.onFailure {
                         logger.warn(
                             "Error while logging heartbeat message for {} , error: ",
-                            travakoConfig.runnerKey,
+                            "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
                             it.message
                         )
                     }

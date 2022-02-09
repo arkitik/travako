@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
-import io.arkitik.travako.sdk.domain.runner.dto.RunnerServerDomainDto
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 
 /**
@@ -13,11 +13,11 @@ import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 class FetchServerSchedulerRunnerOperationProvider(
     private val schedulerRunnerStoreQuery: SchedulerRunnerStoreQuery,
 ) {
-    val fetchServerSchedulerRunners = operationBuilder<RunnerServerDomainDto, List<SchedulerRunnerDomain>> {
+    val fetchServerSchedulerRunners = operationBuilder<ServerDomain, List<SchedulerRunnerDomain>> {
         mainOperation {
             with(schedulerRunnerStoreQuery) {
-                findAllByServerKey(
-                    serverKey
+                findAllByServer(
+                    server = this@mainOperation
                 )
             }
         }

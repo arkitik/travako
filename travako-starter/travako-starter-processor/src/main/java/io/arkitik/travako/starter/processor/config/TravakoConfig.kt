@@ -1,8 +1,10 @@
 package io.arkitik.travako.starter.processor.config
 
+import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.bind.DefaultValue
+import java.net.InetAddress
 import java.time.Duration
 
 /**
@@ -19,4 +21,10 @@ data class TravakoConfig(
     @DefaultValue("1m") val leaderSwitch: Duration,
     @DefaultValue("30s") val jobsAssignee: Duration,
     @DefaultValue("30s") val jobsEvent: Duration,
-)
+) {
+    val keyDto: RunnerKeyDto = RunnerKeyDto(
+        serverKey = serverKey,
+        runnerKey = runnerKey,
+        runnerHost = InetAddress.getLocalHost().toString()
+    )
+}

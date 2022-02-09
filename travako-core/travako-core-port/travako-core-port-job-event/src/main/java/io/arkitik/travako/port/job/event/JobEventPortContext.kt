@@ -7,6 +7,7 @@ import io.arkitik.travako.adapter.job.event.repository.TravakoRunnerJobEventStat
 import io.arkitik.travako.operation.job.event.JobEventSdkImpl
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.event.JobEventStore
 import io.arkitik.travako.store.job.event.RunnerJobEventStateStore
@@ -37,10 +38,12 @@ class JobEventPortContext {
         runnerJobEventStateStore: RunnerJobEventStateStore,
         jobDomainSdk: JobDomainSdk,
         schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+        serverDomainSdk: ServerDomainSdk,
     ): JobEventSdk = JobEventSdkImpl(
         jobEventStore = jobEventStore,
         runnerJobEventStateStore = runnerJobEventStateStore,
         jobDomainSdk = jobDomainSdk,
         schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+        serverDomainSdk = serverDomainSdk,
     )
 }

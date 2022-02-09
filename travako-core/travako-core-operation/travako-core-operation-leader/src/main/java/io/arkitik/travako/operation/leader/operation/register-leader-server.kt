@@ -26,22 +26,25 @@ class RegisterLeaderServerOperationProvider(
     val registerLeaderServer = operationBuilder<LeaderRunnerKeyDto, Unit> {
         install {
             ServerAlreadyHaveRegisteredLeaderRole(
-                leaderStoreQuery = leaderStore.storeQuery
+                leaderStoreQuery = leaderStore.storeQuery,
+                serverDomainSdk = serverDomainSdk
             ).operateRole(LeaderServerKeyDto(serverKey))
         }
         mainOperation {
-            val serverDomain = serverDomainSdk.fetchServer.runOperation(
+            val server = serverDomainSdk.fetchServer.runOperation(
                 ServerDomainDto(serverKey)
             )
-            val schedulerRunnerDomain = schedulerRunnerDomainSdk.fetchSchedulerRunner.runOperation(
+            val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner.runOperation(
                 RunnerDomainDto(
-                    serverKey = serverKey, runnerKey = runnerKey
+                    server = server,
+                    runnerKey = runnerKey,
+                    runnerHost = runnerHost
                 )
             )
             with(leaderStore) {
                 storeCreator(identityCreator()) {
-                    serverDomain.server()
-                    schedulerRunnerDomain.runner()
+                    server.server()
+                    schedulerRunner.runner()
                     create()
                 }.save()
             }

@@ -8,7 +8,6 @@ import io.arkitik.travako.operation.runner.SchedulerRunnerSdkImpl
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
-import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 import org.springframework.context.annotation.Bean
@@ -32,14 +31,14 @@ class RunnerPortContext {
     @Bean
     fun schedulerRunnerSdk(
         schedulerRunnerStore: SchedulerRunnerStore,
-        jobInstanceSdk: JobInstanceSdk,
         serverDomainSdk: ServerDomainSdk,
         leaderDomainSdk: LeaderDomainSdk,
+        schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
     ): SchedulerRunnerSdk = SchedulerRunnerSdkImpl(
         schedulerRunnerStore = schedulerRunnerStore,
-        jobInstanceSdk = jobInstanceSdk,
         serverDomainSdk = serverDomainSdk,
-        leaderDomainSdk = leaderDomainSdk
+        leaderDomainSdk = leaderDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk
     )
 
     @Bean

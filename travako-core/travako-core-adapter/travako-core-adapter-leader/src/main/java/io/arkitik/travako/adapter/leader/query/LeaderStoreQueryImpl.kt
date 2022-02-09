@@ -3,7 +3,11 @@ package io.arkitik.travako.adapter.leader.query
 import io.arkitik.radix.adapter.shared.query.StoreQueryImpl
 import io.arkitik.travako.adapter.leader.repository.TravakoLeaderRepository
 import io.arkitik.travako.core.domain.leader.LeaderDomain
+import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.leader.TravakoLeader
+import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
+import io.arkitik.travako.entity.server.TravakoServer
 import io.arkitik.travako.store.leader.query.LeaderStoreQuery
 import java.time.LocalDateTime
 
@@ -15,17 +19,19 @@ import java.time.LocalDateTime
 class LeaderStoreQueryImpl(
     private val travakoLeaderRepository: TravakoLeaderRepository,
 ) : StoreQueryImpl<String, LeaderDomain, TravakoLeader>(travakoLeaderRepository), LeaderStoreQuery {
-    override fun findByServerKey(serverKey: String) =
-        travakoLeaderRepository.findByServerServerKey(serverKey)
+    override fun findByServer(server: ServerDomain) =
+        travakoLeaderRepository.findByServer(server as TravakoServer)
 
-    override fun existsByServerKey(serverKey: String) =
-        travakoLeaderRepository.existsByServerServerKey(serverKey)
+    override fun existsByServer(server: ServerDomain) =
+        travakoLeaderRepository.existsByServer(server as TravakoServer)
 
-    override fun existsByServerKeyAndRunnerKeyAndBefore(
-        serverKey: String,
-        runnerKey: String,
+    override fun existsByServerAndRunnerAndBefore(
+        server: ServerDomain,
+        runner: SchedulerRunnerDomain,
         beforeDate: LocalDateTime,
-    ) = travakoLeaderRepository.existsByServerServerKeyAndRunnerRunnerKeyAndLastModifiedDateBefore(
-        serverKey = serverKey, runnerKey = runnerKey, lastModifiedDate = beforeDate
+    ) = travakoLeaderRepository.existsByServerAndRunnerAndLastModifiedDateBefore(
+        server = server as TravakoServer,
+        runner = runner as TravakoSchedulerRunner,
+        lastModifiedDate = beforeDate,
     )
 }

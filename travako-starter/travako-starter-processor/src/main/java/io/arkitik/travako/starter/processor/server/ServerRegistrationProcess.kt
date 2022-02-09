@@ -4,7 +4,7 @@ import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.exception.UnprocessableEntityException
 import io.arkitik.travako.core.domain.server.ServerDomain
-import io.arkitik.travako.function.processor.Processor
+import io.arkitik.travako.function.processor.PreProcessor
 import io.arkitik.travako.function.transaction.TransactionalExecutor
 import io.arkitik.travako.sdk.server.ServerSdk
 import io.arkitik.travako.sdk.server.dto.ServerKeyDto
@@ -20,7 +20,7 @@ class ServerRegistrationProcess(
     private val travakoConfig: TravakoConfig,
     private val serverSdk: ServerSdk,
     private val transactionalExecutor: TransactionalExecutor,
-) : Processor<ServerDomain> {
+) : PreProcessor<ServerDomain> {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ServerRegistrationProcess::class.java)!!
     }

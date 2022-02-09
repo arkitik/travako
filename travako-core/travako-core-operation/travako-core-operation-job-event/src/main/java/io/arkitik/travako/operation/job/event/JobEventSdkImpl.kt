@@ -7,6 +7,7 @@ import io.arkitik.travako.operation.job.event.operation.PendingEventsForRunnerOp
 import io.arkitik.travako.operation.job.event.roles.EventIsProcessedForRunnerRole
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.event.JobEventStore
 import io.arkitik.travako.store.job.event.RunnerJobEventStateStore
@@ -21,18 +22,21 @@ class JobEventSdkImpl(
     runnerJobEventStateStore: RunnerJobEventStateStore,
     jobDomainSdk: JobDomainSdk,
     schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+    serverDomainSdk: ServerDomainSdk,
 ) : JobEventSdk {
     override val insertRestartJobEvent =
         InsertJobEventOperationProvider(
-            JobEventType.RESTART,
-            jobDomainSdk,
-            jobEventStore
+            jobEventType = JobEventType.RESTART,
+            jobDomainSdk = jobDomainSdk,
+            jobEventStore = jobEventStore,
+            serverDomainSdk = serverDomainSdk
         ).insertJobEvent
     override val insertRecoverJobEvent =
         InsertJobEventOperationProvider(
-            JobEventType.RECOVER,
-            jobDomainSdk,
-            jobEventStore
+            jobEventType = JobEventType.RECOVER,
+            jobDomainSdk = jobDomainSdk,
+            jobEventStore = jobEventStore,
+            serverDomainSdk = serverDomainSdk
         ).insertJobEvent
 
     override val markEventProcessedForRunner =
@@ -40,6 +44,7 @@ class JobEventSdkImpl(
             jobEventStore = jobEventStore,
             runnerJobEventStateStore = runnerJobEventStateStore,
             schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk
         ).markEventProcessedForRunner
 
     override val pendingEventsForRunner =
@@ -47,12 +52,14 @@ class JobEventSdkImpl(
             schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
             jobEventStoreQuery = jobEventStore.storeQuery,
             runnerJobEventStateStoreQuery = runnerJobEventStateStore.storeQuery,
+            serverDomainSdk = serverDomainSdk
         ).pendingEventsForRunner
 
     override val eventIsProcessedForRunner =
         EventIsProcessedForRunnerRole(
-            jobEventStore.storeQuery,
-            schedulerRunnerDomainSdk,
-            runnerJobEventStateStore.storeQuery
+            jobEventStoreQuery = jobEventStore.storeQuery,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            runnerJobEventStateStoreQuery = runnerJobEventStateStore.storeQuery,
+            serverDomainSdk = serverDomainSdk
         )
 }

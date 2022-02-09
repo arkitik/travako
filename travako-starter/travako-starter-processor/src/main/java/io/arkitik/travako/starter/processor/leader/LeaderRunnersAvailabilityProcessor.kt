@@ -55,27 +55,28 @@ class LeaderRunnersAvailabilityProcessor(
                         it.heartbeatLessThanExpectedTime()
                     }.forEach {
                         logger.debug("Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
-                            it.runnerKey,
+                            "${it.runnerKey}-${it.runnerHost}",
                             lastHeartbeatSeconds)
                         schedulerRunnerSdk.markRunnerAsDown
                             .runOperation(RunnerKeyDto(
                                 serverKey = travakoConfig.serverKey,
-                                runnerKey = it.runnerKey
+                                runnerKey = it.runnerKey,
+                                runnerHost = it.runnerHost
                             ))
                         if (it.isLeader) {
                             logger.debug(
                                 "Start leader recovering process since Runner {} was marked as leader",
-                                it.runnerKey
+                                "${it.runnerKey}-${it.runnerHost}"
                             )
                             logger.debug(
                                 "Start moving {} leader processor responsibilities.",
                                 travakoConfig.serverKey,
                             )
-                            val response =
-                                leaderSdk.switchLeader.runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
+                            val response = leaderSdk.switchLeader
+                                .runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
                             logger.debug(
                                 "{} has been promoted to be {} leader for the next running period",
-                                response.runnerKey,
+                                "${response.runnerKey}-${response.runnerHost}",
                                 response.serverKey,
                             )
                         }

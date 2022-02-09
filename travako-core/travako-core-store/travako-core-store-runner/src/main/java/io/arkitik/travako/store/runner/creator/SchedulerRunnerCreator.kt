@@ -12,6 +12,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
  */
 interface SchedulerRunnerCreator : StoreIdentityCreator<String, SchedulerRunnerDomain> {
     fun String.runnerKey(): SchedulerRunnerCreator
+    fun String.runnerHost(): SchedulerRunnerCreator
     fun InstanceState.instanceState(): SchedulerRunnerCreator
     fun ServerDomain.server(): SchedulerRunnerCreator
 }

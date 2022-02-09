@@ -18,8 +18,7 @@ class FetchJobInstanceOperationProvider(
     val fetchJobInstance = operationBuilder<JobDomainDto, JobInstanceDomain> {
         mainOperation {
             with(jobInstanceStoreQuery) {
-                findByServerKeyAndJobKey(
-                    serverKey = serverKey, jobKey = jobKey
+                findByServerAndJobKey(server = server, jobKey = jobKey
                 ) ?: throw JobErrors.JOB_IS_NOT_REGISTERED.unprocessableEntity()
             }
         }

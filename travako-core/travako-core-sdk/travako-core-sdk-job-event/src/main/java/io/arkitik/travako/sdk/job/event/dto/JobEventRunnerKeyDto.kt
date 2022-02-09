@@ -8,4 +8,5 @@ package io.arkitik.travako.sdk.job.event.dto
 data class JobEventRunnerKeyDto(
     val serverKey: String,
     val runnerKey: String,
+    val runnerHost: String,
 )

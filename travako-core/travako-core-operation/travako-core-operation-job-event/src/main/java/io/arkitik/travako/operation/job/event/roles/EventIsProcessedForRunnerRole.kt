@@ -6,6 +6,8 @@ import io.arkitik.radix.develop.shared.ext.unprocessableEntity
 import io.arkitik.travako.operation.job.event.errors.JobEventErrors
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.event.dto.JobEventRunnerKeyAndUuidDto
 import io.arkitik.travako.store.job.event.query.JobEventStoreQuery
 import io.arkitik.travako.store.job.event.query.RunnerJobEventStateStoreQuery
@@ -19,10 +21,13 @@ class EventIsProcessedForRunnerRole(
     private val jobEventStoreQuery: JobEventStoreQuery,
     private val schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
     private val runnerJobEventStateStoreQuery: RunnerJobEventStateStoreQuery,
+    private val serverDomainSdk: ServerDomainSdk,
 ) : OperationRole<JobEventRunnerKeyAndUuidDto, Boolean> {
     override fun JobEventRunnerKeyAndUuidDto.operateRole(): Boolean {
+        val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+
         val schedulerRunnerDomain = schedulerRunnerDomainSdk.fetchSchedulerRunner.runOperation(
-            RunnerDomainDto(serverKey, runnerKey)
+            RunnerDomainDto(server, runnerKey, runnerHost)
         )
         val jobEventDomain = jobEventStoreQuery.find(
             uuid = eventUuid

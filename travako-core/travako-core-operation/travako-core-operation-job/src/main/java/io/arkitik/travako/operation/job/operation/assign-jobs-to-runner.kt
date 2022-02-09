@@ -6,6 +6,8 @@ import io.arkitik.radix.develop.store.storeUpdater
 import io.arkitik.travako.operation.job.roles.CheckJobsRegisteredRole
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.dto.AssignJobsToRunnerDto
 import io.arkitik.travako.store.job.JobInstanceStore
 
@@ -17,22 +19,26 @@ import io.arkitik.travako.store.job.JobInstanceStore
 class AssignJobsToRunnerOperationProvider(
     private val jobInstanceStore: JobInstanceStore,
     private val schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+    private val serverDomainSdk: ServerDomainSdk,
 ) {
     val assignJobsToRunner = operationBuilder<AssignJobsToRunnerDto, Unit> {
-        install(CheckJobsRegisteredRole(jobInstanceStore.storeQuery))
+        install(CheckJobsRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk))
         mainOperation {
             with(jobInstanceStore) {
-                val schedulerRunnerDomain = schedulerRunnerDomainSdk.fetchSchedulerRunner.runOperation(
-                    RunnerDomainDto(
-                        serverKey = serverKey,
-                        runnerKey = runnerKey
-                    ))
-                storeQuery.findAllByServerKeyAndJobKeys(
-                    serverKey,
-                    jobKeys
+                val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+                val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
+                    .runOperation(
+                        RunnerDomainDto(
+                            server = server,
+                            runnerKey = runnerKey,
+                            runnerHost = runnerHost
+                        ))
+                storeQuery.findAllByServerAndJobKeys(
+                    server = server,
+                    jobKeys = jobKeys
                 ).map {
                     storeUpdater(it.identityUpdater()) {
-                        schedulerRunnerDomain.assignToRunner()
+                        schedulerRunner.assignToRunner()
                         update()
                     }
                 }.save()

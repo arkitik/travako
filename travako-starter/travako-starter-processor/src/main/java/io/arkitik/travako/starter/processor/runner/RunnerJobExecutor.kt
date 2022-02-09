@@ -22,8 +22,9 @@ class RunnerJobExecutor(
     fun executeJob(jobInstanceBean: JobInstanceBean) {
         jobInstanceSdk.isJobAssignedToRunner.operateRole(
             request = JobServerRunnerKeyDto(
-                serverKey = travakoConfig.serverKey,
-                runnerKey = travakoConfig.runnerKey,
+                serverKey = travakoConfig.keyDto.serverKey,
+                runnerKey = travakoConfig.keyDto.runnerKey,
+                runnerHost = travakoConfig.keyDto.runnerHost,
                 jobKey = jobInstanceBean.jobKey
             )
         ).takeIf { it }?.also {

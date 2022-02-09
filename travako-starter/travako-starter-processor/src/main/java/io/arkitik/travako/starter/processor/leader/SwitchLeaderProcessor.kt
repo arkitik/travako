@@ -36,7 +36,8 @@ class SwitchLeaderProcessor(
                     leaderSdk.isLeaderBefore
                         .operateRole(IsLeaderBeforeDto(
                             serverKey = travakoConfig.serverKey,
-                            runnerKey = travakoConfig.runnerKey,
+                            runnerKey = travakoConfig.keyDto.runnerKey,
+                            runnerHost = travakoConfig.keyDto.runnerHost,
                             dateBefore = LocalDateTime.now().minus(travakoConfig.leaderSwitch)
                         )).takeIf { it }?.let {
                             logger.debug(
@@ -44,11 +45,11 @@ class SwitchLeaderProcessor(
                                 travakoConfig.serverKey,
                                 travakoConfig.runnerKey
                             )
-                            val response =
-                                leaderSdk.switchLeader.runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
+                            val response = leaderSdk.switchLeader
+                                .runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
                             logger.debug(
                                 "{} has been promoted to be {} leader for the next running period",
-                                response.runnerKey,
+                                "${response.runnerKey}-${response.runnerHost}",
                                 response.serverKey,
                             )
                         }

@@ -15,8 +15,6 @@ interface SchedulerRunnerSdk {
 
     val logRunnerHeartbeat: Operation<RunnerKeyDto, Unit>
 
-    val unregisterRunner: Operation<RunnerKeyDto, Unit>
-
     val markRunnerAsDown: Operation<RunnerKeyDto, Unit>
 
     val markRunnerAsUp: Operation<RunnerKeyDto, Unit>

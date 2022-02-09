@@ -36,10 +36,12 @@ class JobInstancePortContext {
         serverDomainSdk: ServerDomainSdk,
         schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
         jobEventSdk: JobEventSdk,
+        jobDomainSdk: JobDomainSdk
     ): JobInstanceSdk = JobInstanceSdkImpl(
         jobInstanceStore = jobInstanceStore,
         serverDomainSdk = serverDomainSdk,
         schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
-        jobEventSdk = jobEventSdk
+        jobEventSdk = jobEventSdk,
+        jobDomainSdk = jobDomainSdk,
     )
 }

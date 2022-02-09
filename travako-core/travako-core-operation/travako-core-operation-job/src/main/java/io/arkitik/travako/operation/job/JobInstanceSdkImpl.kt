@@ -1,6 +1,7 @@
 package io.arkitik.travako.operation.job
 
 import io.arkitik.travako.operation.job.operation.*
+import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
@@ -17,6 +18,7 @@ class JobInstanceSdkImpl(
     serverDomainSdk: ServerDomainSdk,
     schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
     jobEventSdk: JobEventSdk,
+    jobDomainSdk: JobDomainSdk,
 ) : JobInstanceSdk {
 
     override val registerJob =
@@ -26,42 +28,56 @@ class JobInstanceSdkImpl(
         ).registerJob
     override val updateJobTrigger =
         UpdateJobTriggerOperationProvider(
-            jobInstanceStore,
-            jobEventSdk
+            jobInstanceStore = jobInstanceStore,
+            jobEventSdk = jobEventSdk,
+            serverDomainSdk = serverDomainSdk,
+            jobDomainSdk = jobDomainSdk,
         ).updateJobTrigger
 
     override val removeRunnerJobsAssignee =
         RemoveRunnerJobsAssigneeOperationProvider(
-            jobInstanceStore
+            jobInstanceStore = jobInstanceStore,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk
         ).removeRunnerJobsAssignee
 
     override val markJobAsWaiting =
         MarkJobAsWaitingOperationProvider(
-            jobInstanceStore
+            jobInstanceStore = jobInstanceStore,
+            serverDomainSdk = serverDomainSdk,
+            jobDomainSdk = jobDomainSdk,
         ).markJobAsWaiting
 
     override val markJobAsRunning =
         MarkJobAsRunningOperationProvider(
-            jobInstanceStore
+            jobInstanceStore = jobInstanceStore,
+            serverDomainSdk = serverDomainSdk,
+            jobDomainSdk = jobDomainSdk,
         ).markJobAsRunning
 
     override val assignJobsToRunner =
         AssignJobsToRunnerOperationProvider(
-            jobInstanceStore,
-            schedulerRunnerDomainSdk
+            jobInstanceStore = jobInstanceStore,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk
         ).assignJobsToRunner
 
     override val assignedRunnerJobs =
         AssignedRunnerJobsOperationProvider(
-            jobInstanceStore.storeQuery
+            jobInstanceStoreQuery = jobInstanceStore.storeQuery,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk
         ).assignedRunnerJobs
 
     override val isJobAssignedToRunner =
         IsJobAssignedToRunnerRole(
-            jobInstanceStore.storeQuery
+            jobInstanceStoreQuery = jobInstanceStore.storeQuery,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk
         )
 
     override val serverJobs = ServerJobsOperationProvider(
-        jobInstanceStore.storeQuery
+        jobInstanceStoreQuery = jobInstanceStore.storeQuery,
+        serverDomainSdk = serverDomainSdk
     ).serverJobs
 }

@@ -21,6 +21,7 @@ import io.arkitik.travako.starter.processor.leader.SwitchLeaderProcessor
 import io.arkitik.travako.starter.processor.runner.*
 import io.arkitik.travako.starter.processor.server.ServerRegistrationProcess
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.TaskScheduler
@@ -119,11 +120,11 @@ class TravakoProcessorStarter {
     fun schedulerRunnerRegistrationProcess(
         travakoConfig: TravakoConfig,
         schedulerRunnerSdk: SchedulerRunnerSdk,
-        transactionalExecutor: TransactionalExecutor,
+        applicationContext: ApplicationContext,
     ) = SchedulerRunnerRegistrationProcess(
         travakoConfig = travakoConfig,
         schedulerRunnerSdk = schedulerRunnerSdk,
-        transactionalExecutor = transactionalExecutor,
+        applicationContext = applicationContext
     )
 
     @Bean
@@ -207,4 +208,13 @@ class TravakoProcessorStarter {
             jobEventSdk = jobEventSdk,
             jobInstanceSdk = jobInstanceSdk,
         )
+
+    @Bean
+    fun shutdownTrigger(
+        travakoConfig: TravakoConfig,
+        schedulerRunnerSdk: SchedulerRunnerSdk,
+    ) = ShutdownTrigger(
+        travakoConfig = travakoConfig,
+        schedulerRunnerSdk = schedulerRunnerSdk
+    )
 }

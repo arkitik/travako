@@ -4,6 +4,7 @@ import io.arkitik.travako.operation.leader.operation.CurrentLeaderOperationProvi
 import io.arkitik.travako.operation.leader.operation.RegisterLeaderServerOperationProvider
 import io.arkitik.travako.operation.leader.operation.SwitchServerOperationProvider
 import io.arkitik.travako.operation.leader.roles.IsLeaderBeforeRole
+import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.leader.LeaderSdk
@@ -18,6 +19,7 @@ class LeaderSdkImpl(
     leaderStore: LeaderStore,
     serverDomainSdk: ServerDomainSdk,
     schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+    leaderDomainSdk: LeaderDomainSdk,
 ) : LeaderSdk {
     override val registerLeaderServer =
         RegisterLeaderServerOperationProvider(
@@ -29,10 +31,19 @@ class LeaderSdkImpl(
         SwitchServerOperationProvider(
             leaderStore = leaderStore,
             schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
+            serverDomainSdk = serverDomainSdk,
+            leaderDomainSdk = leaderDomainSdk
         ).switchLeader
 
-    override val isLeaderBefore = IsLeaderBeforeRole(leaderStore.storeQuery)
+    override val isLeaderBefore = IsLeaderBeforeRole(
+        leaderStoreQuery = leaderStore.storeQuery,
+        serverDomainSdk = serverDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk
+    )
 
     override val currentLeader =
-        CurrentLeaderOperationProvider(leaderStore.storeQuery).currentLeader
+        CurrentLeaderOperationProvider(
+            serverDomainSdk = serverDomainSdk,
+            leaderDomainSdk = leaderDomainSdk
+        ).currentLeader
 }

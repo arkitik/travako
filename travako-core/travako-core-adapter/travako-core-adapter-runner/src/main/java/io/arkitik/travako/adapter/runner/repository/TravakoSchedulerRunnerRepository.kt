@@ -3,8 +3,7 @@ package io.arkitik.travako.adapter.runner.repository
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
-import org.springframework.data.jpa.repository.Lock
-import javax.persistence.LockModeType
+import io.arkitik.travako.entity.server.TravakoServer
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -12,28 +11,31 @@ import javax.persistence.LockModeType
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface TravakoSchedulerRunnerRepository : RadixRepository<String, TravakoSchedulerRunner> {
-    fun findByRunnerKeyAndServerServerKey(
+    fun findByServerAndRunnerKeyAndRunnerHost(
+        server: TravakoServer,
         runnerKey: String,
-        serverKey: String,
+        runnerHost: String,
     ): TravakoSchedulerRunner?
 
-    fun existsByRunnerKeyAndServerServerKey(runnerKey: String, serverKey: String): Boolean
-    fun existsByRunnerKeyAndServerServerKeyAndInstanceState(
+    fun existsByServerAndRunnerKeyAndRunnerHost(
+        server: TravakoServer,
         runnerKey: String,
-        serverKey: String,
+        runnerHost: String,
+    ): Boolean
+
+    fun existsByServerAndRunnerKeyAndRunnerHostAndInstanceState(
+        server: TravakoServer,
+        runnerKey: String,
+        runnerHost: String,
         instanceState: InstanceState,
     ): Boolean
 
-    @Lock(
-        value = LockModeType.PESSIMISTIC_WRITE
-    )
-    fun findTopByServerServerKeyAndInstanceStateOrderByLastHeartbeatTimeAsc(
-        serverKey: String,
+    fun findTopByServerAndInstanceStateOrderByLastHeartbeatTimeAsc(
+        server: TravakoServer,
         instanceState: InstanceState,
     ): TravakoSchedulerRunner?
 
-    @Lock(
-        value = LockModeType.PESSIMISTIC_WRITE
-    )
-    fun findAllByServerServerKey(serverKey: String): List<TravakoSchedulerRunner>
+    fun findAllByServer(
+        server: TravakoServer,
+    ): List<TravakoSchedulerRunner>
 }

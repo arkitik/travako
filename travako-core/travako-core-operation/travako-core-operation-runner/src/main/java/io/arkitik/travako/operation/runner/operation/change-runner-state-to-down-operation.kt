@@ -1,11 +1,14 @@
 package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
-import io.arkitik.radix.develop.shared.ext.unprocessableEntity
+import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeUpdater
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
-import io.arkitik.travako.operation.runner.errors.RunnerErrors
 import io.arkitik.travako.operation.runner.roles.CheckRegisteredAndUpRole
+import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
+import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
+import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
+import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 
@@ -16,15 +19,23 @@ import io.arkitik.travako.store.runner.SchedulerRunnerStore
  */
 class ChangeRunnerStateToDownOperationProvider(
     private val schedulerRunnerStore: SchedulerRunnerStore,
+    private val schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
+    private val serverDomainSdk: ServerDomainSdk,
 ) {
 
     val changeRunnerToDownState = operationBuilder<RunnerKeyDto, Unit> {
-        install(CheckRegisteredAndUpRole(schedulerRunnerStore.storeQuery))
+        install(CheckRegisteredAndUpRole(schedulerRunnerStore.storeQuery, serverDomainSdk))
         mainOperation {
+
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
             with(schedulerRunnerStore) {
-                val schedulerRunnerDomain = (storeQuery.findByRunnerKeyAndServerKey(runnerKey, serverKey)
-                    ?: throw RunnerErrors.RUNNER_IS_NOT_REGISTERED.unprocessableEntity())
-                storeUpdater(schedulerRunnerDomain.identityUpdater()) {
+                val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
+                    .runOperation(RunnerDomainDto(
+                        server = server,
+                        runnerKey = runnerKey,
+                        runnerHost = runnerHost
+                    ))
+                storeUpdater(schedulerRunner.identityUpdater()) {
                     InstanceState.DOWN.instanceState()
                     clearHeartbeat()
                     update()

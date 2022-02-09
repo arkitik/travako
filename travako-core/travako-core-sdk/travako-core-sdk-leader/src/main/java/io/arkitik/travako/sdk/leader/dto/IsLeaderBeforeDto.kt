@@ -10,5 +10,6 @@ import java.time.LocalDateTime
 data class IsLeaderBeforeDto(
     val serverKey: String,
     val runnerKey: String,
+    val runnerHost: String,
     val dateBefore: LocalDateTime,
 )

@@ -2,8 +2,8 @@ package io.arkitik.travako.sdk.domain.runner
 
 import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
-import io.arkitik.travako.sdk.domain.runner.dto.RunnerServerDomainDto
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -12,6 +12,6 @@ import io.arkitik.travako.sdk.domain.runner.dto.RunnerServerDomainDto
  */
 interface SchedulerRunnerDomainSdk {
     val fetchSchedulerRunner: Operation<RunnerDomainDto, SchedulerRunnerDomain>
-    val fetchServerSchedulerRunners: Operation<RunnerServerDomainDto, List<SchedulerRunnerDomain>>
-    val fetchOldestHeartbeatRunner: Operation<RunnerServerDomainDto, SchedulerRunnerDomain>
+    val fetchServerSchedulerRunners: Operation<ServerDomain, List<SchedulerRunnerDomain>>
+    val fetchOldestHeartbeatRunner: Operation<ServerDomain, SchedulerRunnerDomain>
 }

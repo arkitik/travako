@@ -24,17 +24,20 @@ class RegisterJobOperationProvider(
 ) {
     val registerJob = operationBuilder<CreateJobDto, Unit> {
         install {
-            CheckRegisteredJobRole(jobInstanceStore.storeQuery).operateRole(JobKeyDto(serverKey, jobKey))
+            CheckRegisteredJobRole(
+                jobInstanceStore.storeQuery,
+                serverDomainSdk
+            ).operateRole(JobKeyDto(serverKey = serverKey, jobKey = jobKey))
         }
         mainOperation {
-            val serverDomain = serverDomainSdk.fetchServer.runOperation(
+            val server = serverDomainSdk.fetchServer.runOperation(
                 ServerDomainDto(serverKey)
             )
             with(jobInstanceStore) {
                 storeCreator(identityCreator()) {
                     jobKey.jobKey()
                     JobStatus.WAITING.jobStatus()
-                    serverDomain.server()
+                    server.server()
                     jobTrigger.jobTrigger()
                     (JobInstanceTriggerType.DURATION.takeIf { isDuration }
                         ?: JobInstanceTriggerType.CRON).jobTriggerType()

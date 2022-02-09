@@ -13,6 +13,6 @@ class JobDomainSdkImpl(
     jobInstanceStore: JobInstanceStore,
 ) : JobDomainSdk {
     override val fetchJobInstance = FetchJobInstanceOperationProvider(
-        jobInstanceStore.storeQuery
+        jobInstanceStoreQuery = jobInstanceStore.storeQuery,
     ).fetchJobInstance
 }

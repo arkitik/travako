@@ -2,8 +2,8 @@ package io.arkitik.travako.operation.runner
 
 import io.arkitik.travako.operation.runner.operation.*
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
+import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
-import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 
@@ -14,38 +14,41 @@ import io.arkitik.travako.store.runner.SchedulerRunnerStore
  */
 class SchedulerRunnerSdkImpl(
     schedulerRunnerStore: SchedulerRunnerStore,
-    jobInstanceSdk: JobInstanceSdk,
     serverDomainSdk: ServerDomainSdk,
-    leaderDomainSdk: LeaderDomainSdk
+    leaderDomainSdk: LeaderDomainSdk,
+    schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
 ) : SchedulerRunnerSdk {
 
     override val registerRunner = RegisterRunnerOperationProvider(
         schedulerRunnerStore = schedulerRunnerStore,
         serverDomainSdk = serverDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
     ).registerRunnerOperation
 
     override val logRunnerHeartbeat = LogRunnerHeartbeatOperationProvider(
         schedulerRunnerStore = schedulerRunnerStore,
+        serverDomainSdk = serverDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
     ).logRunnerHeartbeatOperation
-
-    override val unregisterRunner = UnRegisterRunnerOperationProvider(
-        schedulerRunnerStore = schedulerRunnerStore,
-        jobInstanceSdk = jobInstanceSdk,
-    ).unRegisterRunnerOperation
 
     override val markRunnerAsDown =
         ChangeRunnerStateToDownOperationProvider(
             schedulerRunnerStore = schedulerRunnerStore,
+            serverDomainSdk = serverDomainSdk,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
         ).changeRunnerToDownState
 
     override val markRunnerAsUp =
         ChangeRunnerStateToUpOperationProvider(
             schedulerRunnerStore = schedulerRunnerStore,
+            serverDomainSdk = serverDomainSdk,
+            schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
         ).changeRunnerStateToUp
 
     override val allServerRunners =
         ServerRunnersOperationProvider(
-            schedulerRunnerStore.storeQuery,
-            leaderDomainSdk
+            schedulerRunnerStoreQuery = schedulerRunnerStore.storeQuery,
+            leaderDomainSdk = leaderDomainSdk,
+            serverDomainSdk = serverDomainSdk,
         ).serverRunners
 }

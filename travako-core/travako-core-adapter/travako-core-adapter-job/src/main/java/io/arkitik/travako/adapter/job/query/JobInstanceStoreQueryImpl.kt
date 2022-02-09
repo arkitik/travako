@@ -3,7 +3,11 @@ package io.arkitik.travako.adapter.job.query
 import io.arkitik.radix.adapter.shared.query.StoreQueryImpl
 import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceRepository
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
+import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
+import io.arkitik.travako.entity.server.TravakoServer
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 
 /**
@@ -16,29 +20,46 @@ class JobInstanceStoreQueryImpl(
 ) : StoreQueryImpl<String, JobInstanceDomain, TravakoJobInstance>(travakoJobInstanceRepository),
     JobInstanceStoreQuery {
 
-    override fun findAllByServerKey(serverKey: String) =
-        travakoJobInstanceRepository.findAllByServerServerKey(serverKey)
+    override fun findAllByServer(server: ServerDomain) =
+        travakoJobInstanceRepository.findAllByServer(server as TravakoServer)
 
-    override fun findAllByServerKeyAndRunnerKey(serverKey: String, runnerKey: String) =
-        travakoJobInstanceRepository.findAllByServerServerKeyAndAssignedToRunnerKey(serverKey, runnerKey)
+    override fun findAllByServerAndRunner(server: ServerDomain, runner: SchedulerRunnerDomain) =
+        travakoJobInstanceRepository.findAllByServerAndAssignedTo(
+            server = server as TravakoServer,
+            runner = runner as TravakoSchedulerRunner
+        )
 
-    override fun existsByServerKeyAndJobKey(serverKey: String, jobKey: String) =
-        travakoJobInstanceRepository.existsByServerServerKeyAndJobKey(serverKey, jobKey)
+    override fun existsByServerAndJobKey(server: ServerDomain, jobKey: String) =
+        travakoJobInstanceRepository.existsByServerAndJobKey(
+            server = server as TravakoServer,
+            jobKey = jobKey
+        )
 
-    override fun existsAllByServerKeyAndJobKeys(serverKey: String, jobKeys: List<String>) =
-        travakoJobInstanceRepository.existsAllByServerServerKeyAndJobKeyIn(serverKey, jobKeys)
+    override fun existsAllByServerAndJobKeys(server: ServerDomain, jobKeys: List<String>) =
+        travakoJobInstanceRepository.existsAllByServerAndJobKeyIn(
+            server = server as TravakoServer,
+            jobKeys = jobKeys
+        )
 
-    override fun findAllByServerKeyAndJobKeys(serverKey: String, jobKeys: List<String>) =
-        travakoJobInstanceRepository.findAllByServerServerKeyAndJobKeyIn(serverKey, jobKeys)
+    override fun findAllByServerAndJobKeys(server: ServerDomain, jobKeys: List<String>) =
+        travakoJobInstanceRepository.findAllByServerAndJobKeyIn(
+            server = server as TravakoServer,
+            jobKeys = jobKeys
+        )
 
-    override fun findByServerKeyAndJobKey(serverKey: String, jobKey: String) =
-        travakoJobInstanceRepository.findByServerServerKeyAndJobKey(serverKey, jobKey)
+    override fun findByServerAndJobKey(server: ServerDomain, jobKey: String) =
+        travakoJobInstanceRepository.findByServerAndJobKey(
+            server = server as TravakoServer,
+            jobKey = jobKey
+        )
 
-    override fun existsByServerKeyAndAssignedToRunnerKeyAndJobKey(
-        serverKey: String,
-        runnerKey: String,
+    override fun existsByServerAndAssignedToRunnerAndJobKey(
+        server: ServerDomain,
+        runner: SchedulerRunnerDomain,
         jobKey: String,
-    ) = travakoJobInstanceRepository.existsByServerServerKeyAndAssignedToRunnerKeyAndJobKey(
-        serverKey = serverKey, runnerKey = runnerKey, jobKey = jobKey
+    ) = travakoJobInstanceRepository.existsByServerAndAssignedToAndJobKey(
+        server = server as TravakoServer,
+        runner = runner as TravakoSchedulerRunner,
+        jobKey = jobKey
     )
 }
