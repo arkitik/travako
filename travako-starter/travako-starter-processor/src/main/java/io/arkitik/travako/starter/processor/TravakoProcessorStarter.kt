@@ -200,12 +200,10 @@ class TravakoProcessorStarter {
     @Bean
     fun jobInstanceRestartProcessor(
         travakoConfig: TravakoConfig,
-        jobEventSdk: JobEventSdk,
         jobInstanceSdk: JobInstanceSdk,
     ): JobInstanceRestartProcessor =
         JobInstanceRestartProcessorImpl(
             travakoConfig = travakoConfig,
-            jobEventSdk = jobEventSdk,
             jobInstanceSdk = jobInstanceSdk,
         )
 

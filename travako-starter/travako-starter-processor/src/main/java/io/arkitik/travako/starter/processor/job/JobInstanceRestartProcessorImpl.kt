@@ -4,8 +4,6 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.exception.UnprocessableEntityException
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.CreateJobDto
-import io.arkitik.travako.sdk.job.event.JobEventSdk
-import io.arkitik.travako.sdk.job.event.dto.JobEventKeyDto
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
 import io.arkitik.travako.starter.job.bean.JobInstanceRestartProcessor
 import io.arkitik.travako.starter.processor.config.TravakoConfig
@@ -18,7 +16,6 @@ import io.arkitik.travako.starter.processor.logger.logger
  */
 class JobInstanceRestartProcessorImpl(
     private val travakoConfig: TravakoConfig,
-    private val jobEventSdk: JobEventSdk,
     private val jobInstanceSdk: JobInstanceSdk,
 ) : JobInstanceRestartProcessor {
     private val logger = logger<JobInstanceRestartProcessorImpl>()
@@ -41,7 +38,5 @@ class JobInstanceRestartProcessorImpl(
                 e.error
             )
         }
-        jobEventSdk.insertRestartJobEvent
-            .runOperation(JobEventKeyDto(travakoConfig.serverKey, jobInstanceBean.jobKey))
     }
 }
