@@ -6,8 +6,14 @@
 
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Job scheduler framework</name>
+    <modules>
+        <module>travako-core</module>
+        <module>travako-starter</module>
+        <module>travako-deploy</module>
+    </modules>
+    <name>Travako Job scheduler framework</name>
     <description>Job clustered scheduling framework</description>
     <url>https://github.com/arkitik/travako</url>
     <licenses>
@@ -150,6 +156,21 @@
                                 <goal>test-compile</goal>
                             </goals>
                         </execution>
+                        <execution>
+                            <id>kapt</id>
+                            <goals>
+                                <goal>kapt</goal>
+                            </goals>
+                            <configuration>
+                                <annotationProcessorPaths>
+                                    <annotationProcessorPath>
+                                        <groupId>org.springframework.boot</groupId>
+                                        <artifactId>spring-boot-configuration-processor</artifactId>
+                                        <version>${spring-boot.version}</version>
+                                    </annotationProcessorPath>
+                                </annotationProcessorPaths>
+                            </configuration>
+                        </execution>
                     </executions>
                     <configuration>
                         <args>
@@ -224,20 +245,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
                 <version>${dokka.version}</version>
@@ -249,17 +256,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <stagingProfileId>e52c677d13cb</stagingProfileId>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                </configuration>
             </plugin>
         </plugins>
     </build>

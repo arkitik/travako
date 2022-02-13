@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+<!--    <property name="LOGS" value="logs"/>-->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{MM-dd-yyyy HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %msg%n"/>
+
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>app-logs/instance2/trace-logs.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{MM-dd-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M : %msg%n
+            </Pattern>
+        </encoder>
+
+        <!-- Will keep 10 days worth of history split into files of 10MB and when the total size of all files reaches 200MB the oldest files will be removed -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>app-logs/instance2/archived/logs_%d{MM-dd-yyyy}_%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="RollingFile"/>
+    </root>
+
+</configuration>

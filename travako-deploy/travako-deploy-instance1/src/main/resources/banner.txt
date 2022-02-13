@@ -1,0 +1,8 @@
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED},--------.                                      ,--.
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED}'--.  .--' ,--.--.  ,--,--. ,--.  ,--.  ,--,--. |  |,-.   ,---.
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED}   |  |    |  .--' ' ,-.  |  \  `'  /  ' ,-.  | |     /  | .-. |
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED}   |  |    |  |    \ '-'  |   \    /   \ '-'  | |  \  \  ' '-' '
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED}   `--'    `--'     `--`--'    `--'     `--`--' `--'`--'  `---'
+
+${AnsiStyle.BOLD}${AnsiColor.BLUE} ${application.title} ${AnsiStyle.BOLD}${AnsiColor.YELLOW} ${application.version}
+${AnsiStyle.BOLD}${AnsiColor.GREEN} Powered by arkitik.io, Spring Boot Version:${spring-boot.formatted-version}
