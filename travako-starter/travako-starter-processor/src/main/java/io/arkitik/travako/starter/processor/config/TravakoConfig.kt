@@ -21,6 +21,7 @@ data class TravakoConfig(
     @DefaultValue("1m") val leaderSwitch: Duration,
     @DefaultValue("30s") val jobsAssignee: Duration,
     @DefaultValue("30s") val jobsEvent: Duration,
+    @DefaultValue("false") val duplicationProcessor: Boolean,
 ) {
     val keyDto: RunnerKeyDto = RunnerKeyDto(
         serverKey = serverKey,

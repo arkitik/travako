@@ -8,17 +8,15 @@ import io.arkitik.travako.function.transaction.TransactionalExecutor
 import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.leader.dto.LeaderServerKeyDto
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
-import io.arkitik.travako.sdk.runner.dto.RunnerDetails
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.sdk.runner.dto.RunnerServerKeyDto
 import io.arkitik.travako.starter.processor.config.TravakoConfig
 import io.arkitik.travako.starter.processor.errors.StartupErrors
 import io.arkitik.travako.starter.processor.logger.logger
+import io.arkitik.travako.starter.processor.runner.heartbeatLessThanExpectedTime
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
 import org.springframework.scheduling.TaskScheduler
 import java.time.Duration
-import java.time.LocalDateTime
-import kotlin.math.absoluteValue
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -52,7 +50,7 @@ class LeaderRunnersAvailabilityProcessor(
                     }.filter {
                         it.runnerKey != travakoConfig.runnerKey
                     }.filter {
-                        it.heartbeatLessThanExpectedTime()
+                        it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
                     }.forEach {
                         logger.debug("Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
                             "${it.runnerKey}-${it.runnerHost}",
@@ -84,12 +82,4 @@ class LeaderRunnersAvailabilityProcessor(
                 }
             }
     }
-
-    private fun RunnerDetails.heartbeatLessThanExpectedTime() =
-        lastHeartbeatTime?.let {
-            Duration.between(
-                LocalDateTime.now(),
-                it
-            ).seconds.absoluteValue > lastHeartbeatSeconds
-        } ?: true
 }

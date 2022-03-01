@@ -3,7 +3,7 @@ application:
   version: v1.0.0
 spring:
   datasource:
-    url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
+    url: jdbc:mysql://${database_host:localhost}:${database_port:3306}/${database_name:travako}
     username: ${database_user:travako}
     password: ${database_password:travako}
     driver-class-name: com.mysql.cj.jdbc.Driver

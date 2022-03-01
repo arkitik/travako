@@ -51,4 +51,10 @@ class SchedulerRunnerSdkImpl(
             leaderDomainSdk = leaderDomainSdk,
             serverDomainSdk = serverDomainSdk,
         ).serverRunners
+
+    override val runnerDetails = RunnerDetailsOperationProvider(
+        leaderDomainSdk = leaderDomainSdk,
+        serverDomainSdk = serverDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk
+    ).runnerDetails
 }
