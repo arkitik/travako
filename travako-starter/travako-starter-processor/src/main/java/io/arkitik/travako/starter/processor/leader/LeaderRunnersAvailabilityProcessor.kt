@@ -46,24 +46,26 @@ class LeaderRunnersAvailabilityProcessor(
                         throw StartupErrors.NO_REGISTERED_RUNNERS.internal()
                     }
                     runners.filter {
-                        it.isRunning
+                        it.isRunning || it.isLeader
                     }.filter {
                         it.runnerKey != travakoConfig.runnerKey
                     }.filter {
                         it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
                     }.forEach {
-                        logger.debug("Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
-                            "${it.runnerKey}-${it.runnerHost}",
-                            lastHeartbeatSeconds)
-                        schedulerRunnerSdk.markRunnerAsDown
-                            .runOperation(RunnerKeyDto(
-                                serverKey = travakoConfig.serverKey,
-                                runnerKey = it.runnerKey,
-                                runnerHost = it.runnerHost
-                            ))
+                        if (it.isRunning) {
+                            logger.debug("Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
+                                "${it.runnerKey}-${it.runnerHost}",
+                                lastHeartbeatSeconds)
+                            schedulerRunnerSdk.markRunnerAsDown
+                                .runOperation(RunnerKeyDto(
+                                    serverKey = travakoConfig.serverKey,
+                                    runnerKey = it.runnerKey,
+                                    runnerHost = it.runnerHost
+                                ))
+                        }
                         if (it.isLeader) {
                             logger.debug(
-                                "Start leader recovering process since Runner {} was marked as leader",
+                                "Start leader recovering process since Runner {} was the selected leader",
                                 "${it.runnerKey}-${it.runnerHost}"
                             )
                             logger.debug(
