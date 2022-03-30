@@ -28,4 +28,11 @@ data class TravakoConfig(
         runnerKey = runnerKey,
         runnerHost = InetAddress.getLocalHost().toString()
     )
+
+    fun isSelf(
+        runnerKey: String,
+        runnerHost: String,
+    ): Boolean {
+        return runnerKey == keyDto.runnerKey && runnerHost == keyDto.runnerHost
+    }
 }
