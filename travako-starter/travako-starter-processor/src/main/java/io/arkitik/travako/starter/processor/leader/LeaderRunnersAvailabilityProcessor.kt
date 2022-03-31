@@ -48,7 +48,7 @@ class LeaderRunnersAvailabilityProcessor(
                     runners.filter {
                         it.isRunning || it.isLeader
                     }.filter {
-                        travakoConfig.isSelf(it.runnerKey, it.runnerHost)
+                        !travakoConfig.isSelf(it.runnerKey, it.runnerHost)
                     }.filter {
                         it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
                     }.forEach {
