@@ -21,6 +21,7 @@
         <module>travako-core-port</module>
         <module>travako-core-function</module>
         <module>travako-core-sdk-domain</module>
+        <module>travako-core-engine</module>
     </modules>
 
 </project>
