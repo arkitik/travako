@@ -1,8 +1,0 @@
-,--------.                                      ,--.
-'--.  .--' ,--.--.  ,--,--. ,--.  ,--.  ,--,--. |  |,-.   ,---.
-   |  |    |  .--' ' ,-.  |  \  `'  /  ' ,-.  | |     /  | .-. |
-   |  |    |  |    \ '-'  |   \    /   \ '-'  | |  \  \  ' '-' '
-   `--'    `--'     `--`--'    `--'     `--`--' `--'`--'  `---'
-
-${application.title} ${application.version}
-Powered by arkitik.io Spring Boot Version:${spring-boot.formatted-version}
