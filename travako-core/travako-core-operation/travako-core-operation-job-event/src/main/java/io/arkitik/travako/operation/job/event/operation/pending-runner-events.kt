@@ -31,7 +31,8 @@ class PendingEventsForRunnerOperationProvider(
                     server = server,
                     runnerKey = runnerKey,
                     runnerHost = runnerHost
-                ))
+                )
+            )
             val jobEvents = jobEventStoreQuery.findAllPendingEventsForServer(server)
             val events = jobEvents
                 .filter { event ->

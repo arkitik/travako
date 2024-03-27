@@ -1,5 +1,10 @@
 package io.arkitik.travako.starter.processor
 
+import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.leader.LeaderDomain
+import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
+import io.arkitik.travako.function.processor.PreProcessor
 import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TransactionalExecutor
 import io.arkitik.travako.sdk.job.JobInstanceSdk
@@ -10,7 +15,8 @@ import io.arkitik.travako.sdk.server.ServerSdk
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
 import io.arkitik.travako.starter.job.bean.JobInstanceRestartProcessor
 import io.arkitik.travako.starter.processor.config.TravakoConfig
-import io.arkitik.travako.starter.processor.function.TravakoStartupProcessor
+import io.arkitik.travako.starter.processor.function.TravakoStartupInitializerProcessor
+import io.arkitik.travako.starter.processor.function.TravakoStartupRunnerProcessor
 import io.arkitik.travako.starter.processor.job.JobInstanceRestartProcessorImpl
 import io.arkitik.travako.starter.processor.job.JobInstancesProcessor
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
@@ -18,8 +24,16 @@ import io.arkitik.travako.starter.processor.leader.LeaderJobsAssigneeProcessor
 import io.arkitik.travako.starter.processor.leader.LeaderRegistrationProcess
 import io.arkitik.travako.starter.processor.leader.LeaderRunnersAvailabilityProcessor
 import io.arkitik.travako.starter.processor.leader.SwitchLeaderProcessor
-import io.arkitik.travako.starter.processor.runner.*
+import io.arkitik.travako.starter.processor.runner.RunnerHeartbeatProcess
+import io.arkitik.travako.starter.processor.runner.RunnerJobExecutor
+import io.arkitik.travako.starter.processor.runner.RunnerJobRestartProcessor
+import io.arkitik.travako.starter.processor.runner.RunnerJobsRegisterProcessor
+import io.arkitik.travako.starter.processor.runner.SchedulerRunnerRegistrationProcess
+import io.arkitik.travako.starter.processor.runner.ShutdownTrigger
 import io.arkitik.travako.starter.processor.server.ServerRegistrationProcess
+import org.springframework.beans.factory.DisposableBean
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -35,13 +49,17 @@ import org.springframework.scheduling.TaskScheduler
 @EnableConfigurationProperties(TravakoConfig::class)
 class TravakoProcessorStarter {
     @Bean
-    fun travakoStartupProcessor(
+    fun travakoStartupInitializerProcessor(
         processors: List<Processor<*>>,
         transactionalExecutor: TransactionalExecutor,
-    ) = TravakoStartupProcessor(
-        processors,
-        transactionalExecutor
-    )
+    ): InitializingBean =
+        TravakoStartupInitializerProcessor(processors, transactionalExecutor)
+
+    @Bean
+    fun travakoStartupRunnerProcessor(
+        processors: List<Processor<*>>,
+        transactionalExecutor: TransactionalExecutor,
+    ): CommandLineRunner = TravakoStartupRunnerProcessor(processors, transactionalExecutor)
 
     @Bean
     fun leaderRegistrationProcess(
@@ -51,7 +69,7 @@ class TravakoProcessorStarter {
         jobInstances: List<JobInstanceBean>,
         taskScheduler: TaskScheduler,
         jobInstanceSdk: JobInstanceSdk,
-    ) = LeaderRegistrationProcess(
+    ): PreProcessor<LeaderDomain> = LeaderRegistrationProcess(
         travakoConfig = travakoConfig,
         leaderSdk = leaderSdk,
         transactionalExecutor = transactionalExecutor,
@@ -63,7 +81,7 @@ class TravakoProcessorStarter {
         leaderSdk: LeaderSdk,
         transactionalExecutor: TransactionalExecutor,
         taskScheduler: TaskScheduler,
-    ) = SwitchLeaderProcessor(
+    ): Processor<LeaderDomain> = SwitchLeaderProcessor(
         travakoConfig = travakoConfig,
         taskScheduler = taskScheduler,
         leaderSdk = leaderSdk,
@@ -78,7 +96,7 @@ class TravakoProcessorStarter {
         schedulerRunnerSdk: SchedulerRunnerSdk,
         transactionalExecutor: TransactionalExecutor,
         leaderSdk: LeaderSdk,
-    ) = LeaderJobsAssigneeProcessor(
+    ): Processor<LeaderDomain> = LeaderJobsAssigneeProcessor(
         travakoConfig = travakoConfig,
         taskScheduler = taskScheduler,
         jobInstanceSdk = jobInstanceSdk,
@@ -95,7 +113,7 @@ class TravakoProcessorStarter {
         schedulerRunnerSdk: SchedulerRunnerSdk,
         transactionalExecutor: TransactionalExecutor,
         leaderSdk: LeaderSdk,
-    ) = LeaderRunnersAvailabilityProcessor(
+    ): Processor<LeaderDomain> = LeaderRunnersAvailabilityProcessor(
         travakoConfig = travakoConfig,
         taskScheduler = taskScheduler,
         schedulerRunnerSdk = schedulerRunnerSdk,
@@ -109,7 +127,7 @@ class TravakoProcessorStarter {
         jobInstances: List<JobInstanceBean>,
         jobInstanceSdk: JobInstanceSdk,
         transactionalExecutor: TransactionalExecutor,
-    ) = JobInstancesProcessor(
+    ): Processor<JobInstanceDomain> = JobInstancesProcessor(
         travakoConfig = travakoConfig,
         jobInstances = jobInstances,
         jobInstanceSdk = jobInstanceSdk,
@@ -121,7 +139,7 @@ class TravakoProcessorStarter {
         travakoConfig: TravakoConfig,
         schedulerRunnerSdk: SchedulerRunnerSdk,
         applicationContext: ApplicationContext,
-    ) = SchedulerRunnerRegistrationProcess(
+    ): PreProcessor<SchedulerRunnerDomain> = SchedulerRunnerRegistrationProcess(
         travakoConfig = travakoConfig,
         schedulerRunnerSdk = schedulerRunnerSdk,
         applicationContext = applicationContext
@@ -133,7 +151,7 @@ class TravakoProcessorStarter {
         schedulerRunnerSdk: SchedulerRunnerSdk,
         taskScheduler: TaskScheduler,
         transactionalExecutor: TransactionalExecutor,
-    ) = RunnerHeartbeatProcess(
+    ): Processor<SchedulerRunnerDomain> = RunnerHeartbeatProcess(
         travakoConfig = travakoConfig,
         schedulerRunnerSdk = schedulerRunnerSdk,
         taskScheduler = taskScheduler,
@@ -144,7 +162,7 @@ class TravakoProcessorStarter {
     fun runnerJobsRegisterProcessor(
         jobInstances: List<JobInstanceBean>,
         jobsSchedulerRegistry: JobsSchedulerRegistry,
-    ) = RunnerJobsRegisterProcessor(
+    ): Processor<SchedulerRunnerDomain> = RunnerJobsRegisterProcessor(
         jobInstances = jobInstances,
         jobsSchedulerRegistry = jobsSchedulerRegistry
     )
@@ -177,7 +195,7 @@ class TravakoProcessorStarter {
         transactionalExecutor: TransactionalExecutor,
         jobInstances: List<JobInstanceBean>,
         jobsSchedulerRegistry: JobsSchedulerRegistry,
-    ) = RunnerJobRestartProcessor(
+    ): Processor<SchedulerRunnerDomain> = RunnerJobRestartProcessor(
         travakoConfig = travakoConfig,
         taskScheduler = taskScheduler,
         jobEventSdk = jobEventSdk,
@@ -191,7 +209,7 @@ class TravakoProcessorStarter {
         travakoConfig: TravakoConfig,
         serverSdk: ServerSdk,
         transactionalExecutor: TransactionalExecutor,
-    ) = ServerRegistrationProcess(
+    ): PreProcessor<ServerDomain> = ServerRegistrationProcess(
         travakoConfig = travakoConfig,
         serverSdk = serverSdk,
         transactionalExecutor = transactionalExecutor,
@@ -211,7 +229,7 @@ class TravakoProcessorStarter {
     fun shutdownTrigger(
         travakoConfig: TravakoConfig,
         schedulerRunnerSdk: SchedulerRunnerSdk,
-    ) = ShutdownTrigger(
+    ): DisposableBean = ShutdownTrigger(
         travakoConfig = travakoConfig,
         schedulerRunnerSdk = schedulerRunnerSdk
     )

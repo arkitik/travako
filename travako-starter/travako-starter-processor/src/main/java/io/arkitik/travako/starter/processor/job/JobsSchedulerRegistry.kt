@@ -29,9 +29,17 @@ class JobsSchedulerRegistry(
     fun rebootScheduledJob(jobInstance: JobInstanceBean) {
         jobTriggers[jobInstance.jobKey]?.cancel(false)
         logger.debug("Restart JOB instance {}", jobInstance.jobKey)
-        val newScheduledFuture = jobInstance.trigger.buildJob(taskScheduler) {
-            runnerJobExecutor.executeJob(jobInstance)
+        try {
+            val newScheduledFuture = jobInstance.trigger.buildJob(taskScheduler) {
+                runnerJobExecutor.executeJob(jobInstance)
+            }
+            jobTriggers[jobInstance.jobKey] = newScheduledFuture
+        } catch (e: Exception) {
+            logger.warn(
+                "Error while restart the Job Instance: [Key: {}] [Error: {}]",
+                jobInstance.jobKey,
+                e.message
+            )
         }
-        jobTriggers[jobInstance.jobKey] = newScheduledFuture
     }
 }

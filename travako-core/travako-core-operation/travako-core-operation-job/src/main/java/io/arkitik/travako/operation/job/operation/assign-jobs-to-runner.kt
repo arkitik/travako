@@ -32,7 +32,8 @@ class AssignJobsToRunnerOperationProvider(
                             server = server,
                             runnerKey = runnerKey,
                             runnerHost = runnerHost
-                        ))
+                        )
+                    )
                 storeQuery.findAllByServerAndJobKeys(
                     server = server,
                     jobKeys = jobKeys

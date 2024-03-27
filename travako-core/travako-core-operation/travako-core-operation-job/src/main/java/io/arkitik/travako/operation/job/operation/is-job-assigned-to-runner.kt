@@ -22,11 +22,13 @@ class IsJobAssignedToRunnerRole(
     override fun JobServerRunnerKeyDto.operateRole(): Boolean {
         val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
         val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-            .runOperation(RunnerDomainDto(
-                server = server,
-                runnerKey = runnerKey,
-                runnerHost = runnerHost
-            ))
+            .runOperation(
+                RunnerDomainDto(
+                    server = server,
+                    runnerKey = runnerKey,
+                    runnerHost = runnerHost
+                )
+            )
         return jobInstanceStoreQuery.existsByServerAndAssignedToRunnerAndJobKey(
             server = server,
             runner = schedulerRunner,

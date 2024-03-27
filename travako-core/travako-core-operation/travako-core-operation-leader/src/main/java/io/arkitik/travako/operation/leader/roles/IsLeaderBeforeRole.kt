@@ -22,11 +22,13 @@ class IsLeaderBeforeRole(
     override fun IsLeaderBeforeDto.operateRole(): Boolean {
         val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
         val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-            .runOperation(RunnerDomainDto(
-                server = server,
-                runnerKey = runnerKey,
-                runnerHost = runnerHost
-            ))
+            .runOperation(
+                RunnerDomainDto(
+                    server = server,
+                    runnerKey = runnerKey,
+                    runnerHost = runnerHost
+                )
+            )
         return leaderStoreQuery.existsByServerAndRunnerAndBefore(
             server = server,
             runner = schedulerRunner,

@@ -2,7 +2,13 @@ package io.arkitik.travako.sdk.job
 
 import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.radix.develop.operation.OperationRole
-import io.arkitik.travako.sdk.job.dto.*
+import io.arkitik.travako.sdk.job.dto.AssignJobsToRunnerDto
+import io.arkitik.travako.sdk.job.dto.CreateJobDto
+import io.arkitik.travako.sdk.job.dto.JobDetails
+import io.arkitik.travako.sdk.job.dto.JobKeyDto
+import io.arkitik.travako.sdk.job.dto.JobRunnerKeyDto
+import io.arkitik.travako.sdk.job.dto.JobServerDto
+import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

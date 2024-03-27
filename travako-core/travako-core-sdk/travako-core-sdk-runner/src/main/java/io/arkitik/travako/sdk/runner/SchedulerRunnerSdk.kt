@@ -20,4 +20,6 @@ interface SchedulerRunnerSdk {
     val markRunnerAsUp: Operation<RunnerKeyDto, Unit>
 
     val allServerRunners: Operation<RunnerServerKeyDto, List<RunnerDetails>>
+
+    val runnerDetails: Operation<RunnerKeyDto, RunnerDetails>
 }

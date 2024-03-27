@@ -4,7 +4,14 @@ import io.arkitik.travako.domain.job.event.JobEventDomain
 import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.entity.job.TravakoJobInstance
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.ForeignKey
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

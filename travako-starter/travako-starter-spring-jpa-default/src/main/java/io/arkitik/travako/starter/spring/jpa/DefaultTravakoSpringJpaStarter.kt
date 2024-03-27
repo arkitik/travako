@@ -17,14 +17,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 @Configuration
-@Import(value = [
-    SharedPortContext::class,
-    RunnerPortContext::class,
-    JobInstancePortContext::class,
-    ServerPortContext::class,
-    LeaderPortContext::class,
-    JobEventPortContext::class,
-])
+@Import(
+    value = [
+        SharedPortContext::class,
+        RunnerPortContext::class,
+        JobInstancePortContext::class,
+        ServerPortContext::class,
+        LeaderPortContext::class,
+        JobEventPortContext::class,
+    ]
+)
 @EntityScan(
     value = [
         "io.arkitik.travako.entity.runner",

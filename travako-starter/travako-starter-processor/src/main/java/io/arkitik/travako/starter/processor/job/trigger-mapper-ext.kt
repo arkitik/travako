@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.job
 
-import io.arkitik.radix.develop.shared.error.Error
-import io.arkitik.radix.develop.shared.exception.InternalException
+import io.arkitik.radix.develop.shared.error.RadixError
+import io.arkitik.radix.develop.shared.ext.internal
 import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.CronTrigger
 import org.springframework.scheduling.support.PeriodicTrigger
@@ -25,12 +25,16 @@ fun Trigger.parseTrigger(): Pair<String, Boolean> {
         is CronTrigger -> {
             expression to false
         }
+
         is PeriodicTrigger -> {
             "${timeUnit.convert(period, TimeUnit.MILLISECONDS)}${timeUnitsMapper[timeUnit]}" to true
         }
+
         else -> {
-            throw InternalException(Error("INTERNAL-ERROR",
-                "trigger is not supported $this"))
+            throw RadixError(
+                "INTERNAL-ERROR",
+                "trigger is not supported $this"
+            ).internal()
         }
     }
 }

@@ -36,7 +36,8 @@ class OperationProviderMarkEventProcessedForRunner(
                     server = server,
                     runnerKey = runnerKey,
                     runnerHost = runnerHost
-                ))
+                )
+            )
 
             with(runnerJobEventStateStore) {
                 storeCreator(identityCreator()) {

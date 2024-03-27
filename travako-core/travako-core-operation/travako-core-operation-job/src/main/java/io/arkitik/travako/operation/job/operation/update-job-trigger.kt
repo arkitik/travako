@@ -27,30 +27,32 @@ class UpdateJobTriggerOperationProvider(
     private val serverDomainSdk: ServerDomainSdk,
     private val jobDomainSdk: JobDomainSdk,
 ) {
-    val updateJobTrigger = operationBuilder<CreateJobDto, Unit> {
-        install {
-            CheckJobRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk)
-                .operateRole(
-                    JobKeyDto(
-                        serverKey = serverKey,
-                        jobKey = jobKey,
-                    ))
-        }
-
-        mainOperation {
-            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-            with(jobInstanceStore) {
-                val jobInstance = jobDomainSdk.fetchJobInstance
-                    .runOperation(JobDomainDto(server, jobKey))
-
-                storeUpdater(jobInstance.identityUpdater()) {
-                    jobTrigger.jobTrigger()
-                    (JobInstanceTriggerType.DURATION.takeIf { isDuration }
-                        ?: JobInstanceTriggerType.CRON).jobTriggerType()
-                    update()
-                }.save()
+    val updateJobTrigger =
+        operationBuilder<CreateJobDto, Unit> {
+            install {
+                CheckJobRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk)
+                    .operateRole(
+                        JobKeyDto(
+                            serverKey = serverKey,
+                            jobKey = jobKey,
+                        )
+                    )
             }
-            jobEventSdk.insertRestartJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
+
+            mainOperation {
+                val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+                with(jobInstanceStore) {
+                    val jobInstance = jobDomainSdk.fetchJobInstance
+                        .runOperation(JobDomainDto(server, jobKey))
+
+                    storeUpdater(jobInstance.identityUpdater()) {
+                        jobTrigger.jobTrigger()
+                        (JobInstanceTriggerType.DURATION.takeIf { isDuration }
+                            ?: JobInstanceTriggerType.CRON).jobTriggerType()
+                        update()
+                    }.save()
+                }
+                jobEventSdk.insertRestartJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
+            }
         }
-    }
 }

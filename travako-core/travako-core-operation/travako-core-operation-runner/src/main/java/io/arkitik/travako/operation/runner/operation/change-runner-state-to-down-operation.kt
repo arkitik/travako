@@ -30,11 +30,13 @@ class ChangeRunnerStateToDownOperationProvider(
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
             with(schedulerRunnerStore) {
                 val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-                    .runOperation(RunnerDomainDto(
-                        server = server,
-                        runnerKey = runnerKey,
-                        runnerHost = runnerHost
-                    ))
+                    .runOperation(
+                        RunnerDomainDto(
+                            server = server,
+                            runnerKey = runnerKey,
+                            runnerHost = runnerHost
+                        )
+                    )
                 storeUpdater(schedulerRunner.identityUpdater()) {
                     InstanceState.DOWN.instanceState()
                     clearHeartbeat()

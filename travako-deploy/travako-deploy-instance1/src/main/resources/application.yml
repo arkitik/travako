@@ -36,7 +36,7 @@ arkitik:
       runner-key: travako-runner-1
     database:
       datasource:
-        url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:travako}
+        url: jdbc:mysql://${database_host:localhost}:${database_port:3306}/${database_name:travako}
         username: ${database_user:travako}
         password: ${database_password:travako}
         driver-class-name: com.mysql.cj.jdbc.Driver

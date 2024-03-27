@@ -1,6 +1,11 @@
 package io.arkitik.travako.operation.runner
 
-import io.arkitik.travako.operation.runner.operation.*
+import io.arkitik.travako.operation.runner.operation.ChangeRunnerStateToDownOperationProvider
+import io.arkitik.travako.operation.runner.operation.ChangeRunnerStateToUpOperationProvider
+import io.arkitik.travako.operation.runner.operation.LogRunnerHeartbeatOperationProvider
+import io.arkitik.travako.operation.runner.operation.RegisterRunnerOperationProvider
+import io.arkitik.travako.operation.runner.operation.RunnerDetailsOperationProvider
+import io.arkitik.travako.operation.runner.operation.ServerRunnersOperationProvider
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
@@ -51,4 +56,10 @@ class SchedulerRunnerSdkImpl(
             leaderDomainSdk = leaderDomainSdk,
             serverDomainSdk = serverDomainSdk,
         ).serverRunners
+
+    override val runnerDetails = RunnerDetailsOperationProvider(
+        leaderDomainSdk = leaderDomainSdk,
+        serverDomainSdk = serverDomainSdk,
+        schedulerRunnerDomainSdk = schedulerRunnerDomainSdk
+    ).runnerDetails
 }

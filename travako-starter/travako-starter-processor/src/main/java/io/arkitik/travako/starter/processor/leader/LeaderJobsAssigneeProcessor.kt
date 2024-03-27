@@ -42,12 +42,14 @@ class LeaderJobsAssigneeProcessor(
         travakoConfig.jobsAssignee
             .fixedRateJob(taskScheduler) {
                 leaderSdk.isLeaderBefore
-                    .operateRole(IsLeaderBeforeDto(
-                        serverKey = travakoConfig.keyDto.serverKey,
-                        runnerKey = travakoConfig.keyDto.runnerKey,
-                        runnerHost = travakoConfig.keyDto.runnerHost,
-                        dateBefore = LocalDateTime.now()
-                    )).takeIf { it }?.let {
+                    .operateRole(
+                        IsLeaderBeforeDto(
+                            serverKey = travakoConfig.keyDto.serverKey,
+                            runnerKey = travakoConfig.keyDto.runnerKey,
+                            runnerHost = travakoConfig.keyDto.runnerHost,
+                            dateBefore = LocalDateTime.now()
+                        )
+                    ).takeIf { it }?.let {
                         transactionalExecutor.runOnTransaction {
                             logger.info("Start jobs reassign process...")
                             val runners = schedulerRunnerSdk.allServerRunners
@@ -77,9 +79,11 @@ class LeaderJobsAssigneeProcessor(
                                             jobKeys = jobKeys
                                         )
                                     )
-                                    logger.info("Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
+                                    logger.info(
+                                        "Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
                                         "${entry.key.first}-${entry.key.second}",
-                                        jobKeys)
+                                        jobKeys
+                                    )
                                 }
                         }
                     }

@@ -5,6 +5,7 @@ import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.sdk.job.event.dto.EventDataDto
 import io.arkitik.travako.sdk.job.event.dto.JobEventRunnerKeyAndUuidDto
@@ -71,9 +72,11 @@ class RunnerJobRestartProcessor(
                             }
                         }
                 }.onFailure {
-                    logger.warn("Error while fetching pending events for runner {}, cause {}",
+                    logger.warn(
+                        "Error while fetching pending events for runner {}, cause {}",
                         "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
-                        it.message)
+                        it.message
+                    )
                 }
             }
     }

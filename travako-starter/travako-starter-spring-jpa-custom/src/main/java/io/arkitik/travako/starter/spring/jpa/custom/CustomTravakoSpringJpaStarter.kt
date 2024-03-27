@@ -35,14 +35,16 @@ import javax.sql.DataSource
     entityManagerFactoryRef = "travakoEntityManagerFactory",
     transactionManagerRef = "travakoTransactionManager"
 )
-@Import(value = [
-    SharedPortContext::class,
-    RunnerPortContext::class,
-    JobInstancePortContext::class,
-    ServerPortContext::class,
-    LeaderPortContext::class,
-    JobEventPortContext::class,
-])
+@Import(
+    value = [
+        SharedPortContext::class,
+        RunnerPortContext::class,
+        JobInstancePortContext::class,
+        ServerPortContext::class,
+        LeaderPortContext::class,
+        JobEventPortContext::class,
+    ]
+)
 class CustomTravakoSpringJpaStarter {
     @Bean
     @ConfigurationProperties("arkitik.travako.database.datasource")

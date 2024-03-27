@@ -2,13 +2,11 @@ version: "3"
 services:
   mysql:
     image: mysql:latest
-    container_name: travako_mysql_db
+    container_name: travako_mysql_db_0
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
       - MYSQL_USER=travako
       - MYSQL_PASSWORD=travako
       - MYSQL_DATABASE=travako
       - MYSQL_ROOT_PASSWORD=travako
-
-

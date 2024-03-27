@@ -30,11 +30,13 @@ class ChangeRunnerStateToUpOperationProvider(
             with(schedulerRunnerStore) {
                 val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
                 val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-                    .runOperation(RunnerDomainDto(
-                        server = server,
-                        runnerKey = runnerKey,
-                        runnerHost = runnerHost
-                    ))
+                    .runOperation(
+                        RunnerDomainDto(
+                            server = server,
+                            runnerKey = runnerKey,
+                            runnerHost = runnerHost
+                        )
+                    )
                 storeUpdater(schedulerRunner.identityUpdater()) {
                     InstanceState.UP.instanceState()
                     LocalDateTime.now().lastHeartbeatTime()

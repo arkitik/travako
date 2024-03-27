@@ -32,7 +32,7 @@ class RunnerHeartbeatProcess(
                         logRunnerHeartbeat.runOperation(travakoConfig.keyDto)
                     }.onFailure {
                         logger.warn(
-                            "Error while logging heartbeat message for {} , error: ",
+                            "Error while logging heartbeat message for {} , error: {}",
                             "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
                             it.message
                         )

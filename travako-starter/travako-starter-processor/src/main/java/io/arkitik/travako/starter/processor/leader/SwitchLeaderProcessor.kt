@@ -34,12 +34,14 @@ class SwitchLeaderProcessor(
             .fixedRateJob(taskScheduler) {
                 transactionalExecutor.runOnTransaction {
                     leaderSdk.isLeaderBefore
-                        .operateRole(IsLeaderBeforeDto(
-                            serverKey = travakoConfig.serverKey,
-                            runnerKey = travakoConfig.keyDto.runnerKey,
-                            runnerHost = travakoConfig.keyDto.runnerHost,
-                            dateBefore = LocalDateTime.now().minus(travakoConfig.leaderSwitch)
-                        )).takeIf { it }?.let {
+                        .operateRole(
+                            IsLeaderBeforeDto(
+                                serverKey = travakoConfig.serverKey,
+                                runnerKey = travakoConfig.keyDto.runnerKey,
+                                runnerHost = travakoConfig.keyDto.runnerHost,
+                                dateBefore = LocalDateTime.now().minus(travakoConfig.leaderSwitch)
+                            )
+                        ).takeIf { it }?.let {
                             logger.debug(
                                 "Start moving {} leader processor responsibilities from runner {}.",
                                 travakoConfig.serverKey,

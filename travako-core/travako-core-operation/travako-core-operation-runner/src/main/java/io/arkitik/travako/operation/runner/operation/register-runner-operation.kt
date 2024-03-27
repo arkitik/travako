@@ -31,11 +31,13 @@ class RegisterRunnerOperationProvider(
                 val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
                 val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
                     .runCatching {
-                        runOperation(RunnerDomainDto(
-                            server = server,
-                            runnerKey = runnerKey,
-                            runnerHost = runnerHost
-                        ))
+                        runOperation(
+                            RunnerDomainDto(
+                                server = server,
+                                runnerKey = runnerKey,
+                                runnerHost = runnerHost
+                            )
+                        )
                     }.getOrElse {
                         storeCreator(identityCreator()) {
                             runnerKey.runnerKey()

@@ -1,10 +1,10 @@
 package io.arkitik.travako.starter.processor.job
 
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.shared.exception.UnprocessableEntityException
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.CreateJobDto
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
@@ -31,8 +31,8 @@ class JobInstancesProcessor(
     override fun process() {
         transactionalExecutor.runUnitTransaction {
             jobInstances.forEach { job ->
-                val jobTrigger = job.trigger.parseTrigger()
                 try {
+                    val jobTrigger = job.trigger.parseTrigger()
                     jobInstanceSdk.registerJob
                         .runOperation(
                             CreateJobDto(
@@ -40,12 +40,13 @@ class JobInstancesProcessor(
                                 jobKey = job.jobKey,
                                 jobTrigger = jobTrigger.first,
                                 isDuration = jobTrigger.second
-                            ))
-                } catch (e: UnprocessableEntityException) {
+                            )
+                        )
+                } catch (e: Exception) {
                     LOGGER.warn(
                         "Error while registering the Job Instance: [Key: {}] [Error: {}]",
                         job.jobKey,
-                        e.error
+                        e.message
                     )
                 }
             }

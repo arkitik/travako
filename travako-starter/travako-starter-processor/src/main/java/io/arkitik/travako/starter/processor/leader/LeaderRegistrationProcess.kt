@@ -38,7 +38,8 @@ class LeaderRegistrationProcess(
                         serverKey = travakoConfig.keyDto.serverKey,
                         runnerKey = travakoConfig.keyDto.runnerKey,
                         runnerHost = travakoConfig.keyDto.runnerHost
-                    ))
+                    )
+                )
             } catch (e: UnprocessableEntityException) {
                 LOGGER.warn(
                     "Error while registering the Leader: [Server: {}] [Runner: {}] [Error: {}]",

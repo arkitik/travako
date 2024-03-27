@@ -3,6 +3,7 @@ package io.arkitik.travako.starter.processor.runner
 import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
@@ -33,16 +34,19 @@ class RunnerJobExecutor(
                     JobKeyDto(
                         serverKey = travakoConfig.serverKey,
                         jobKey = jobInstanceBean.jobKey
-                    ))
+                    )
+                )
             }
             transactionalExecutor.runUnitTransaction {
                 jobInstanceBean.runJob()
             }
             transactionalExecutor.runUnitTransaction {
-                jobInstanceSdk.markJobAsWaiting.runOperation(JobKeyDto(
-                    serverKey = travakoConfig.serverKey,
-                    jobKey = jobInstanceBean.jobKey
-                ))
+                jobInstanceSdk.markJobAsWaiting.runOperation(
+                    JobKeyDto(
+                        serverKey = travakoConfig.serverKey,
+                        jobKey = jobInstanceBean.jobKey
+                    )
+                )
             }
         }
     }

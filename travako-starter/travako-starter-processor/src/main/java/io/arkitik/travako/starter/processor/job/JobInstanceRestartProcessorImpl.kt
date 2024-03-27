@@ -14,7 +14,7 @@ import io.arkitik.travako.starter.processor.logger.logger
  * Created At 04 9:42 PM, **Tue, January 2022**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class JobInstanceRestartProcessorImpl(
+internal class JobInstanceRestartProcessorImpl(
     private val travakoConfig: TravakoConfig,
     private val jobInstanceSdk: JobInstanceSdk,
 ) : JobInstanceRestartProcessor {
@@ -30,7 +30,8 @@ class JobInstanceRestartProcessorImpl(
                         jobKey = jobInstanceBean.jobKey,
                         jobTrigger = jobTrigger.first,
                         isDuration = jobTrigger.second
-                    ))
+                    )
+                )
         } catch (e: UnprocessableEntityException) {
             logger.warn(
                 "Error while updating Job Instance: [Key: {}] [Error: {}]",
