@@ -2,7 +2,6 @@ package io.arkitik.travako.starter.processor.config
 
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.bind.DefaultValue
 import java.net.InetAddress
 import java.time.Duration
@@ -13,7 +12,6 @@ import java.time.Duration
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 @ConfigurationProperties(prefix = "arkitik.travako.config")
-@ConstructorBinding
 data class TravakoConfig(
     val serverKey: String,
     val runnerKey: String,
@@ -23,11 +21,12 @@ data class TravakoConfig(
     @DefaultValue("30s") val jobsEvent: Duration,
     @DefaultValue("false") val duplicationProcessor: Boolean,
 ) {
-    val keyDto: RunnerKeyDto = RunnerKeyDto(
-        serverKey = serverKey,
-        runnerKey = runnerKey,
-        runnerHost = InetAddress.getLocalHost().toString()
-    )
+    val keyDto: RunnerKeyDto =
+        RunnerKeyDto(
+            serverKey = serverKey,
+            runnerKey = runnerKey,
+            runnerHost = InetAddress.getLocalHost().toString()
+        )
 
     fun isSelf(
         runnerKey: String,

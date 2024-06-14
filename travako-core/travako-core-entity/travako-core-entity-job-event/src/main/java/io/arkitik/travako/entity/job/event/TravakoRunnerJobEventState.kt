@@ -3,13 +3,13 @@ package io.arkitik.travako.entity.job.event
 import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.ForeignKey
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import jakarta.persistence.Entity
+import jakarta.persistence.ForeignKey
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

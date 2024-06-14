@@ -2,7 +2,7 @@ package io.arkitik.travako.starter.spring.jpa.custom
 
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory
 import org.springframework.data.repository.Repository
-import javax.persistence.EntityManager
+import jakarta.persistence.EntityManager
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

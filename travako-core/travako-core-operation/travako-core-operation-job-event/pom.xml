@@ -5,17 +5,13 @@
     <parent>
         <artifactId>travako-core-operation</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v1.3.0</version>
+        <version>v2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>travako-core-operation-job-event</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>io.arkitik.radix</groupId>
-            <artifactId>radix-development-operation-ext</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>travako-core-sdk-job-event</artifactId>
