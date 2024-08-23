@@ -2,7 +2,7 @@ package io.arkitik.travako.starter.processor.runner
 
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.starter.job.bean.JobInstanceBean
+import io.arkitik.travako.starter.job.source.JobInstancesSource
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
 
 /**
@@ -10,15 +10,16 @@ import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
  * Created At 30 10:58 PM, **Thu, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class RunnerJobsRegisterProcessor(
-    private val jobInstances: List<JobInstanceBean>,
+internal class RunnerJobsRegisterProcessor(
+    private val jobInstancesSource: JobInstancesSource,
     private val jobsSchedulerRegistry: JobsSchedulerRegistry,
 ) : Processor<SchedulerRunnerDomain> {
     override val type = SchedulerRunnerDomain::class.java
 
     override fun process() {
-        jobInstances.forEach { jobInstanceBean ->
-            jobsSchedulerRegistry.scheduleJob(jobInstanceBean)
-        }
+        jobInstancesSource
+            .forEach { jobInstanceBean ->
+                jobsSchedulerRegistry.scheduleJob(jobInstanceBean)
+            }
     }
 }

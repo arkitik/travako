@@ -2,7 +2,8 @@ package io.arkitik.travako.starter.processor.function
 
 import io.arkitik.travako.function.processor.PreProcessor
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import org.springframework.beans.factory.InitializingBean
 
 /**
@@ -12,10 +13,10 @@ import org.springframework.beans.factory.InitializingBean
  */
 internal class TravakoStartupInitializerProcessor(
     private val registeredProcessors: List<Processor<*>>,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : TravakoStartupProcessor(), InitializingBean {
     override fun afterPropertiesSet() {
-        transactionalExecutor.runOnTransaction {
+        travakoTransactionalExecutor.runUnitTransaction {
             val processors = registeredProcessors.filterIsInstance<PreProcessor<*>>()
             runProcessors(processors)
         }

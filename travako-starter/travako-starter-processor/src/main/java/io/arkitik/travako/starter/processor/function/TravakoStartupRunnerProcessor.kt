@@ -2,7 +2,8 @@ package io.arkitik.travako.starter.processor.function
 
 import io.arkitik.travako.function.processor.PreProcessor
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import org.springframework.boot.CommandLineRunner
 
 /**
@@ -12,10 +13,10 @@ import org.springframework.boot.CommandLineRunner
  */
 internal class TravakoStartupRunnerProcessor(
     private val registeredProcessors: List<Processor<*>>,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : TravakoStartupProcessor(), CommandLineRunner {
     override fun run(vararg args: String?) {
-        transactionalExecutor.runOnTransaction {
+        travakoTransactionalExecutor.runUnitTransaction {
             val processors = registeredProcessors.filter {
                 it !is PreProcessor
             }

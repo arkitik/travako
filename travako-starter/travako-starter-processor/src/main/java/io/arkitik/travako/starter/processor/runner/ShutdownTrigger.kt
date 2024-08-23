@@ -10,7 +10,7 @@ import org.springframework.beans.factory.DisposableBean
  * Created At 09 9:11 PM, **Wed, February 2022**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class ShutdownTrigger(
+internal class ShutdownTrigger(
     private val travakoConfig: TravakoConfig,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
 ) : DisposableBean {

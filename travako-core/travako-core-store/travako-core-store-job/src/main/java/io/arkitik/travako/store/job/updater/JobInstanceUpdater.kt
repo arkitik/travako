@@ -17,7 +17,10 @@ interface JobInstanceUpdater : StoreIdentityUpdater<String, JobInstanceDomain> {
     fun SchedulerRunnerDomain.assignToRunner(): JobInstanceUpdater
 
     fun JobStatus.status(): JobInstanceUpdater
-    fun LocalDateTime.lastRunningTime(): JobInstanceUpdater
+
+    fun LocalDateTime?.lastRunningTime(): JobInstanceUpdater
+
+    fun LocalDateTime?.nextExecutionTime(): JobInstanceUpdater
 
     fun String.jobTrigger(): JobInstanceUpdater
     fun JobInstanceTriggerType.jobTriggerType(): JobInstanceUpdater

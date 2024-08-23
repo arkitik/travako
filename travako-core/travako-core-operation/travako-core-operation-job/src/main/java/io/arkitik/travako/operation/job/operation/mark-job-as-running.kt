@@ -1,5 +1,6 @@
 package io.arkitik.travako.operation.job.operation
 
+import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeUpdater
@@ -9,7 +10,7 @@ import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.job.dto.JobDomainDto
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
-import io.arkitik.travako.sdk.job.dto.JobKeyDto
+import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
 import io.arkitik.travako.store.job.JobInstanceStore
 
 /**
@@ -22,17 +23,22 @@ class MarkJobAsRunningOperationProvider(
     private val serverDomainSdk: ServerDomainSdk,
     private val jobDomainSdk: JobDomainSdk,
 ) {
-    val markJobAsRunning = operationBuilder<JobKeyDto, Unit> {
-        install(CheckJobRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk))
+    private val checkJobRegisteredRole = CheckJobRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk)
+
+    val markJobAsRunning = operationBuilder<UpdateJobRequest, Unit> {
+        install {
+            checkJobRegisteredRole.operateRole(jobKey)
+        }
 
         mainOperation {
-            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(jobKey.serverKey))
 
             with(jobInstanceStore) {
                 val jobInstance = jobDomainSdk.fetchJobInstance
-                    .runOperation(JobDomainDto(server, jobKey))
+                    .runOperation(JobDomainDto(server, jobKey.jobKey))
                 storeUpdater(jobInstance.identityUpdater()) {
                     JobStatus.RUNNING.status()
+                    nextExecutionTime.nextExecutionTime()
                     update()
                 }.save()
             }

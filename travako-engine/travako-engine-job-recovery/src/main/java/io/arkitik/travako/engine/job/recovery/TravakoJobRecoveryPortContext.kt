@@ -3,7 +3,7 @@ package io.arkitik.travako.engine.job.recovery
 import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.engine.job.recovery.processor.JobRecoveryProcessor
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.starter.processor.config.TravakoConfig
@@ -23,13 +23,13 @@ class TravakoJobRecoveryPortContext {
         schedulerRunnerSdk: SchedulerRunnerSdk,
         taskScheduler: TaskScheduler,
         travakoConfig: TravakoConfig,
-        transactionalExecutor: TransactionalExecutor,
+        travakoTransactionalExecutor: TravakoTransactionalExecutor,
     ): Processor<LeaderDomain> =
         JobRecoveryProcessor(
             jobInstanceSdk = jobInstanceSdk,
             schedulerRunnerSdk = schedulerRunnerSdk,
             taskScheduler = taskScheduler,
             travakoConfig = travakoConfig,
-            transactionalExecutor = transactionalExecutor
+            travakoTransactionalExecutor = travakoTransactionalExecutor
         )
 }

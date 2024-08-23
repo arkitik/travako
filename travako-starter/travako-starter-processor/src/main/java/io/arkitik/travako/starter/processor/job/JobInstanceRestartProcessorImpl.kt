@@ -18,7 +18,9 @@ internal class JobInstanceRestartProcessorImpl(
     private val travakoConfig: TravakoConfig,
     private val jobInstanceSdk: JobInstanceSdk,
 ) : JobInstanceRestartProcessor {
-    private val logger = logger<JobInstanceRestartProcessorImpl>()
+    companion object {
+        private val logger = logger<JobInstanceRestartProcessorImpl>()
+    }
 
     override fun triggerRestartJob(jobInstanceBean: JobInstanceBean) {
         try {

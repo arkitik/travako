@@ -5,7 +5,6 @@ import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.server.TravakoServer
-import java.time.LocalDateTime
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -16,6 +15,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.time.LocalDateTime
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -62,4 +62,5 @@ data class TravakoJobInstance(
     @Column(nullable = false, updatable = false)
     override val creationDate: LocalDateTime = LocalDateTime.now(),
     override var lastRunningTime: LocalDateTime? = null,
+    override var nextExecutionTime: LocalDateTime? = null,
 ) : JobInstanceDomain

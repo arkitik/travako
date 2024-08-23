@@ -5,7 +5,8 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.ext.internal
 import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.AssignJobsToRunnerDto
 import io.arkitik.travako.sdk.job.dto.JobServerDto
@@ -26,15 +27,17 @@ import java.util.*
  * Created At 30 11:47 PM, **Thu, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class LeaderJobsAssigneeProcessor(
+internal class LeaderJobsAssigneeProcessor(
     private val travakoConfig: TravakoConfig,
     private val taskScheduler: TaskScheduler,
     private val jobInstanceSdk: JobInstanceSdk,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
     private val leaderSdk: LeaderSdk,
 ) : Processor<LeaderDomain> {
-    private val logger = logger<LeaderJobsAssigneeProcessor>()
+    companion object {
+        private val logger = logger<LeaderJobsAssigneeProcessor>()
+    }
 
     override val type = LeaderDomain::class.java
 
@@ -50,7 +53,7 @@ class LeaderJobsAssigneeProcessor(
                             dateBefore = LocalDateTime.now()
                         )
                     ).takeIf { it }?.let {
-                        transactionalExecutor.runOnTransaction {
+                        travakoTransactionalExecutor.runUnitTransaction {
                             logger.info("Start jobs reassign process...")
                             val runners = schedulerRunnerSdk.allServerRunners
                                 .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))

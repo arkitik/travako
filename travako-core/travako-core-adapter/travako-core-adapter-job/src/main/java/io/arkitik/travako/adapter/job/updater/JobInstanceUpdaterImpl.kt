@@ -31,8 +31,13 @@ class JobInstanceUpdaterImpl(
         return this@JobInstanceUpdaterImpl
     }
 
-    override fun LocalDateTime.lastRunningTime(): JobInstanceUpdater {
+    override fun LocalDateTime?.lastRunningTime(): JobInstanceUpdater {
         entity.lastRunningTime = this
+        return this@JobInstanceUpdaterImpl
+    }
+
+    override fun LocalDateTime?.nextExecutionTime(): JobInstanceUpdater {
+        entity.nextExecutionTime = this
         return this@JobInstanceUpdaterImpl
     }
 
