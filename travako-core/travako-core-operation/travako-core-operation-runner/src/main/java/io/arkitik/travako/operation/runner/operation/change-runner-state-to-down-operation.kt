@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeUpdater
+import io.arkitik.radix.develop.store.storeUpdaterWithSave
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.operation.runner.roles.CheckRegisteredAndUpRole
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
@@ -25,23 +25,23 @@ class ChangeRunnerStateToDownOperationProvider(
 
     val changeRunnerToDownState = operationBuilder<RunnerKeyDto, Unit> {
         install(CheckRegisteredAndUpRole(schedulerRunnerStore.storeQuery, serverDomainSdk))
-        mainOperation {
 
+        mainOperation {
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-            with(schedulerRunnerStore) {
-                val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-                    .runOperation(
-                        RunnerDomainDto(
-                            server = server,
-                            runnerKey = runnerKey,
-                            runnerHost = runnerHost
-                        )
+            val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
+                .runOperation(
+                    RunnerDomainDto(
+                        server = server,
+                        runnerKey = runnerKey,
+                        runnerHost = runnerHost
                     )
-                storeUpdater(schedulerRunner.identityUpdater()) {
+                )
+            with(schedulerRunnerStore) {
+                storeUpdaterWithSave(schedulerRunner.identityUpdater()) {
                     InstanceState.DOWN.instanceState()
                     clearHeartbeat()
                     update()
-                }.save()
+                }
             }
         }
     }

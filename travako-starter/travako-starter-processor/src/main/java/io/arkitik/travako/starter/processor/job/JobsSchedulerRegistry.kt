@@ -16,8 +16,11 @@ class JobsSchedulerRegistry(
     private val taskScheduler: TaskScheduler,
     private val runnerJobExecutor: RunnerJobExecutor,
 ) {
+    companion object {
+        private val logger = logger<JobsSchedulerRegistry>()
+    }
+
     private val jobTriggers = hashMapOf<String, ScheduledFuture<*>?>()
-    private val logger = logger<JobsSchedulerRegistry>()
 
     fun scheduleJob(jobInstance: JobInstanceBean) {
         val scheduledFuture = jobInstance.trigger.buildJob(taskScheduler) {

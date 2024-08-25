@@ -13,13 +13,14 @@ import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 class FetchServerSchedulerRunnerOperationProvider(
     private val schedulerRunnerStoreQuery: SchedulerRunnerStoreQuery,
 ) {
-    val fetchServerSchedulerRunners = operationBuilder<ServerDomain, List<SchedulerRunnerDomain>> {
-        mainOperation {
-            with(schedulerRunnerStoreQuery) {
-                findAllByServer(
-                    server = this@mainOperation
-                )
+    val fetchServerSchedulerRunners =
+        operationBuilder<ServerDomain, List<SchedulerRunnerDomain>> {
+            mainOperation {
+                with(schedulerRunnerStoreQuery) {
+                    findAllByServer(
+                        server = this@mainOperation
+                    )
+                }
             }
         }
-    }
 }

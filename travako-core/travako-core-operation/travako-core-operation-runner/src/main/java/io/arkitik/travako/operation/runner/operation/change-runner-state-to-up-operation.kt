@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeUpdater
+import io.arkitik.radix.develop.store.storeUpdaterWithSave
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.operation.runner.roles.CheckRegisteredRole
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
@@ -27,21 +27,21 @@ class ChangeRunnerStateToUpOperationProvider(
     val changeRunnerStateToUp = operationBuilder<RunnerKeyDto, Unit> {
         install(CheckRegisteredRole(schedulerRunnerStore.storeQuery, serverDomainSdk))
         mainOperation {
-            with(schedulerRunnerStore) {
-                val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-                val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
-                    .runOperation(
-                        RunnerDomainDto(
-                            server = server,
-                            runnerKey = runnerKey,
-                            runnerHost = runnerHost
-                        )
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+            val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
+                .runOperation(
+                    RunnerDomainDto(
+                        server = server,
+                        runnerKey = runnerKey,
+                        runnerHost = runnerHost
                     )
-                storeUpdater(schedulerRunner.identityUpdater()) {
+                )
+            with(schedulerRunnerStore) {
+                storeUpdaterWithSave(schedulerRunner.identityUpdater()) {
                     InstanceState.UP.instanceState()
                     LocalDateTime.now().lastHeartbeatTime()
                     update()
-                }.save()
+                }
             }
         }
     }

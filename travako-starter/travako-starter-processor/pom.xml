@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-starter</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.0.0</version>
+        <version>v2.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,6 +24,11 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>travako-starter-job-bean</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-starter-job-source</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

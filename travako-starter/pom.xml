@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.0.0</version>
+        <version>v2.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,11 +16,6 @@
         <module>travako-starter-job-bean</module>
         <module>travako-starter-spring-jpa-default</module>
         <module>travako-starter-spring-jpa-custom</module>
+        <module>travako-starter-job-source</module>
     </modules>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
 </project>

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
  * Created At 28 8:42 PM, **Tue, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class SchedulerRunnerRegistrationProcess(
+internal class SchedulerRunnerRegistrationProcess(
     private val travakoConfig: TravakoConfig,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val applicationContext: ApplicationContext,
@@ -40,8 +40,7 @@ class SchedulerRunnerRegistrationProcess(
 
     private fun stopServer(exception: Exception) {
         LOGGER.error(
-            "A runner with the same key and host has been registered previously for the server {}, runner-key {}, " +
-                    "the application will stop working till you provide a unique runner-key",
+            "A runner with the same key and host has already been registered for the server {}. Runner key: {}. The application will stop working until you provide a unique runner key.",
             travakoConfig.serverKey,
             travakoConfig.runnerKey
         )
@@ -50,9 +49,7 @@ class SchedulerRunnerRegistrationProcess(
             travakoConfig.runnerKey,
             exception.message,
         )
-        SpringApplication.exit(applicationContext, ExitCodeGenerator {
-            0
-        })
+        SpringApplication.exit(applicationContext, ExitCodeGenerator { 0 })
     }
 
     private fun startDuplicationProcessor(exception: Exception) {

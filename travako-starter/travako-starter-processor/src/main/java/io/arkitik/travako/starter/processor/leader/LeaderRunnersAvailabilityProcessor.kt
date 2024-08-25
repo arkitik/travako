@@ -4,7 +4,8 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.ext.internal
 import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.leader.dto.LeaderServerKeyDto
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
@@ -23,23 +24,25 @@ import java.time.Duration
  * Created At 31 12:56 AM, **Fri, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class LeaderRunnersAvailabilityProcessor(
+internal class LeaderRunnersAvailabilityProcessor(
     private val travakoConfig: TravakoConfig,
     private val taskScheduler: TaskScheduler,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
     private val leaderSdk: LeaderSdk,
 ) : Processor<LeaderDomain> {
-    override val type = LeaderDomain::class.java
+    companion object {
+        private val logger = logger<LeaderRunnersAvailabilityProcessor>()
+    }
 
-    private val logger = logger<LeaderRunnersAvailabilityProcessor>()
+    override val type = LeaderDomain::class.java
 
     private val lastHeartbeatSeconds = travakoConfig.heartbeat.seconds.times(2)
 
     override fun process() {
         Duration.ofSeconds(travakoConfig.heartbeat.seconds.times(2))
             .fixedRateJob(taskScheduler) {
-                transactionalExecutor.runOnTransaction {
+                travakoTransactionalExecutor.runUnitTransaction {
                     val runners = schedulerRunnerSdk.allServerRunners
                         .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))
                     if (runners.isEmpty()) {

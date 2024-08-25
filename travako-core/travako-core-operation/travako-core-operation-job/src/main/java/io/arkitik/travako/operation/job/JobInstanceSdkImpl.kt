@@ -1,5 +1,6 @@
 package io.arkitik.travako.operation.job
 
+import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.travako.operation.job.operation.AssignJobsToRunnerOperationProvider
 import io.arkitik.travako.operation.job.operation.AssignedRunnerJobsOperationProvider
 import io.arkitik.travako.operation.job.operation.IsJobAssignedToRunnerRole
@@ -13,6 +14,7 @@ import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
+import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.JobInstanceStore
 
@@ -49,14 +51,14 @@ class JobInstanceSdkImpl(
             serverDomainSdk = serverDomainSdk
         ).removeRunnerJobsAssignee
 
-    override val markJobAsWaiting =
+    override val markJobAsWaiting: Operation<UpdateJobRequest, Unit> =
         MarkJobAsWaitingOperationProvider(
             jobInstanceStore = jobInstanceStore,
             serverDomainSdk = serverDomainSdk,
             jobDomainSdk = jobDomainSdk,
         ).markJobAsWaiting
 
-    override val markJobAsRunning =
+    override val markJobAsRunning: Operation<UpdateJobRequest, Unit> =
         MarkJobAsRunningOperationProvider(
             jobInstanceStore = jobInstanceStore,
             serverDomainSdk = serverDomainSdk,
@@ -88,4 +90,5 @@ class JobInstanceSdkImpl(
         jobInstanceStoreQuery = jobInstanceStore.storeQuery,
         serverDomainSdk = serverDomainSdk
     ).serverJobs
+
 }

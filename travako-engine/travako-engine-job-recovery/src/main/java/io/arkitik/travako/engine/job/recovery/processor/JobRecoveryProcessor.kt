@@ -4,7 +4,7 @@ import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.JobDetails
@@ -12,6 +12,7 @@ import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobRunnerKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
+import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerDetails
 import io.arkitik.travako.sdk.runner.dto.RunnerServerKeyDto
@@ -30,7 +31,7 @@ internal class JobRecoveryProcessor(
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val taskScheduler: TaskScheduler,
     private val travakoConfig: TravakoConfig,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : Processor<LeaderDomain> {
     companion object {
         private val logger = LoggerFactory.getLogger(JobRecoveryProcessor::class.java)
@@ -42,7 +43,7 @@ internal class JobRecoveryProcessor(
         Duration.ofSeconds(travakoConfig.jobsAssignee.seconds.times(2))
             .fixedRateJob(taskScheduler) {
                 logger.debug("Start jobs-recovery-processor")
-                transactionalExecutor.runUnitTransaction {
+                travakoTransactionalExecutor.runUnitTransaction {
                     val runningJobs = jobInstanceSdk.serverJobs
                         .runOperation(
                             JobServerDto(
@@ -91,9 +92,12 @@ internal class JobRecoveryProcessor(
                                 )
                                 jobInstanceSdk.markJobAsWaiting
                                     .runOperation(
-                                        JobKeyDto(
-                                            serverKey = travakoConfig.serverKey,
-                                            jobKey = job.jobKey
+                                        UpdateJobRequest(
+                                            jobKey = JobKeyDto(
+                                                serverKey = travakoConfig.serverKey,
+                                                jobKey = job.jobKey
+                                            ),
+                                            nextExecutionTime = null
                                         )
                                     )
                             }

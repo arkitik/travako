@@ -4,7 +4,8 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.exception.UnprocessableEntityException
 import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.function.processor.PreProcessor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.leader.dto.LeaderRunnerKeyDto
 import io.arkitik.travako.starter.processor.config.TravakoConfig
@@ -15,10 +16,10 @@ import org.slf4j.LoggerFactory
  * Created At 28 8:42 PM, **Tue, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class LeaderRegistrationProcess(
+internal class LeaderRegistrationProcess(
     private val travakoConfig: TravakoConfig,
     private val leaderSdk: LeaderSdk,
-    private val transactionalExecutor: TransactionalExecutor,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : PreProcessor<LeaderDomain> {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LeaderRegistrationProcess::class.java)!!
@@ -27,7 +28,7 @@ class LeaderRegistrationProcess(
     override val type = LeaderDomain::class.java
 
     override fun process() {
-        transactionalExecutor.runOnTransaction {
+        travakoTransactionalExecutor.runUnitTransaction {
             LOGGER.debug(
                 "Start Registering Leader: [Key: {}]",
                 travakoConfig.serverKey

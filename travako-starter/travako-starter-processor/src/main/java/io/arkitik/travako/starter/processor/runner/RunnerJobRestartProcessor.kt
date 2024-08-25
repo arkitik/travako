@@ -4,13 +4,13 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.sdk.job.event.dto.EventDataDto
 import io.arkitik.travako.sdk.job.event.dto.JobEventRunnerKeyAndUuidDto
 import io.arkitik.travako.sdk.job.event.dto.JobEventRunnerKeyDto
-import io.arkitik.travako.starter.job.bean.JobInstanceBean
+import io.arkitik.travako.starter.job.source.JobInstancesSource
 import io.arkitik.travako.starter.processor.config.TravakoConfig
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
 import io.arkitik.travako.starter.processor.logger.logger
@@ -22,12 +22,12 @@ import org.springframework.scheduling.TaskScheduler
  * Created At 04 7:21 PM, **Tue, January 2022**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class RunnerJobRestartProcessor(
+internal class RunnerJobRestartProcessor(
     private val travakoConfig: TravakoConfig,
     private val taskScheduler: TaskScheduler,
     private val jobEventSdk: JobEventSdk,
-    private val transactionalExecutor: TransactionalExecutor,
-    private val jobInstances: List<JobInstanceBean>,
+    private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
+    private val jobInstancesSource: JobInstancesSource,
     private val jobsSchedulerRegistry: JobsSchedulerRegistry,
 ) : Processor<SchedulerRunnerDomain> {
     override val type = SchedulerRunnerDomain::class.java
@@ -36,11 +36,12 @@ class RunnerJobRestartProcessor(
 
     init {
         eventProcessors[JobEventType.RESTART.name] = { event ->
-            jobInstances.firstOrNull { job ->
-                event.jobKey == job.jobKey
-            }?.let { job ->
-                jobsSchedulerRegistry.rebootScheduledJob(job)
-            }
+            jobInstancesSource
+                .firstOrNull { job ->
+                    event.jobKey == job.jobKey
+                }?.let { job ->
+                    jobsSchedulerRegistry.rebootScheduledJob(job)
+                }
         }
     }
 
@@ -56,7 +57,7 @@ class RunnerJobRestartProcessor(
                         )
                     ).events
                         .forEach { event ->
-                            transactionalExecutor.runUnitTransaction {
+                            travakoTransactionalExecutor.runUnitTransaction {
                                 eventProcessors[event.eventType]?.let { function ->
                                     logger.debug("Start {} processor for [Job-Key {}]", event.eventType, event.jobKey)
                                     function(event)

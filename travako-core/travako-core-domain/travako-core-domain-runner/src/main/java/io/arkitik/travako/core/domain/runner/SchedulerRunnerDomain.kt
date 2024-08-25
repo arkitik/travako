@@ -10,8 +10,8 @@ import java.time.LocalDateTime
  * Created At 25 4:39 PM, **Sat, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  *
- * =================================================
- * Scheduler instance will responsible to:
+ * ------------------------------------------
+ * Scheduler runner instance will responsible to:
  * * Non-Leader Instance will responsible to run all jobs unless there is no instance expect one, then; the same instance will run all scheduled jobs.
  */
 interface SchedulerRunnerDomain : Identity<String> {

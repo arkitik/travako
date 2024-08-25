@@ -2,7 +2,7 @@ package io.arkitik.travako.port.runner
 
 import io.arkitik.travako.adapter.runner.SchedulerRunnerStoreImpl
 import io.arkitik.travako.adapter.runner.repository.TravakoSchedulerRunnerRepository
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.operation.runner.SchedulerRunnerDomainSdkImpl
 import io.arkitik.travako.operation.runner.SchedulerRunnerSdkImpl
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
@@ -44,9 +44,9 @@ class RunnerPortContext {
     @Bean
     fun schedulerRunnerDomainSdk(
         schedulerRunnerStore: SchedulerRunnerStore,
-        transactionalExecutor: TransactionalExecutor,
+        travakoTransactionalExecutor: TravakoTransactionalExecutor,
     ): SchedulerRunnerDomainSdk = SchedulerRunnerDomainSdkImpl(
         schedulerRunnerStore = schedulerRunnerStore,
-        transactionalExecutor = transactionalExecutor,
+        travakoTransactionalExecutor = travakoTransactionalExecutor,
     )
 }

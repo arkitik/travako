@@ -3,7 +3,7 @@ package io.arkitik.travako.operation.job.operation
 import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeCreator
+import io.arkitik.radix.develop.store.creatorWithSave
 import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.operation.job.roles.CheckRegisteredJobRole
@@ -34,15 +34,14 @@ class RegisterJobOperationProvider(
                 ServerDomainDto(serverKey)
             )
             with(jobInstanceStore) {
-                storeCreator(identityCreator()) {
+                creatorWithSave(identityCreator()) {
                     jobKey.jobKey()
                     JobStatus.WAITING.jobStatus()
                     server.server()
                     jobTrigger.jobTrigger()
                     (JobInstanceTriggerType.DURATION.takeIf { isDuration }
                         ?: JobInstanceTriggerType.CRON).jobTriggerType()
-                    create()
-                }.save()
+                }
             }
         }
     }

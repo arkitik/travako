@@ -5,8 +5,8 @@ package io.arkitik.travako.function.transaction
  * Created At 25 11:21 PM, **Sat, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-interface TransactionalExecutor {
+interface TravakoTransactionalExecutor {
     fun <T> runOnTransaction(function: () -> T): T?
 }
 
-fun TransactionalExecutor.runUnitTransaction(function: () -> Unit) = runOnTransaction(function)
+fun TravakoTransactionalExecutor.runUnitTransaction(function: () -> Unit) = runOnTransaction(function)

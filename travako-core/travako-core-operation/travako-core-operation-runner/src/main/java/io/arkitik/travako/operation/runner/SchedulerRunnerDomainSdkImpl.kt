@@ -1,6 +1,6 @@
 package io.arkitik.travako.operation.runner
 
-import io.arkitik.travako.function.transaction.TransactionalExecutor
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.operation.runner.operation.FetchOldestHeartbeatRunnerOperationProvider
 import io.arkitik.travako.operation.runner.operation.FetchSchedulerRunnerOperationProvider
 import io.arkitik.travako.operation.runner.operation.FetchServerSchedulerRunnerOperationProvider
@@ -14,7 +14,7 @@ import io.arkitik.travako.store.runner.SchedulerRunnerStore
  */
 class SchedulerRunnerDomainSdkImpl(
     schedulerRunnerStore: SchedulerRunnerStore,
-    transactionalExecutor: TransactionalExecutor,
+    travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : SchedulerRunnerDomainSdk {
     override val fetchSchedulerRunner =
         FetchSchedulerRunnerOperationProvider(schedulerRunnerStore.storeQuery).fetchSchedulerRunner
@@ -23,6 +23,6 @@ class SchedulerRunnerDomainSdkImpl(
     override val fetchOldestHeartbeatRunner =
         FetchOldestHeartbeatRunnerOperationProvider(
             schedulerRunnerStoreQuery = schedulerRunnerStore.storeQuery,
-            transactionalExecutor = transactionalExecutor,
+            travakoTransactionalExecutor = travakoTransactionalExecutor,
         ).fetchOldestHeartbeatRunner
 }
