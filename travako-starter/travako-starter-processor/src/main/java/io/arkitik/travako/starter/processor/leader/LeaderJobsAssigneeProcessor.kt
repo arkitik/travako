@@ -9,14 +9,17 @@ import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.AssignJobsToRunnerDto
+import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobServerDto
 import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.leader.dto.IsLeaderBeforeDto
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerServerKeyDto
-import io.arkitik.travako.starter.processor.config.TravakoConfig
+import io.arkitik.travako.starter.processor.config.TravakoLeaderConfig
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.errors.StartupErrors
-import io.arkitik.travako.starter.processor.logger.logger
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
 import org.springframework.scheduling.TaskScheduler
 import java.time.LocalDateTime
@@ -34,6 +37,8 @@ internal class LeaderJobsAssigneeProcessor(
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
     private val leaderSdk: LeaderSdk,
+    private val travakoLeaderConfig: TravakoLeaderConfig,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
 ) : Processor<LeaderDomain> {
     companion object {
         private val logger = logger<LeaderJobsAssigneeProcessor>()
@@ -42,55 +47,55 @@ internal class LeaderJobsAssigneeProcessor(
     override val type = LeaderDomain::class.java
 
     override fun process() {
-        travakoConfig.jobsAssignee
-            .fixedRateJob(taskScheduler) {
-                leaderSdk.isLeaderBefore
-                    .operateRole(
-                        IsLeaderBeforeDto(
-                            serverKey = travakoConfig.keyDto.serverKey,
-                            runnerKey = travakoConfig.keyDto.runnerKey,
-                            runnerHost = travakoConfig.keyDto.runnerHost,
-                            dateBefore = LocalDateTime.now()
-                        )
-                    ).takeIf { it }?.let {
-                        travakoTransactionalExecutor.runUnitTransaction {
-                            logger.info("Start jobs reassign process...")
-                            val runners = schedulerRunnerSdk.allServerRunners
-                                .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))
-                                .filter { it.isRunning }
-                            if (runners.isEmpty()) {
-                                throw StartupErrors.NO_REGISTERED_RUNNERS.internal()
+        travakoLeaderConfig.jobsAssignee.fixedRateJob(taskScheduler) {
+            leaderSdk.isLeaderBefore
+                .operateRole(
+                    IsLeaderBeforeDto(
+                        serverKey = travakoConfig.serverKey,
+                        runnerKey = travakoRunnerConfig.key,
+                        runnerHost = travakoRunnerConfig.host,
+                        dateBefore = LocalDateTime.now()
+                    )
+                ).takeIf { it }?.let {
+                    travakoTransactionalExecutor.runUnitTransaction {
+                        logger.info("Start jobs reassign process...")
+                        val runners = schedulerRunnerSdk.allRunningServerRunners
+                            .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))
+                        if (runners.isEmpty()) {
+                            throw StartupErrors.NO_REGISTERED_RUNNERS.internal()
+                        }
+                        val jobs = jobInstanceSdk.serverJobs
+                            .runOperation(JobServerDto(travakoConfig.serverKey))
+                        if (jobs.isEmpty()) {
+                            throw StartupErrors.NO_REGISTERED_JOBS.internal()
+                        }
+                        jobs.filterNot(JobDetails::isRunning)
+                            .map { job ->
+                                runners[Random().nextInt(runners.size)] to job
+                            }.groupBy {
+                                it.first.runnerKey to it.first.runnerHost
                             }
-                            val jobs = jobInstanceSdk.serverJobs
-                                .runOperation(JobServerDto(travakoConfig.serverKey))
-                            if (jobs.isEmpty()) {
-                                throw StartupErrors.NO_REGISTERED_JOBS.internal()
-                            }
-                            jobs.filter { it.isRunning.not() }
-                                .map { job ->
-                                    runners[Random().nextInt(runners.size)] to job
-                                }.groupBy { it.first.runnerKey to it.first.runnerHost }
-                                .forEach { entry ->
-                                    val jobKeys = entry.value.map {
-                                        it.second.jobKey
-                                    }
-                                    jobInstanceSdk.assignJobsToRunner.runOperation(
+                            .forEach { (key, value) ->
+                                val jobKeys = value
+                                    .map { it.second.jobKey }
+                                jobInstanceSdk.assignJobsToRunner
+                                    .runOperation(
                                         AssignJobsToRunnerDto(
                                             serverKey = travakoConfig.serverKey,
-                                            runnerKey = entry.key.first,
-                                            runnerHost = entry.key.second,
+                                            runnerKey = key.first,
+                                            runnerHost = key.second,
                                             jobKeys = jobKeys
                                         )
                                     )
-                                    logger.info(
-                                        "Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
-                                        "${entry.key.first}-${entry.key.second}",
-                                        jobKeys
-                                    )
-                                }
-                        }
+                                logger.info(
+                                    "Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
+                                    "${key.first}-${key.second}",
+                                    jobKeys
+                                )
+                            }
                     }
-            }
+                }
+        }
     }
 
 }

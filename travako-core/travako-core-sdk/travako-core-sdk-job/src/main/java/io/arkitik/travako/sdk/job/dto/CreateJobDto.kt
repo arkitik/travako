@@ -1,5 +1,7 @@
 package io.arkitik.travako.sdk.job.dto
 
+import java.time.LocalDateTime
+
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
  * Created At 27 7:09 PM, **Mon, December 2021**
@@ -8,6 +10,9 @@ package io.arkitik.travako.sdk.job.dto
 data class CreateJobDto(
     val serverKey: String,
     val jobKey: String,
+    val jobClassName: String,
     val jobTrigger: String,
     val isDuration: Boolean,
+    val nextExecution: LocalDateTime?,
+    val params: Map<String, String?>,
 )

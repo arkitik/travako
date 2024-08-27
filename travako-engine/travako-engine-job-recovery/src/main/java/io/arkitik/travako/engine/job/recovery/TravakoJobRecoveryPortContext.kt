@@ -6,7 +6,8 @@ import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
-import io.arkitik.travako.starter.processor.config.TravakoConfig
+import io.arkitik.travako.starter.processor.config.TravakoLeaderConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.TaskScheduler
@@ -23,6 +24,7 @@ class TravakoJobRecoveryPortContext {
         schedulerRunnerSdk: SchedulerRunnerSdk,
         taskScheduler: TaskScheduler,
         travakoConfig: TravakoConfig,
+        travakoLeaderConfig: TravakoLeaderConfig,
         travakoTransactionalExecutor: TravakoTransactionalExecutor,
     ): Processor<LeaderDomain> =
         JobRecoveryProcessor(
@@ -30,6 +32,7 @@ class TravakoJobRecoveryPortContext {
             schedulerRunnerSdk = schedulerRunnerSdk,
             taskScheduler = taskScheduler,
             travakoConfig = travakoConfig,
-            travakoTransactionalExecutor = travakoTransactionalExecutor
+            travakoTransactionalExecutor = travakoTransactionalExecutor,
+            travakoLeaderConfig = travakoLeaderConfig
         )
 }

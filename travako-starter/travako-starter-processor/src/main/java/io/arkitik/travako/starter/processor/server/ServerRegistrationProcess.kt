@@ -9,8 +9,8 @@ import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.server.ServerSdk
 import io.arkitik.travako.sdk.server.dto.ServerKeyDto
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import org.slf4j.LoggerFactory
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.logger.logger
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -23,7 +23,7 @@ internal class ServerRegistrationProcess(
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : PreProcessor<ServerDomain> {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ServerRegistrationProcess::class.java)!!
+        private val LOGGER = logger<ServerRegistrationProcess>()
     }
 
     override val type = ServerDomain::class.java

@@ -37,7 +37,7 @@ class MarkJobAsRunningOperationProvider(
                 val jobInstance = jobDomainSdk.fetchJobInstance
                     .runOperation(JobDomainDto(server, jobKey.jobKey))
                 storeUpdater(jobInstance.identityUpdater()) {
-                    JobStatus.RUNNING.status()
+                    JobStatus.RUNNING.jobStatus()
                     nextExecutionTime.nextExecutionTime()
                     update()
                 }.save()

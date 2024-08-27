@@ -20,7 +20,7 @@ class CheckJobsRegisteredRole(
 ) : OperationRole<AssignJobsToRunnerDto, Unit> {
     override fun AssignJobsToRunnerDto.operateRole() {
         val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-        jobInstanceStoreQuery.existsAllByServerAndJobKeys(
+        jobInstanceStoreQuery.existsByServerAndJobKeys(
             server = server,
             jobKeys = jobKeys
         ).takeIf { !it }?.also {

@@ -1,8 +1,12 @@
 package io.arkitik.travako.starter.processor.runner
 
+import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.function.processor.Processor
-import io.arkitik.travako.starter.job.source.JobInstancesSource
+import io.arkitik.travako.sdk.job.JobInstanceSdk
+import io.arkitik.travako.sdk.job.dto.JobServerDto
+import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
 
 /**
@@ -11,15 +15,22 @@ import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 internal class RunnerJobsRegisterProcessor(
-    private val jobInstancesSource: JobInstancesSource,
     private val jobsSchedulerRegistry: JobsSchedulerRegistry,
+    private val travakoConfig: TravakoConfig,
+    private val jobInstanceSdk: JobInstanceSdk,
+    private val travakoJobInstanceProvider: TravakoJobInstanceProvider,
 ) : Processor<SchedulerRunnerDomain> {
     override val type = SchedulerRunnerDomain::class.java
 
     override fun process() {
-        jobInstancesSource
-            .forEach { jobInstanceBean ->
-                jobsSchedulerRegistry.scheduleJob(jobInstanceBean)
+        jobInstanceSdk.serverJobs
+            .runOperation(JobServerDto(travakoConfig.serverKey))
+            .forEach { jobDetails ->
+                val travakoJob = travakoJobInstanceProvider.provideJobInstance(
+                    jobDetails.jobKey,
+                    jobDetails.jobClassName
+                )
+                jobsSchedulerRegistry.scheduleJob(jobDetails, travakoJob)
             }
     }
 }

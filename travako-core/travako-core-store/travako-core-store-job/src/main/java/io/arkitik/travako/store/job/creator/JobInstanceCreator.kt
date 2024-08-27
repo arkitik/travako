@@ -5,6 +5,7 @@ import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.server.ServerDomain
+import java.time.LocalDateTime
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -13,8 +14,16 @@ import io.arkitik.travako.core.domain.server.ServerDomain
  */
 interface JobInstanceCreator : StoreIdentityCreator<String, JobInstanceDomain> {
     fun String.jobKey(): JobInstanceCreator
+
+    fun String.jobClassName(): JobInstanceCreator
+
     fun ServerDomain.server(): JobInstanceCreator
+
     fun JobStatus.jobStatus(): JobInstanceCreator
+
     fun String.jobTrigger(): JobInstanceCreator
+
     fun JobInstanceTriggerType.jobTriggerType(): JobInstanceCreator
+
+    fun LocalDateTime?.nextExecutionTime(): JobInstanceCreator
 }

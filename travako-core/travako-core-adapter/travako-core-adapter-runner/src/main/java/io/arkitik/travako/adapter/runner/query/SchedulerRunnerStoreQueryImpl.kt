@@ -56,4 +56,7 @@ class SchedulerRunnerStoreQueryImpl(
     ) = travakoSchedulerRunnerRepository.findAllByServer(
         server = server as TravakoServer
     )
+
+    override fun findAllByServerAndStatus(server: ServerDomain, status: InstanceState) =
+        travakoSchedulerRunnerRepository.findAllByServerAndInstanceState(server, status)
 }

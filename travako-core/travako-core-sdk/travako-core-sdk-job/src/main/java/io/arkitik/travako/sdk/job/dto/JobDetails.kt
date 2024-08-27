@@ -9,8 +9,10 @@ import java.time.LocalDateTime
  */
 data class JobDetails(
     val jobKey: String,
+    val jobClassName: String,
     val isRunning: Boolean,
     val jobTrigger: String,
     val isDuration: Boolean,
     val lastRunningTime: LocalDateTime?,
+    val params: Map<String, String?>,
 )

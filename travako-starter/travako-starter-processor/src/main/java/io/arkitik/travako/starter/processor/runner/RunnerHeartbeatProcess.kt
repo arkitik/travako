@@ -6,8 +6,10 @@ import io.arkitik.travako.function.processor.Processor
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import io.arkitik.travako.starter.processor.logger.logger
+import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
 import org.springframework.scheduling.TaskScheduler
 
@@ -18,23 +20,33 @@ import org.springframework.scheduling.TaskScheduler
  */
 internal class RunnerHeartbeatProcess(
     private val travakoConfig: TravakoConfig,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val taskScheduler: TaskScheduler,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : Processor<SchedulerRunnerDomain> {
-    private val logger = logger<RunnerHeartbeatProcess>()
+    companion object {
+        private val logger = logger<RunnerHeartbeatProcess>()
+    }
+
     override val type = SchedulerRunnerDomain::class.java
 
     override fun process() {
-        travakoConfig.heartbeat
+        travakoRunnerConfig.heartbeat
             .fixedRateJob(taskScheduler) {
                 travakoTransactionalExecutor.runUnitTransaction {
                     schedulerRunnerSdk.runCatching {
-                        logRunnerHeartbeat.runOperation(travakoConfig.keyDto)
+                        logRunnerHeartbeat.runOperation(
+                            RunnerKeyDto(
+                                serverKey = travakoConfig.serverKey,
+                                runnerKey = travakoRunnerConfig.key,
+                                runnerHost = travakoRunnerConfig.host
+                            )
+                        )
                     }.onFailure {
                         logger.warn(
                             "Error while logging heartbeat message for {} , error: {}",
-                            "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
+                            "${travakoRunnerConfig.key}-${travakoRunnerConfig.host}",
                             it.message
                         )
                     }

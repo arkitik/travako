@@ -8,8 +8,10 @@ import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.CreateJobDto
 import io.arkitik.travako.starter.job.source.JobInstancesSource
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import org.slf4j.LoggerFactory
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
+import io.arkitik.travako.starter.processor.core.job.parseTrigger
+import io.arkitik.travako.starter.processor.core.logger.logger
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -23,33 +25,38 @@ internal class JobInstancesProcessor(
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : Processor<JobInstanceDomain> {
     companion object {
-        private val logger = LoggerFactory.getLogger(JobInstancesProcessor::class.java)!!
+        private val logger = logger<JobInstancesProcessor>()
     }
 
     override val type = JobInstanceDomain::class.java
 
     override fun process() {
         travakoTransactionalExecutor.runUnitTransaction {
-            jobInstancesSource.forEach { job ->
-                try {
-                    val jobTrigger = job.trigger.parseTrigger()
-                    jobInstanceSdk.registerJob
-                        .runOperation(
-                            CreateJobDto(
-                                serverKey = travakoConfig.serverKey,
-                                jobKey = job.jobKey,
-                                jobTrigger = jobTrigger.first,
-                                isDuration = jobTrigger.second
+            jobInstancesSource.jobs()
+                .forEach { jobInstanceBean ->
+                    try {
+                        val jobTrigger = jobInstanceBean.trigger.parseTrigger()
+                        val nextExecution = jobInstanceBean.trigger.nextTimeToExecution()
+                        jobInstanceSdk.registerJob
+                            .runOperation(
+                                CreateJobDto(
+                                    serverKey = travakoConfig.serverKey,
+                                    jobKey = jobInstanceBean.jobKey,
+                                    jobTrigger = jobTrigger.first,
+                                    isDuration = jobTrigger.second,
+                                    nextExecution = nextExecution,
+                                    jobClassName = jobInstanceBean.javaClass.name,
+                                    params = mapOf()
+                                )
                             )
+                    } catch (e: Exception) {
+                        logger.warn(
+                            "Error while registering the Job Instance: [Key: {}] [Error: {}]",
+                            jobInstanceBean.jobKey,
+                            e.message
                         )
-                } catch (e: Exception) {
-                    logger.warn(
-                        "Error while registering the Job Instance: [Key: {}] [Error: {}]",
-                        job.jobKey,
-                        e.message
-                    )
+                    }
                 }
-            }
         }
     }
 }

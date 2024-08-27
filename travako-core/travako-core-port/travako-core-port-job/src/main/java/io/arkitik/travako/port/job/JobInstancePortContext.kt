@@ -1,6 +1,8 @@
 package io.arkitik.travako.port.job
 
+import io.arkitik.travako.adapter.job.JobInstanceParamStoreImpl
 import io.arkitik.travako.adapter.job.JobInstanceStoreImpl
+import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceParamRepository
 import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceRepository
 import io.arkitik.travako.operation.job.JobDomainSdkImpl
 import io.arkitik.travako.operation.job.JobInstanceSdkImpl
@@ -9,6 +11,7 @@ import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.event.JobEventSdk
+import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.JobInstanceStore
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,6 +29,11 @@ class JobInstancePortContext {
     ): JobInstanceStore = JobInstanceStoreImpl(travakoJobInstanceRepository)
 
     @Bean
+    fun jobInstanceParamStore(
+        travakoJobInstanceParamRepository: TravakoJobInstanceParamRepository,
+    ): JobInstanceParamStore = JobInstanceParamStoreImpl(travakoJobInstanceParamRepository)
+
+    @Bean
     fun jobDomainSdk(
         jobInstanceStore: JobInstanceStore,
     ): JobDomainSdk = JobDomainSdkImpl(jobInstanceStore)
@@ -37,11 +45,13 @@ class JobInstancePortContext {
         schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
         jobEventSdk: JobEventSdk,
         jobDomainSdk: JobDomainSdk,
+        jobInstanceParamStore: JobInstanceParamStore,
     ): JobInstanceSdk = JobInstanceSdkImpl(
         jobInstanceStore = jobInstanceStore,
         serverDomainSdk = serverDomainSdk,
         schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
         jobEventSdk = jobEventSdk,
         jobDomainSdk = jobDomainSdk,
+        jobInstanceParamStore = jobInstanceParamStore
     )
 }

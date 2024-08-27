@@ -16,12 +16,17 @@ interface JobInstanceUpdater : StoreIdentityUpdater<String, JobInstanceDomain> {
     fun removeRunnerAssignee(): JobInstanceUpdater
     fun SchedulerRunnerDomain.assignToRunner(): JobInstanceUpdater
 
-    fun JobStatus.status(): JobInstanceUpdater
+    fun JobStatus.jobStatus(): JobInstanceUpdater
 
     fun LocalDateTime?.lastRunningTime(): JobInstanceUpdater
 
     fun LocalDateTime?.nextExecutionTime(): JobInstanceUpdater
 
     fun String.jobTrigger(): JobInstanceUpdater
+
     fun JobInstanceTriggerType.jobTriggerType(): JobInstanceUpdater
+
+    fun String.jobClassName(): JobInstanceUpdater
+
+    fun removeNextExecutionTime(): JobInstanceUpdater
 }

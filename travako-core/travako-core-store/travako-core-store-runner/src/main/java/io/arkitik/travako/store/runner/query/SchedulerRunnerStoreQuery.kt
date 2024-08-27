@@ -38,4 +38,9 @@ interface SchedulerRunnerStoreQuery : StoreQuery<String, SchedulerRunnerDomain> 
     fun findAllByServer(
         server: ServerDomain,
     ): List<SchedulerRunnerDomain>
+
+    fun findAllByServerAndStatus(
+        server: ServerDomain,
+        status: InstanceState,
+    ): List<SchedulerRunnerDomain>
 }

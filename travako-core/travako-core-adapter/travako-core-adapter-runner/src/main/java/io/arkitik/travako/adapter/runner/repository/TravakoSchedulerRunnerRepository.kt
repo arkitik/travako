@@ -2,6 +2,7 @@ package io.arkitik.travako.adapter.runner.repository
 
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.server.TravakoServer
 
@@ -37,5 +38,10 @@ interface TravakoSchedulerRunnerRepository : RadixRepository<String, TravakoSche
 
     fun findAllByServer(
         server: TravakoServer,
+    ): List<TravakoSchedulerRunner>
+
+    fun findAllByServerAndInstanceState(
+        server: ServerDomain,
+        instanceState: InstanceState,
     ): List<TravakoSchedulerRunner>
 }

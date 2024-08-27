@@ -1,14 +1,25 @@
 package io.arkitik.travako.starter.job.bean
 
+import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
 import org.springframework.scheduling.Trigger
 
 /**
- * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
- * Created At 28 10:00 PM, **Tue, December 2021**
- * Project *travako* [arkitik.io](https://arkitik.io)
+ * Created By Ibrahim Al-Tamimi 
+ * Created At 10:15 AM, 27/08/2024
  */
-interface JobInstanceBean {
+@Deprecated(
+    message = "will be removed in a future version, instead use TravakoJob for scheduling jobs",
+    replaceWith = ReplaceWith("io.arkitik.travako.starter.job.bean.TravakoJob"),
+    level = DeprecationLevel.WARNING
+)
+interface JobInstanceBean : TravakoJob {
+    override fun execute(executionData: TravakoJobExecutionData) {
+        runJob()
+    }
+
     val jobKey: String
+        get() = javaClass.simpleName
+
     val trigger: Trigger
 
     fun runJob()

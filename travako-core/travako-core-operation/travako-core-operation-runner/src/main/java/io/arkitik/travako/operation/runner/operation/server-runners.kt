@@ -40,4 +40,22 @@ class ServerRunnersOperationProvider(
             }
         }
     }
+    val allRunningServerRunners = operationBuilder<RunnerServerKeyDto, List<RunnerDetails>> {
+        mainOperation {
+            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+            val leaderDomain = leaderDomainSdk.fetchServerLeader.runOperation(LeaderDomainServerDto(server))
+            schedulerRunnerStoreQuery.findAllByServerAndStatus(
+                server = server,
+                status = InstanceState.UP,
+            ).map { runner ->
+                RunnerDetails(
+                    runnerKey = runner.runnerKey,
+                    runnerHost = runner.runnerHost,
+                    isRunning = InstanceState.UP == runner.instanceState,
+                    isLeader = leaderDomain.runner.uuid == runner.uuid,
+                    lastHeartbeatTime = runner.lastHeartbeatTime
+                )
+            }
+        }
+    }
 }
