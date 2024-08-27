@@ -1,7 +1,9 @@
 package io.arkitik.travako.starter.processor.job
 
-import io.arkitik.travako.starter.job.bean.JobInstanceBean
-import io.arkitik.travako.starter.processor.logger.logger
+import io.arkitik.travako.sdk.job.dto.JobDetails
+import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.processor.core.job.asTrigger
+import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.runner.RunnerJobExecutor
 import io.arkitik.travako.starter.processor.scheduler.buildJob
 import org.springframework.scheduling.TaskScheduler
@@ -22,25 +24,33 @@ class JobsSchedulerRegistry(
 
     private val jobTriggers = hashMapOf<String, ScheduledFuture<*>?>()
 
-    fun scheduleJob(jobInstance: JobInstanceBean) {
-        val scheduledFuture = jobInstance.trigger.buildJob(taskScheduler) {
-            runnerJobExecutor.executeJob(jobInstance)
+    fun scheduleJob(jobDetails: JobDetails, travakoJob: TravakoJob) {
+        logger.debug("Scheduling JOB instance {}", jobDetails.jobKey)
+        val trigger = jobDetails.asTrigger()
+        val scheduledFuture = trigger.buildJob(taskScheduler) {
+            runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
         }
-        jobTriggers[jobInstance.jobKey] = scheduledFuture
+        jobTriggers[jobDetails.jobKey] = scheduledFuture
     }
 
-    fun rebootScheduledJob(jobInstance: JobInstanceBean) {
-        jobTriggers[jobInstance.jobKey]?.cancel(false)
-        logger.debug("Restart JOB instance {}", jobInstance.jobKey)
+    fun deleteJob(jobKey: String) {
+        logger.debug("Deleting JOB instance {}", jobKey)
+        jobTriggers[jobKey]?.cancel(false)
+    }
+
+    fun rebootScheduledJob(jobDetails: JobDetails, travakoJob: TravakoJob) {
+        jobTriggers[jobDetails.jobKey]?.cancel(false)
+        val trigger = jobDetails.asTrigger()
+        logger.debug("Restart JOB instance {}", jobDetails.jobKey)
         try {
-            val newScheduledFuture = jobInstance.trigger.buildJob(taskScheduler) {
-                runnerJobExecutor.executeJob(jobInstance)
+            val newScheduledFuture = trigger.buildJob(taskScheduler) {
+                runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
             }
-            jobTriggers[jobInstance.jobKey] = newScheduledFuture
+            jobTriggers[jobDetails.jobKey] = newScheduledFuture
         } catch (e: Exception) {
             logger.warn(
                 "Error while restart the Job Instance: [Key: {}] [Error: {}]",
-                jobInstance.jobKey,
+                jobDetails.jobKey,
                 e.message
             )
         }

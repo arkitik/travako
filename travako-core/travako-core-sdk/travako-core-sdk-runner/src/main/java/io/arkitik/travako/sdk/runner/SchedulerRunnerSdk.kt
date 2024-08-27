@@ -21,5 +21,7 @@ interface SchedulerRunnerSdk {
 
     val allServerRunners: Operation<RunnerServerKeyDto, List<RunnerDetails>>
 
+    val allRunningServerRunners: Operation<RunnerServerKeyDto, List<RunnerDetails>>
+
     val runnerDetails: Operation<RunnerKeyDto, RunnerDetails>
 }

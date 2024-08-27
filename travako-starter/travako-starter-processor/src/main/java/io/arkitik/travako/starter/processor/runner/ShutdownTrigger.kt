@@ -2,7 +2,9 @@ package io.arkitik.travako.starter.processor.runner
 
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
-import io.arkitik.travako.starter.processor.config.TravakoConfig
+import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import org.springframework.beans.factory.DisposableBean
 
 /**
@@ -12,10 +14,17 @@ import org.springframework.beans.factory.DisposableBean
  */
 internal class ShutdownTrigger(
     private val travakoConfig: TravakoConfig,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
 ) : DisposableBean {
     override fun destroy() {
         schedulerRunnerSdk.markRunnerAsDown
-            .runOperation(travakoConfig.keyDto)
+            .runOperation(
+                RunnerKeyDto(
+                    serverKey = travakoConfig.serverKey,
+                    runnerKey = travakoRunnerConfig.key,
+                    runnerHost = travakoRunnerConfig.host,
+                )
+            )
     }
 }

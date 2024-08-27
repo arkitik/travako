@@ -8,8 +8,9 @@ import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.leader.dto.LeaderRunnerKeyDto
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import org.slf4j.LoggerFactory
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.logger.logger
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -20,32 +21,33 @@ internal class LeaderRegistrationProcess(
     private val travakoConfig: TravakoConfig,
     private val leaderSdk: LeaderSdk,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
 ) : PreProcessor<LeaderDomain> {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(LeaderRegistrationProcess::class.java)!!
+        private val logger = logger<LeaderRegistrationProcess>()
     }
 
     override val type = LeaderDomain::class.java
 
     override fun process() {
         travakoTransactionalExecutor.runUnitTransaction {
-            LOGGER.debug(
+            logger.debug(
                 "Start Registering Leader: [Key: {}]",
                 travakoConfig.serverKey
             )
             try {
                 leaderSdk.registerLeaderServer.runOperation(
                     LeaderRunnerKeyDto(
-                        serverKey = travakoConfig.keyDto.serverKey,
-                        runnerKey = travakoConfig.keyDto.runnerKey,
-                        runnerHost = travakoConfig.keyDto.runnerHost
+                        serverKey = travakoConfig.serverKey,
+                        runnerKey = travakoRunnerConfig.key,
+                        runnerHost = travakoRunnerConfig.host
                     )
                 )
             } catch (e: UnprocessableEntityException) {
-                LOGGER.warn(
+                logger.warn(
                     "Error while registering the Leader: [Server: {}] [Runner: {}] [Error: {}]",
                     travakoConfig.serverKey,
-                    "${travakoConfig.keyDto.runnerKey}-${travakoConfig.keyDto.runnerHost}",
+                    "${travakoRunnerConfig.key}-${travakoRunnerConfig.host}",
                     e.error
                 )
             }

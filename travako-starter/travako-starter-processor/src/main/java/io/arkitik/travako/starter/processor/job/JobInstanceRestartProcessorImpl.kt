@@ -1,13 +1,10 @@
 package io.arkitik.travako.starter.processor.job
 
-import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.exception.UnprocessableEntityException
-import io.arkitik.travako.sdk.job.JobInstanceSdk
-import io.arkitik.travako.sdk.job.dto.CreateJobDto
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
 import io.arkitik.travako.starter.job.bean.JobInstanceRestartProcessor
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import io.arkitik.travako.starter.processor.logger.logger
+import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
+import io.arkitik.travako.starter.processor.core.logger.logger
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -15,8 +12,7 @@ import io.arkitik.travako.starter.processor.logger.logger
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 internal class JobInstanceRestartProcessorImpl(
-    private val travakoConfig: TravakoConfig,
-    private val jobInstanceSdk: JobInstanceSdk,
+    private val jobInstancesRegistry: JobInstancesRegistry,
 ) : JobInstanceRestartProcessor {
     companion object {
         private val logger = logger<JobInstanceRestartProcessorImpl>()
@@ -24,16 +20,7 @@ internal class JobInstanceRestartProcessorImpl(
 
     override fun triggerRestartJob(jobInstanceBean: JobInstanceBean) {
         try {
-            val jobTrigger = jobInstanceBean.trigger.parseTrigger()
-            jobInstanceSdk.updateJobTrigger
-                .runOperation(
-                    CreateJobDto(
-                        serverKey = travakoConfig.serverKey,
-                        jobKey = jobInstanceBean.jobKey,
-                        jobTrigger = jobTrigger.first,
-                        isDuration = jobTrigger.second
-                    )
-                )
+            jobInstancesRegistry.updateJobTrigger(jobInstanceBean.jobKey, jobInstanceBean.trigger)
         } catch (e: UnprocessableEntityException) {
             logger.warn(
                 "Error while updating Job Instance: [Key: {}] [Error: {}]",

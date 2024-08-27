@@ -15,6 +15,8 @@ import io.arkitik.travako.sdk.job.event.dto.JobEventRunnerKeyDto
 interface JobEventSdk {
     val insertRestartJobEvent: Operation<JobEventKeyDto, Unit>
     val insertRecoverJobEvent: Operation<JobEventKeyDto, Unit>
+    val insertRegisterJobEvent: Operation<JobEventKeyDto, Unit>
+    val insertDeleteJobEvent: Operation<JobEventKeyDto, Unit>
 
     val markEventProcessedForRunner: Operation<JobEventRunnerKeyAndUuidDto, Unit>
 

@@ -15,10 +15,16 @@ import java.time.LocalDateTime
 interface JobInstanceDomain : Identity<String> {
     override val uuid: String
     val jobKey: String
+    val jobClassName: String
+
     val server: ServerDomain
+
     val jobStatus: JobStatus
+
     val jobTrigger: String
+
     val jobTriggerType: JobInstanceTriggerType
+
     val assignedTo: SchedulerRunnerDomain?
     val lastRunningTime: LocalDateTime?
     val nextExecutionTime: LocalDateTime?

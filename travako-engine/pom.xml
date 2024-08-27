@@ -6,13 +6,14 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako</artifactId>
-        <version>v2.0.1</version>
+        <version>v2.1.0</version>
     </parent>
 
     <artifactId>travako-engine</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>travako-engine-job-recovery</module>
+        <module>travako-engine-job-misfiring</module>
     </modules>
 
 </project>

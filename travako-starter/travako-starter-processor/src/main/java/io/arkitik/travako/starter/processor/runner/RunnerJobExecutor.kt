@@ -5,15 +5,18 @@ import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
+import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
 import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
-import io.arkitik.travako.starter.job.bean.JobInstanceBean
-import io.arkitik.travako.starter.processor.config.TravakoConfig
-import io.arkitik.travako.starter.processor.logger.logger
-import org.springframework.scheduling.support.SimpleTriggerContext
+import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
+import io.arkitik.travako.starter.processor.core.logger.logger
+import org.springframework.scheduling.Trigger
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -22,6 +25,7 @@ import java.time.ZoneId
  */
 class RunnerJobExecutor(
     private val travakoConfig: TravakoConfig,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
     private val jobInstanceSdk: JobInstanceSdk,
 ) {
@@ -29,31 +33,38 @@ class RunnerJobExecutor(
         private val logger = logger<RunnerJobExecutor>()
     }
 
-    fun executeJob(jobInstanceBean: JobInstanceBean) {
-        jobInstanceSdk.isJobAssignedToRunner.operateRole(
-            request = JobServerRunnerKeyDto(
-                serverKey = travakoConfig.keyDto.serverKey,
-                runnerKey = travakoConfig.keyDto.runnerKey,
-                runnerHost = travakoConfig.keyDto.runnerHost,
-                jobKey = jobInstanceBean.jobKey
-            )
-        ).takeIf { it }?.also {
-            val instant = jobInstanceBean.trigger.nextExecution(SimpleTriggerContext())
-            val nextExecution = instant?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+    fun executeJob(jobDetails: JobDetails, trigger: Trigger, travakoJob: TravakoJob) {
+        jobInstanceSdk.isJobAssignedToRunner
+            .operateRole(
+                request = JobServerRunnerKeyDto(
+                    serverKey = travakoConfig.serverKey,
+                    runnerKey = travakoRunnerConfig.key,
+                    runnerHost = travakoRunnerConfig.host,
+                    jobKey = jobDetails.jobKey
+                )
+            ).takeIf { it }?.also {
+                jobDetails.markAsRunning(null)
 
-            jobInstanceBean.markAsRunning(nextExecution)
-
-            runCatching {
-                jobInstanceBean.runJob()
-            }.onFailure {
-                logger.error("Error while executing job [key: ${jobInstanceBean.jobKey}]", it)
-            }.also {
-                jobInstanceBean.markAsWaiting(nextExecution)
+                runCatching {
+                    travakoJob.execute(
+                        TravakoJobExecutionData(
+                            serverKey = travakoConfig.serverKey,
+                            runnerKey = travakoRunnerConfig.key,
+                            runnerHost = travakoRunnerConfig.host,
+                            jobKey = jobDetails.jobKey,
+                            params = jobDetails.params
+                        )
+                    )
+                }.onFailure {
+                    logger.error("Error while executing job [key: ${jobDetails.jobKey}]", it)
+                }.also {
+                    val nextExecution = trigger.nextTimeToExecution()
+                    jobDetails.markAsWaiting(nextExecution)
+                }
             }
-        }
     }
 
-    private fun JobInstanceBean.markAsRunning(nextExecution: LocalDateTime?) {
+    private fun JobDetails.markAsRunning(nextExecution: LocalDateTime?) {
         travakoTransactionalExecutor.runUnitTransaction {
             jobInstanceSdk.markJobAsRunning.runOperation(
                 UpdateJobRequest(
@@ -67,7 +78,7 @@ class RunnerJobExecutor(
         }
     }
 
-    private fun JobInstanceBean.markAsWaiting(nextExecution: LocalDateTime?) {
+    private fun JobDetails.markAsWaiting(nextExecution: LocalDateTime?) {
         travakoTransactionalExecutor.runUnitTransaction {
             jobInstanceSdk.markJobAsWaiting.runOperation(
                 UpdateJobRequest(

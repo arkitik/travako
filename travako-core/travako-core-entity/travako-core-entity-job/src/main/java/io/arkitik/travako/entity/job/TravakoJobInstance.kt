@@ -37,6 +37,8 @@ data class TravakoJobInstance(
     @Column(nullable = false, updatable = false)
     override val jobKey: String,
     @Column(nullable = false)
+    override var jobClassName: String,
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     override var jobStatus: JobStatus,
     @Id

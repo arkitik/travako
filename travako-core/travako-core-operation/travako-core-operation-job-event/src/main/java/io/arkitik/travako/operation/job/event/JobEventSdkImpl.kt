@@ -31,9 +31,26 @@ class JobEventSdkImpl(
             jobEventStore = jobEventStore,
             serverDomainSdk = serverDomainSdk
         ).insertJobEvent
+
     override val insertRecoverJobEvent =
         InsertJobEventOperationProvider(
             jobEventType = JobEventType.RECOVER,
+            jobDomainSdk = jobDomainSdk,
+            jobEventStore = jobEventStore,
+            serverDomainSdk = serverDomainSdk
+        ).insertJobEvent
+
+    override val insertRegisterJobEvent =
+        InsertJobEventOperationProvider(
+            jobEventType = JobEventType.REGISTER,
+            jobDomainSdk = jobDomainSdk,
+            jobEventStore = jobEventStore,
+            serverDomainSdk = serverDomainSdk
+        ).insertJobEvent
+
+    override val insertDeleteJobEvent =
+        InsertJobEventOperationProvider(
+            jobEventType = JobEventType.DELETE,
             jobDomainSdk = jobDomainSdk,
             jobEventStore = jobEventStore,
             serverDomainSdk = serverDomainSdk

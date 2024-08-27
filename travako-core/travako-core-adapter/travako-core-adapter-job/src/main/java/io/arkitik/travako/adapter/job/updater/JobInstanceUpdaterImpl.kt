@@ -26,8 +26,13 @@ class JobInstanceUpdaterImpl(
         return this@JobInstanceUpdaterImpl
     }
 
-    override fun JobStatus.status(): JobInstanceUpdater {
+    override fun JobStatus.jobStatus(): JobInstanceUpdater {
         entity.jobStatus = this
+        return this@JobInstanceUpdaterImpl
+    }
+
+    override fun removeNextExecutionTime(): JobInstanceUpdater {
+        entity.nextExecutionTime = null
         return this@JobInstanceUpdaterImpl
     }
 
@@ -48,6 +53,11 @@ class JobInstanceUpdaterImpl(
 
     override fun JobInstanceTriggerType.jobTriggerType(): JobInstanceUpdater {
         entity.jobTriggerType = this
+        return this@JobInstanceUpdaterImpl
+    }
+
+    override fun String.jobClassName(): JobInstanceUpdater {
+        entity.jobClassName = this
         return this@JobInstanceUpdaterImpl
     }
 

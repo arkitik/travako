@@ -8,6 +8,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
 import io.arkitik.travako.entity.server.TravakoServer
 import io.arkitik.travako.store.job.creator.JobInstanceCreator
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -17,15 +18,22 @@ import java.util.*
  */
 class JobInstanceCreatorImpl : JobInstanceCreator {
     private lateinit var jobKey: String
+    private lateinit var jobClassName: String
     private lateinit var server: ServerDomain
     private lateinit var jobTrigger: String
     private lateinit var jobTriggerType: JobInstanceTriggerType
+    private var nextExecutionTime: LocalDateTime? = null
 
     private var jobStatus: JobStatus = JobStatus.WAITING
     private var uuid: String = UUID.randomUUID().toString().replace("-", "")
 
     override fun String.jobKey(): JobInstanceCreator {
         jobKey = this
+        return this@JobInstanceCreatorImpl
+    }
+
+    override fun String.jobClassName(): JobInstanceCreator {
+        jobClassName = this
         return this@JobInstanceCreatorImpl
     }
 
@@ -49,6 +57,11 @@ class JobInstanceCreatorImpl : JobInstanceCreator {
         return this@JobInstanceCreatorImpl
     }
 
+    override fun LocalDateTime?.nextExecutionTime(): JobInstanceCreator {
+        this@JobInstanceCreatorImpl.nextExecutionTime = this
+        return this@JobInstanceCreatorImpl
+    }
+
     override fun String.uuid(): StoreIdentityCreator<String, JobInstanceDomain> {
         uuid = this
         return this@JobInstanceCreatorImpl
@@ -62,5 +75,7 @@ class JobInstanceCreatorImpl : JobInstanceCreator {
             server = server as TravakoServer,
             jobTrigger = jobTrigger,
             jobTriggerType = jobTriggerType,
+            nextExecutionTime = nextExecutionTime,
+            jobClassName = jobClassName,
         )
 }

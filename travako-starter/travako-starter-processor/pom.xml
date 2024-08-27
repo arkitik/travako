@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-starter</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.0.1</version>
+        <version>v2.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,9 +17,9 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-starter-processor-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
@@ -79,6 +79,16 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>travako-core-sdk-job-event</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-starter-job-registry</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-sdk-domain-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

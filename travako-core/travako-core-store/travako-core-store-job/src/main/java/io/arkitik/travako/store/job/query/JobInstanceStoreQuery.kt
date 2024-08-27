@@ -2,8 +2,10 @@ package io.arkitik.travako.store.job.query
 
 import io.arkitik.radix.develop.store.query.StoreQuery
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.server.ServerDomain
+import java.time.LocalDateTime
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -11,8 +13,9 @@ import io.arkitik.travako.core.domain.server.ServerDomain
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface JobInstanceStoreQuery : StoreQuery<String, JobInstanceDomain> {
-    fun findAllByServer(
+    fun findAllByServerAndStatusIn(
         server: ServerDomain,
+        statuses: List<JobStatus>,
     ): List<JobInstanceDomain>
 
     fun findAllByServerAndRunner(
@@ -20,12 +23,13 @@ interface JobInstanceStoreQuery : StoreQuery<String, JobInstanceDomain> {
         runner: SchedulerRunnerDomain,
     ): List<JobInstanceDomain>
 
-    fun existsByServerAndJobKey(
+    fun existsByServerAndJobKeyAndStatusIn(
         server: ServerDomain,
         jobKey: String,
+        statuses: List<JobStatus>,
     ): Boolean
 
-    fun existsAllByServerAndJobKeys(
+    fun existsByServerAndJobKeys(
         server: ServerDomain,
         jobKeys: List<String>,
     ): Boolean
@@ -45,4 +49,18 @@ interface JobInstanceStoreQuery : StoreQuery<String, JobInstanceDomain> {
         runner: SchedulerRunnerDomain,
         jobKey: String,
     ): Boolean
+
+    fun findAllByServerAndRunnerAndStatusNextExecutionTimeIsBefore(
+        server: ServerDomain,
+        runner: SchedulerRunnerDomain,
+        status: JobStatus,
+        nextExecutionTime: LocalDateTime,
+    ): List<JobInstanceDomain>
+
+
+    fun findByServerAndJobKeyAndStatus(
+        server: ServerDomain,
+        jobKey: String,
+        status: JobStatus,
+    ): JobInstanceDomain?
 }

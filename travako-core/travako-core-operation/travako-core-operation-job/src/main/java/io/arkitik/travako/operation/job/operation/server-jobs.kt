@@ -8,6 +8,7 @@ import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobServerDto
+import io.arkitik.travako.store.job.query.JobInstanceParamStoreQuery
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 
 /**
@@ -18,20 +19,27 @@ import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 class ServerJobsOperationProvider(
     private val jobInstanceStoreQuery: JobInstanceStoreQuery,
     private val serverDomainSdk: ServerDomainSdk,
+    private val jobInstanceParamStoreQuery: JobInstanceParamStoreQuery,
 ) {
     val serverJobs = operationBuilder<JobServerDto, List<JobDetails>> {
         mainOperation {
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-            jobInstanceStoreQuery.findAllByServer(server)
-                .map { job ->
-                    JobDetails(
-                        jobKey = job.jobKey,
-                        isRunning = JobStatus.RUNNING == job.jobStatus,
-                        jobTrigger = job.jobTrigger,
-                        isDuration = JobInstanceTriggerType.DURATION == job.jobTriggerType,
-                        lastRunningTime = job.lastRunningTime,
-                    )
-                }
+            jobInstanceStoreQuery.findAllByServerAndStatusIn(
+                server = server,
+                statuses = JobStatus.entries.filterNot { it == JobStatus.DOWN }
+            ).map { job ->
+                val jobInstanceParams = jobInstanceParamStoreQuery.findAllByJobInstance(job)
+                    .associate { it.key to it.value }
+                JobDetails(
+                    jobKey = job.jobKey,
+                    jobClassName = job.jobClassName,
+                    isRunning = JobStatus.RUNNING == job.jobStatus,
+                    jobTrigger = job.jobTrigger,
+                    isDuration = JobInstanceTriggerType.DURATION == job.jobTriggerType,
+                    lastRunningTime = job.lastRunningTime,
+                    params = jobInstanceParams
+                )
+            }
         }
     }
 }

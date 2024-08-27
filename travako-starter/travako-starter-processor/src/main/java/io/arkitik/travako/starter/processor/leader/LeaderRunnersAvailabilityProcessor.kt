@@ -11,9 +11,10 @@ import io.arkitik.travako.sdk.leader.dto.LeaderServerKeyDto
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerKeyDto
 import io.arkitik.travako.sdk.runner.dto.RunnerServerKeyDto
-import io.arkitik.travako.starter.processor.config.TravakoConfig
+import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.errors.StartupErrors
-import io.arkitik.travako.starter.processor.logger.logger
 import io.arkitik.travako.starter.processor.runner.heartbeatLessThanExpectedTime
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
 import org.springframework.scheduling.TaskScheduler
@@ -30,6 +31,7 @@ internal class LeaderRunnersAvailabilityProcessor(
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
     private val leaderSdk: LeaderSdk,
+    private val travakoRunnerConfig: TravakoRunnerConfig,
 ) : Processor<LeaderDomain> {
     companion object {
         private val logger = logger<LeaderRunnersAvailabilityProcessor>()
@@ -37,58 +39,57 @@ internal class LeaderRunnersAvailabilityProcessor(
 
     override val type = LeaderDomain::class.java
 
-    private val lastHeartbeatSeconds = travakoConfig.heartbeat.seconds.times(2)
+    private val lastHeartbeatSeconds = travakoRunnerConfig.heartbeat.seconds.times(2)
 
     override fun process() {
-        Duration.ofSeconds(travakoConfig.heartbeat.seconds.times(2))
-            .fixedRateJob(taskScheduler) {
-                travakoTransactionalExecutor.runUnitTransaction {
-                    val runners = schedulerRunnerSdk.allServerRunners
-                        .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))
-                    if (runners.isEmpty()) {
-                        throw StartupErrors.NO_REGISTERED_RUNNERS.internal()
-                    }
-                    runners.filter {
-                        it.isRunning || it.isLeader
-                    }.filter {
-                        !travakoConfig.isSelf(it.runnerKey, it.runnerHost)
-                    }.filter {
-                        it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
-                    }.forEach {
-                        if (it.isRunning) {
-                            logger.debug(
-                                "Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
-                                "${it.runnerKey}-${it.runnerHost}",
-                                lastHeartbeatSeconds
-                            )
-                            schedulerRunnerSdk.markRunnerAsDown
-                                .runOperation(
-                                    RunnerKeyDto(
-                                        serverKey = travakoConfig.serverKey,
-                                        runnerKey = it.runnerKey,
-                                        runnerHost = it.runnerHost
-                                    )
+        Duration.ofSeconds(travakoRunnerConfig.heartbeat.seconds.times(2)).fixedRateJob(taskScheduler) {
+            travakoTransactionalExecutor.runUnitTransaction {
+                val runners = schedulerRunnerSdk.allServerRunners
+                    .runOperation(RunnerServerKeyDto(travakoConfig.serverKey))
+                if (runners.isEmpty()) {
+                    throw StartupErrors.NO_REGISTERED_RUNNERS.internal()
+                }
+                runners.filter {
+                    it.isRunning || it.isLeader
+                }.filter {
+                    travakoRunnerConfig.key == it.runnerKey && travakoRunnerConfig.host == it.runnerHost
+                }.filter {
+                    it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
+                }.forEach {
+                    if (it.isRunning) {
+                        logger.debug(
+                            "Runner {} marked as DOWN since no heartbeat message has been logged from {} seconds",
+                            "${it.runnerKey}-${it.runnerHost}",
+                            lastHeartbeatSeconds
+                        )
+                        schedulerRunnerSdk.markRunnerAsDown
+                            .runOperation(
+                                RunnerKeyDto(
+                                    serverKey = travakoConfig.serverKey,
+                                    runnerKey = it.runnerKey,
+                                    runnerHost = it.runnerHost
                                 )
-                        }
-                        if (it.isLeader) {
-                            logger.debug(
-                                "Start leader recovering process since Runner {} was the selected leader",
-                                "${it.runnerKey}-${it.runnerHost}"
                             )
-                            logger.debug(
-                                "Start moving {} leader processor responsibilities.",
-                                travakoConfig.serverKey,
-                            )
-                            val response = leaderSdk.switchLeader
-                                .runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
-                            logger.debug(
-                                "{} has been promoted to be {} leader for the next running period",
-                                "${response.runnerKey}-${response.runnerHost}",
-                                response.serverKey,
-                            )
-                        }
+                    }
+                    if (it.isLeader) {
+                        logger.debug(
+                            "Start leader recovering process since Runner {} was the selected leader",
+                            "${it.runnerKey}-${it.runnerHost}"
+                        )
+                        logger.debug(
+                            "Start moving {} leader processor responsibilities.",
+                            travakoConfig.serverKey,
+                        )
+                        val response = leaderSdk.switchLeader
+                            .runOperation(LeaderServerKeyDto(travakoConfig.serverKey))
+                        logger.debug(
+                            "{} has been promoted to be {} leader for the next running period",
+                            "${response.runnerKey}-${response.runnerHost}",
+                            response.serverKey,
+                        )
                     }
                 }
             }
+        }
     }
 }

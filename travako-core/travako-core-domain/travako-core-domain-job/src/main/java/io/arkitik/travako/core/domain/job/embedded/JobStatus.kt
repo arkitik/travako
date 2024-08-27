@@ -7,5 +7,6 @@ package io.arkitik.travako.core.domain.job.embedded
  */
 enum class JobStatus {
     RUNNING,
-    WAITING
+    WAITING,
+    DOWN,
 }

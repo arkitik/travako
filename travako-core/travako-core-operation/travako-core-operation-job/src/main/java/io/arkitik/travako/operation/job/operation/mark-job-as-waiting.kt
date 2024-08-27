@@ -37,7 +37,7 @@ class MarkJobAsWaitingOperationProvider(
                 val jobInstance = jobDomainSdk.fetchJobInstance
                     .runOperation(JobDomainDto(server, jobKey.jobKey))
                 storeUpdater(jobInstance.identityUpdater()) {
-                    JobStatus.WAITING.status()
+                    JobStatus.WAITING.jobStatus()
                     LocalDateTime.now().lastRunningTime()
                     nextExecutionTime.nextExecutionTime()
                     update()

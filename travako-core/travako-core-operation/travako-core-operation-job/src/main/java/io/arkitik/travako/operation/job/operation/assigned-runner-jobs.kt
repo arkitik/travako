@@ -6,7 +6,8 @@ import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
-import io.arkitik.travako.sdk.job.dto.AssignJobsToRunnerDto
+import io.arkitik.travako.sdk.job.dto.AssignedJobsToRunnerDto
+import io.arkitik.travako.sdk.job.dto.AssignedRunnerJobDto
 import io.arkitik.travako.sdk.job.dto.JobRunnerKeyDto
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 
@@ -20,7 +21,7 @@ class AssignedRunnerJobsOperationProvider(
     private val schedulerRunnerDomainSdk: SchedulerRunnerDomainSdk,
     private val serverDomainSdk: ServerDomainSdk,
 ) {
-    val assignedRunnerJobs = operationBuilder<JobRunnerKeyDto, AssignJobsToRunnerDto> {
+    val assignedRunnerJobs = operationBuilder<JobRunnerKeyDto, AssignedJobsToRunnerDto> {
         mainOperation {
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
             val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
@@ -34,10 +35,10 @@ class AssignedRunnerJobsOperationProvider(
             val jobKeys = jobInstanceStoreQuery.findAllByServerAndRunner(
                 server = server,
                 runner = schedulerRunner,
-            ).map {
-                it.jobKey
+            ).map { jobInstance ->
+                AssignedRunnerJobDto(jobInstance.jobKey, jobInstance.jobClassName)
             }
-            AssignJobsToRunnerDto(
+            AssignedJobsToRunnerDto(
                 serverKey = serverKey,
                 runnerKey = runnerKey,
                 runnerHost = runnerHost,

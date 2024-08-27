@@ -7,5 +7,7 @@ package io.arkitik.travako.domain.job.event.embedded
  */
 enum class JobEventType {
     RESTART,
-    RECOVER
+    RECOVER,
+    REGISTER,
+    DELETE,
 }

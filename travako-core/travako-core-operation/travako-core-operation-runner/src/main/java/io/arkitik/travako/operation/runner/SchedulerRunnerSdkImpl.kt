@@ -57,6 +57,13 @@ class SchedulerRunnerSdkImpl(
             serverDomainSdk = serverDomainSdk,
         ).serverRunners
 
+    override val allRunningServerRunners =
+        ServerRunnersOperationProvider(
+            schedulerRunnerStoreQuery = schedulerRunnerStore.storeQuery,
+            leaderDomainSdk = leaderDomainSdk,
+            serverDomainSdk = serverDomainSdk,
+        ).allRunningServerRunners
+
     override val runnerDetails = RunnerDetailsOperationProvider(
         leaderDomainSdk = leaderDomainSdk,
         serverDomainSdk = serverDomainSdk,

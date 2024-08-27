@@ -16,11 +16,17 @@ import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.runner.dto.RunnerDetails
 import io.arkitik.travako.sdk.runner.dto.RunnerServerKeyDto
-import io.arkitik.travako.starter.processor.config.TravakoConfig
+import io.arkitik.travako.starter.processor.config.TravakoLeaderConfig
+import io.arkitik.travako.starter.processor.core.config.TravakoConfig
+import io.arkitik.travako.starter.processor.core.job.asTrigger
+import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
+import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.scheduler.fixedRateJob
-import org.slf4j.LoggerFactory
 import org.springframework.scheduling.TaskScheduler
 import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZoneId
+
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -31,16 +37,17 @@ internal class JobRecoveryProcessor(
     private val schedulerRunnerSdk: SchedulerRunnerSdk,
     private val taskScheduler: TaskScheduler,
     private val travakoConfig: TravakoConfig,
+    private val travakoLeaderConfig: TravakoLeaderConfig,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : Processor<LeaderDomain> {
     companion object {
-        private val logger = LoggerFactory.getLogger(JobRecoveryProcessor::class.java)
+        private val logger = logger<JobRecoveryProcessor>()
     }
 
     override val type: Class<LeaderDomain> = LeaderDomain::class.java
 
     override fun process() {
-        Duration.ofSeconds(travakoConfig.jobsAssignee.seconds.times(2))
+        Duration.ofSeconds(travakoLeaderConfig.jobsAssignee.seconds.times(2))
             .fixedRateJob(taskScheduler) {
                 logger.debug("Start jobs-recovery-processor")
                 travakoTransactionalExecutor.runUnitTransaction {
@@ -84,6 +91,10 @@ internal class JobRecoveryProcessor(
                                     )
                                 )
                             jobs.forEach { job ->
+                                val instant =
+                                    (job.lastRunningTime ?: LocalDateTime.now()).atZone(ZoneId.systemDefault())
+                                        .toInstant()
+                                val nextExecutionTime = job.asTrigger().nextTimeToExecution(instant)
                                 logger.debug(
                                     "Jobs-recovery-processor detect inactive runner and jobs assigned to it, marking job as WAITING for runner: [key: {}, host: {}], job: [key: {}]",
                                     runner.runnerKey,
@@ -97,7 +108,7 @@ internal class JobRecoveryProcessor(
                                                 serverKey = travakoConfig.serverKey,
                                                 jobKey = job.jobKey
                                             ),
-                                            nextExecutionTime = null
+                                            nextExecutionTime = nextExecutionTime
                                         )
                                     )
                             }
