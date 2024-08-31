@@ -17,8 +17,15 @@ class TravakoJobBeanDataBuilder {
     private lateinit var jobTrigger: Trigger
     private val params: MutableMap<String, String?> = mutableMapOf()
 
+    private var firingTime = LocalTime.now()
+
     fun jobKey(jobKey: String): TravakoJobBeanDataBuilder {
         this.jobKey = jobKey
+        return this
+    }
+
+    fun firingTime(firingTime: LocalTime): TravakoJobBeanDataBuilder {
+        this.firingTime = firingTime
         return this
     }
 
@@ -89,6 +96,7 @@ class TravakoJobBeanDataBuilder {
             jobClass = jobClass,
             params = params,
             jobTrigger = jobTrigger,
+            firingTime = firingTime
         )
 }
 

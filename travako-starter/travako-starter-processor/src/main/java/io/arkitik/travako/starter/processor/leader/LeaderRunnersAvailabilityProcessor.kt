@@ -52,7 +52,7 @@ internal class LeaderRunnersAvailabilityProcessor(
                 runners.filter {
                     it.isRunning || it.isLeader
                 }.filter {
-                    travakoRunnerConfig.key == it.runnerKey && travakoRunnerConfig.host == it.runnerHost
+                    travakoRunnerConfig.key != it.runnerKey && travakoRunnerConfig.host != it.runnerHost
                 }.filter {
                     it.heartbeatLessThanExpectedTime(lastHeartbeatSeconds)
                 }.forEach {

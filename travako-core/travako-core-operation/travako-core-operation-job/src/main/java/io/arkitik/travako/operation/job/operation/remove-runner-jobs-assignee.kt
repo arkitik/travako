@@ -3,6 +3,7 @@ package io.arkitik.travako.operation.job.operation
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeUpdater
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.runner.dto.RunnerDomainDto
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
@@ -37,6 +38,7 @@ class RemoveRunnerJobsAssigneeOperationProvider(
                     runner = schedulerRunner,
                 ).map {
                     storeUpdater(it.identityUpdater()) {
+                        JobStatus.WAITING.jobStatus()
                         removeRunnerAssignee()
                         update()
                     }
