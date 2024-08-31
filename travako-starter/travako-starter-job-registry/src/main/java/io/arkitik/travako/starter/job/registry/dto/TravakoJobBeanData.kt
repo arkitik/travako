@@ -2,6 +2,7 @@ package io.arkitik.travako.starter.job.registry.dto
 
 import io.arkitik.travako.starter.job.bean.TravakoJob
 import org.springframework.scheduling.Trigger
+import java.time.LocalTime
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -12,4 +13,5 @@ class TravakoJobBeanData(
     val jobTrigger: Trigger,
     val jobClass: Class<out TravakoJob>,
     val params: Map<String, String?>,
+    val firingTime: LocalTime,
 )

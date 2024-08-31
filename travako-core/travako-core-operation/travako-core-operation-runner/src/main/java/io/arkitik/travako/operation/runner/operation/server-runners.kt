@@ -25,10 +25,8 @@ class ServerRunnersOperationProvider(
         mainOperation {
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
             val leaderDomain = leaderDomainSdk.fetchServerLeader.runOperation(LeaderDomainServerDto(server))
-            with(schedulerRunnerStoreQuery) {
-                findAllByServer(
-                    server
-                ).map { runner ->
+            schedulerRunnerStoreQuery.findAllByServer(server)
+                .map { runner ->
                     RunnerDetails(
                         runnerKey = runner.runnerKey,
                         runnerHost = runner.runnerHost,
@@ -37,7 +35,6 @@ class ServerRunnersOperationProvider(
                         lastHeartbeatTime = runner.lastHeartbeatTime
                     )
                 }
-            }
         }
     }
     val allRunningServerRunners = operationBuilder<RunnerServerKeyDto, List<RunnerDetails>> {
