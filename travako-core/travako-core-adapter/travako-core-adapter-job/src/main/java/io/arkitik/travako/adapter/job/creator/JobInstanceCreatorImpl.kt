@@ -26,6 +26,7 @@ class JobInstanceCreatorImpl : JobInstanceCreator {
 
     private var jobStatus: JobStatus = JobStatus.WAITING
     private var uuid: String = UUID.randomUUID().toString().replace("-", "")
+    private var singleRun: Boolean = false
 
     override fun String.jobKey(): JobInstanceCreator {
         jobKey = this
@@ -57,6 +58,11 @@ class JobInstanceCreatorImpl : JobInstanceCreator {
         return this@JobInstanceCreatorImpl
     }
 
+    override fun Boolean.singleRun(): JobInstanceCreator {
+        this@JobInstanceCreatorImpl.singleRun = this
+        return this@JobInstanceCreatorImpl
+    }
+
     override fun LocalDateTime?.nextExecutionTime(): JobInstanceCreator {
         this@JobInstanceCreatorImpl.nextExecutionTime = this
         return this@JobInstanceCreatorImpl
@@ -77,5 +83,6 @@ class JobInstanceCreatorImpl : JobInstanceCreator {
             jobTriggerType = jobTriggerType,
             nextExecutionTime = nextExecutionTime,
             jobClassName = jobClassName,
+            singleRun = singleRun,
         )
 }

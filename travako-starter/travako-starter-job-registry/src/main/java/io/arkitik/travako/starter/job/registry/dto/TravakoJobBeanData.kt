@@ -14,4 +14,5 @@ class TravakoJobBeanData(
     val jobClass: Class<out TravakoJob>,
     val params: Map<String, String?>,
     val firingTime: LocalTime,
+    val singleRun: Boolean = false,
 )

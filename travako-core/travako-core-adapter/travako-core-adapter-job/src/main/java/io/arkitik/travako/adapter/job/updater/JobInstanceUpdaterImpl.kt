@@ -61,5 +61,10 @@ class JobInstanceUpdaterImpl(
         return this@JobInstanceUpdaterImpl
     }
 
+    override fun Boolean.singleRun(): JobInstanceUpdater {
+        entity.singleRun = this
+        return this@JobInstanceUpdaterImpl
+    }
+
     override fun update() = entity
 }

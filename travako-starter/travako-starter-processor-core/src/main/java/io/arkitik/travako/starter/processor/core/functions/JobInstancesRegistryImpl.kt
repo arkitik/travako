@@ -44,7 +44,8 @@ internal class JobInstancesRegistryImpl(
                     isDuration = jobTrigger.second,
                     nextExecution = nextExecution,
                     jobClassName = jobBeanData.jobClass.name,
-                    params = jobBeanData.params
+                    params = jobBeanData.params,
+                    singleRun = jobBeanData.singleRun
                 )
             )
         logger.info(

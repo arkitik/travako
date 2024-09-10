@@ -34,6 +34,7 @@ internal class JobDetailsOperation(
             isDuration = JobInstanceTriggerType.DURATION == job.jobTriggerType,
             lastRunningTime = job.lastRunningTime,
             params = jobInstanceParams,
+            singleRun = job.singleRun,
         )
     }
 }

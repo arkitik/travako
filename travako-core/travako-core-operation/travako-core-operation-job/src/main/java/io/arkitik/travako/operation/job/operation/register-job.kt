@@ -52,6 +52,7 @@ class RegisterJobOperationProvider(
                         JobStatus.WAITING.jobStatus()
                         nextExecution.nextExecutionTime()
                         jobTrigger.jobTrigger()
+                        singleRun.singleRun()
                         (JobInstanceTriggerType.DURATION.takeIf { isDuration }
                             ?: JobInstanceTriggerType.CRON).jobTriggerType()
                         update()
@@ -71,6 +72,7 @@ class RegisterJobOperationProvider(
                 } else {
                     creatorWithSave(identityCreator()) {
                         jobKey.jobKey()
+                        singleRun.singleRun()
                         jobClassName.jobClassName()
                         JobStatus.WAITING.jobStatus()
                         server.server()

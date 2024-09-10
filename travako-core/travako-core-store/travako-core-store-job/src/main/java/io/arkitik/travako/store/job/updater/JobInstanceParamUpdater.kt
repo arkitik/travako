@@ -7,6 +7,4 @@ import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
  * Created By Ibrahim Al-Tamimi 
  * Created At 1:18 PM, 26/08/2024
  */
-interface JobInstanceParamUpdater : StoreIdentityUpdater<String, JobInstanceParamDomain> {
-    fun String?.value(): JobInstanceParamUpdater
-}
+interface JobInstanceParamUpdater : StoreIdentityUpdater<String, JobInstanceParamDomain>

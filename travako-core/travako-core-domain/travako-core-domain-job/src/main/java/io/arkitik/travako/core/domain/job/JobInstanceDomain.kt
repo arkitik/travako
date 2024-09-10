@@ -26,6 +26,10 @@ interface JobInstanceDomain : Identity<String> {
     val jobTriggerType: JobInstanceTriggerType
 
     val assignedTo: SchedulerRunnerDomain?
+
     val lastRunningTime: LocalDateTime?
+
     val nextExecutionTime: LocalDateTime?
+
+    val singleRun: Boolean
 }
