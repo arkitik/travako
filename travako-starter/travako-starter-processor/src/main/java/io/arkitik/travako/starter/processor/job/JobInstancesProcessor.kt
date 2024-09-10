@@ -7,6 +7,7 @@ import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.CreateJobDto
+import io.arkitik.travako.starter.job.bean.JobInstanceBean
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
@@ -33,6 +34,7 @@ internal class JobInstancesProcessor(
     override fun process() {
         travakoTransactionalExecutor.runUnitTransaction {
             jobInstancesSource.jobs()
+                .filterIsInstance<JobInstanceBean>()
                 .forEach { jobInstanceBean ->
                     try {
                         val jobTrigger = jobInstanceBean.trigger.parseTrigger()
@@ -46,7 +48,8 @@ internal class JobInstancesProcessor(
                                     isDuration = jobTrigger.second,
                                     nextExecution = nextExecution,
                                     jobClassName = jobInstanceBean.javaClass.name,
-                                    params = mapOf()
+                                    params = mapOf(),
+                                    singleRun = jobInstanceBean.singleRun,
                                 )
                             )
                     } catch (e: Exception) {

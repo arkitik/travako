@@ -3,32 +3,13 @@ package io.arkitik.travako.operation.job
 import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.radix.develop.operation.OperationRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
-import io.arkitik.travako.operation.job.operation.AssignJobsToRunnerOperationProvider
-import io.arkitik.travako.operation.job.operation.AssignedRunnerJobsOperationProvider
-import io.arkitik.travako.operation.job.operation.IsJobAssignedToRunnerRole
-import io.arkitik.travako.operation.job.operation.JobDetailsOperation
-import io.arkitik.travako.operation.job.operation.MarkJobAsRunningOperationProvider
-import io.arkitik.travako.operation.job.operation.MarkJobAsWaitingOperationProvider
-import io.arkitik.travako.operation.job.operation.RegisterJobOperationProvider
-import io.arkitik.travako.operation.job.operation.RemoveRunnerJobsAssigneeOperationProvider
-import io.arkitik.travako.operation.job.operation.RunnerJobsWithDueNextExecutionTimeOperation
-import io.arkitik.travako.operation.job.operation.ServerJobsOperationProvider
-import io.arkitik.travako.operation.job.operation.UnregisterJobOperation
-import io.arkitik.travako.operation.job.operation.UpdateJobOperationProvider
-import io.arkitik.travako.operation.job.roles.CheckJobRegisteredRole
+import io.arkitik.travako.operation.job.operation.*
 import io.arkitik.travako.operation.job.roles.JobRegisteredRole
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
-import io.arkitik.travako.sdk.job.dto.AssignedJobsToRunnerDto
-import io.arkitik.travako.sdk.job.dto.JobDetails
-import io.arkitik.travako.sdk.job.dto.JobKeyDto
-import io.arkitik.travako.sdk.job.dto.JobRunnerKeyDto
-import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyNextExecutionDto
-import io.arkitik.travako.sdk.job.dto.UpdateJobParamsDto
-import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
-import io.arkitik.travako.sdk.job.dto.UpdateJobTriggerDto
+import io.arkitik.travako.sdk.job.dto.*
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.JobInstanceStore
@@ -54,7 +35,6 @@ class JobInstanceSdkImpl(
         jobInstanceParamStore = jobInstanceParamStore,
         jobEventSdk = jobEventSdk
     )
-    private val checkJobRegisteredRole = CheckJobRegisteredRole(jobInstanceStore.storeQuery, serverDomainSdk)
 
     override val registerJob =
         RegisterJobOperationProvider(
@@ -91,6 +71,14 @@ class JobInstanceSdkImpl(
             jobDomainSdk = jobDomainSdk,
         ).markJobAsRunning
 
+    override val markJobAsDone: Operation<JobKeyDto, Unit> =
+        MarkJobAsDoneWaitingOperationProvider(
+            jobInstanceStore = jobInstanceStore,
+            serverDomainSdk = serverDomainSdk,
+            jobDomainSdk = jobDomainSdk,
+            jobEventSdk = jobEventSdk,
+        ).markJobAsDone
+
     override val assignJobsToRunner =
         AssignJobsToRunnerOperationProvider(
             jobInstanceStore = jobInstanceStore,
@@ -117,12 +105,12 @@ class JobInstanceSdkImpl(
         serverDomainSdk = serverDomainSdk,
         jobInstanceParamStoreQuery = jobInstanceParamStore.storeQuery,
     ).serverJobs
-
     override val jobRegistered: OperationRole<JobKeyDto, Boolean> =
         JobRegisteredRole(
             jobInstanceStoreQuery = jobInstanceStore.storeQuery,
             serverDomainSdk = serverDomainSdk
         )
+
     override val runnerJobsWithDueNextExecutionTime: Operation<JobServerRunnerKeyNextExecutionDto, List<JobDetails>> =
         operationBuilder {
             mainOperation(
@@ -134,13 +122,11 @@ class JobInstanceSdkImpl(
                 )
             )
         }
-
     override val unregisterJob: Operation<JobKeyDto, Unit> =
         operationBuilder {
             mainOperation(
                 UnregisterJobOperation(
                     jobInstanceStore = jobInstanceStore,
-                    jobInstanceParamStore = jobInstanceParamStore,
                     serverDomainSdk = serverDomainSdk,
                     jobEventSdk = jobEventSdk
                 )
@@ -148,7 +134,6 @@ class JobInstanceSdkImpl(
         }
     override val jobDetails: Operation<JobKeyDto, JobDetails> =
         operationBuilder {
-            install(checkJobRegisteredRole)
             mainOperation(
                 JobDetailsOperation(
                     serverDomainSdk = serverDomainSdk,

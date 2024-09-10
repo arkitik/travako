@@ -21,7 +21,7 @@ internal class JobRegisteredRole(
         return jobInstanceStoreQuery.existsByServerAndJobKeyAndStatusIn(
             server = server,
             jobKey = jobKey,
-            statuses = JobStatus.entries.filterNot { it == JobStatus.DOWN }
+            statuses = JobStatus.repeatable()
         )
     }
 }

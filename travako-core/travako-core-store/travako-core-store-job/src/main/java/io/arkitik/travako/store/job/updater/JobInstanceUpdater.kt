@@ -29,4 +29,6 @@ interface JobInstanceUpdater : StoreIdentityUpdater<String, JobInstanceDomain> {
     fun String.jobClassName(): JobInstanceUpdater
 
     fun removeNextExecutionTime(): JobInstanceUpdater
+
+    fun Boolean.singleRun(): JobInstanceUpdater
 }

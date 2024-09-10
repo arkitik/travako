@@ -5,16 +5,7 @@ import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.server.TravakoServer
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.ForeignKey
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
-import jakarta.persistence.UniqueConstraint
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 /**
@@ -55,7 +46,7 @@ data class TravakoJobInstance(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     override var jobTriggerType: JobInstanceTriggerType,
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(
         foreignKey = ForeignKey(name = "travako_job_instance_runner_fk"),
         name = "runnerUuid"
@@ -63,6 +54,10 @@ data class TravakoJobInstance(
     override var assignedTo: TravakoSchedulerRunner? = null,
     @Column(nullable = false, updatable = false)
     override val creationDate: LocalDateTime = LocalDateTime.now(),
+    @Column
     override var lastRunningTime: LocalDateTime? = null,
+    @Column
     override var nextExecutionTime: LocalDateTime? = null,
+    @Column(nullable = false)
+    override var singleRun: Boolean,
 ) : JobInstanceDomain

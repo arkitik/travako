@@ -45,6 +45,7 @@ class RunnerJobExecutor(
             ).takeIf { it }?.also {
                 jobDetails.markAsRunning(null)
 
+                logger.trace("Start job execution. [key: {}]", jobDetails.jobKey)
                 runCatching {
                     travakoJob.execute(
                         TravakoJobExecutionData(
@@ -56,10 +57,17 @@ class RunnerJobExecutor(
                         )
                     )
                 }.onFailure {
-                    logger.error("Error while executing job [key: ${jobDetails.jobKey}]", it)
+                    logger.error("Error while executing job [key: {}]", jobDetails.jobKey, it)
+                }.onSuccess {
+                    logger.trace("Job executed successfully. [key: {}]", jobDetails.jobKey)
+                    if (jobDetails.singleRun) {
+                        jobDetails.markAsDone()
+                    }
                 }.also {
-                    val nextExecution = trigger.nextTimeToExecution()
-                    jobDetails.markAsWaiting(nextExecution)
+                    if (!jobDetails.singleRun || !it.isSuccess) {
+                        val nextExecution = trigger.nextTimeToExecution()
+                        jobDetails.markAsWaiting(nextExecution)
+                    }
                 }
             }
     }
@@ -87,6 +95,17 @@ class RunnerJobExecutor(
                         jobKey = jobKey
                     ),
                     nextExecutionTime = nextExecution
+                )
+            )
+        }
+    }
+
+    private fun JobDetails.markAsDone() {
+        travakoTransactionalExecutor.runUnitTransaction {
+            jobInstanceSdk.markJobAsDone.runOperation(
+                JobKeyDto(
+                    serverKey = travakoConfig.serverKey,
+                    jobKey = jobKey
                 )
             )
         }

@@ -26,4 +26,6 @@ interface JobInstanceCreator : StoreIdentityCreator<String, JobInstanceDomain> {
     fun JobInstanceTriggerType.jobTriggerType(): JobInstanceCreator
 
     fun LocalDateTime?.nextExecutionTime(): JobInstanceCreator
+
+    fun Boolean.singleRun(): JobInstanceCreator
 }

@@ -19,6 +19,13 @@ class TravakoJobBeanDataBuilder {
 
     private var firingTime = LocalTime.now()
 
+    private var singleRun = false
+
+    fun singleRun(singleRun: Boolean): TravakoJobBeanDataBuilder {
+        this.singleRun = singleRun
+        return this
+    }
+
     fun jobKey(jobKey: String): TravakoJobBeanDataBuilder {
         this.jobKey = jobKey
         return this
@@ -93,11 +100,21 @@ class TravakoJobBeanDataBuilder {
     fun build() =
         TravakoJobBeanData(
             jobKey = jobKey,
+            jobTrigger = jobTrigger,
             jobClass = jobClass,
             params = params,
-            jobTrigger = jobTrigger,
-            firingTime = firingTime
+            firingTime = firingTime,
+            singleRun = singleRun,
         )
+}
+
+
+fun TravakoJobBeanDataBuilder.forever(): TravakoJobBeanDataBuilder {
+    return singleRun(false)
+}
+
+fun TravakoJobBeanDataBuilder.oneTime(): TravakoJobBeanDataBuilder {
+    return singleRun(true)
 }
 
 fun jobBuilder(builder: TravakoJobBeanDataBuilder.() -> Unit) =

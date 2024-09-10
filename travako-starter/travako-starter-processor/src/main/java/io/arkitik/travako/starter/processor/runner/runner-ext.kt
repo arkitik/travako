@@ -11,9 +11,9 @@ import kotlin.math.absoluteValue
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 fun RunnerDetails.heartbeatLessThanExpectedTime(lastHeartbeatSeconds: Long) =
-    lastHeartbeatTime?.let {
+    lastHeartbeatTime?.let { dateTime ->
         Duration.between(
             LocalDateTime.now(),
-            it
+            dateTime
         ).seconds.absoluteValue > lastHeartbeatSeconds
     } ?: true

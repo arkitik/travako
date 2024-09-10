@@ -15,4 +15,5 @@ data class JobDetails(
     val isDuration: Boolean,
     val lastRunningTime: LocalDateTime?,
     val params: Map<String, String?>,
+    val singleRun: Boolean,
 )

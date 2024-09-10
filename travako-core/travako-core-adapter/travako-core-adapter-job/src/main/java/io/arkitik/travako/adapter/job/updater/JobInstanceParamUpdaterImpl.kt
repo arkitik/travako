@@ -10,10 +10,6 @@ import io.arkitik.travako.store.job.updater.JobInstanceParamUpdater
 internal class JobInstanceParamUpdaterImpl(
     private val jobInstanceParam: TravakoJobInstanceParam,
 ) : JobInstanceParamUpdater {
-    override fun String?.value(): JobInstanceParamUpdater {
-        jobInstanceParam.value = this
-        return this@JobInstanceParamUpdaterImpl
-    }
 
     override fun update() = jobInstanceParam
 }

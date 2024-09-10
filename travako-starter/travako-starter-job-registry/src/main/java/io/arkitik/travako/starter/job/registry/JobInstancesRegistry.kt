@@ -1,6 +1,8 @@
 package io.arkitik.travako.starter.job.registry
 
 import io.arkitik.travako.starter.job.registry.dto.TravakoJobBeanData
+import io.arkitik.travako.starter.job.registry.dto.TravakoJobBeanDataBuilder
+import io.arkitik.travako.starter.job.registry.dto.jobBuilder
 import org.springframework.scheduling.Trigger
 
 /**
@@ -9,6 +11,8 @@ import org.springframework.scheduling.Trigger
  */
 interface JobInstancesRegistry {
     fun registerJob(jobBeanData: TravakoJobBeanData)
+    fun registerJob(jobBeanData: TravakoJobBeanDataBuilder.() -> Unit) =
+        registerJob(jobBuilder(jobBeanData))
 
     fun jobRegistered(jobKey: String): Boolean
 

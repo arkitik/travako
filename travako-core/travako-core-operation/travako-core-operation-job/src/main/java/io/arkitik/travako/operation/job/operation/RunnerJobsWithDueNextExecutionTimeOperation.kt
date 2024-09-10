@@ -49,6 +49,7 @@ internal class RunnerJobsWithDueNextExecutionTimeOperation(
                 isDuration = JobInstanceTriggerType.DURATION == job.jobTriggerType,
                 lastRunningTime = job.lastRunningTime,
                 params = jobInstanceParams,
+                singleRun = job.singleRun,
             )
         }
     }

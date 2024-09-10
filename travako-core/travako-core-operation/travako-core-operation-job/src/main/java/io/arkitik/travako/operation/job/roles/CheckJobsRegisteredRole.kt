@@ -14,7 +14,7 @@ import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
  * Created At 25 9:03 PM, **Sat, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-class CheckJobsRegisteredRole(
+internal class CheckJobsRegisteredRole(
     private val jobInstanceStoreQuery: JobInstanceStoreQuery,
     private val serverDomainSdk: ServerDomainSdk,
 ) : OperationRole<AssignJobsToRunnerDto, Unit> {

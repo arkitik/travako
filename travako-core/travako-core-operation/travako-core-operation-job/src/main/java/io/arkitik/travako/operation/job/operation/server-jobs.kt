@@ -26,7 +26,7 @@ class ServerJobsOperationProvider(
             val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
             jobInstanceStoreQuery.findAllByServerAndStatusIn(
                 server = server,
-                statuses = JobStatus.entries.filterNot { it == JobStatus.DOWN }
+                statuses = JobStatus.repeatable()
             ).map { job ->
                 val jobInstanceParams = jobInstanceParamStoreQuery.findAllByJobInstance(job)
                     .associate { it.key to it.value }
@@ -37,7 +37,8 @@ class ServerJobsOperationProvider(
                     jobTrigger = job.jobTrigger,
                     isDuration = JobInstanceTriggerType.DURATION == job.jobTriggerType,
                     lastRunningTime = job.lastRunningTime,
-                    params = jobInstanceParams
+                    params = jobInstanceParams,
+                    singleRun = job.singleRun,
                 )
             }
         }
