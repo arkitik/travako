@@ -11,6 +11,7 @@ import io.arkitik.travako.sdk.domain.server.dto.ServerDomainDto
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.sdk.job.event.dto.JobEventKeyDto
+import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.JobInstanceStore
 
 /**
@@ -21,11 +22,12 @@ internal class UnregisterJobOperation(
     private val jobInstanceStore: JobInstanceStore,
     private val serverDomainSdk: ServerDomainSdk,
     private val jobEventSdk: JobEventSdk,
+    private val jobInstanceParamStore: JobInstanceParamStore,
 ) : Operation<JobKeyDto, Unit> {
     override fun JobKeyDto.operate() {
         val server = serverDomainSdk.fetchServer
             .runOperation(ServerDomainDto(serverKey))
-        with(jobInstanceStore) {
+        val jobInstance = with(jobInstanceStore) {
             val jobInstanceDomain = storeQuery.findByServerAndJobKey(
                 server = server,
                 jobKey = jobKey
@@ -36,6 +38,9 @@ internal class UnregisterJobOperation(
                 removeNextExecutionTime()
                 update()
             }
+        }
+        with(jobInstanceParamStore) {
+            storeQuery.findAllByJobInstance(jobInstance).deleteAll()
         }
         jobEventSdk.insertDeleteJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
     }
