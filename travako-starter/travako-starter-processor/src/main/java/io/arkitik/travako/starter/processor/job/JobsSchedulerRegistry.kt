@@ -27,6 +27,10 @@ class JobsSchedulerRegistry(
     fun scheduleJob(jobDetails: JobDetails, travakoJob: TravakoJob) {
         logger.debug("Scheduling JOB instance {}", jobDetails.jobKey)
         val trigger = jobDetails.asTrigger()
+        if (jobTriggers.containsKey(jobDetails.jobKey)) {
+            logger.warn("Job already scheduled, restart job trigger {}", jobDetails.jobKey)
+            deleteJob(jobDetails.jobKey)
+        }
         val scheduledFuture = trigger.buildJob(taskScheduler) {
             runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
         }

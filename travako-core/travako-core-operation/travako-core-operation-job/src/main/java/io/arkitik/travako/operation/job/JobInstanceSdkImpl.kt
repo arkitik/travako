@@ -3,13 +3,32 @@ package io.arkitik.travako.operation.job
 import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.radix.develop.operation.OperationRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
-import io.arkitik.travako.operation.job.operation.*
+import io.arkitik.travako.operation.job.operation.AssignJobsToRunnerOperationProvider
+import io.arkitik.travako.operation.job.operation.AssignedRunnerJobsOperationProvider
+import io.arkitik.travako.operation.job.operation.IsJobAssignedToRunnerRole
+import io.arkitik.travako.operation.job.operation.JobDetailsOperation
+import io.arkitik.travako.operation.job.operation.MarkJobAsDoneWaitingOperationProvider
+import io.arkitik.travako.operation.job.operation.MarkJobAsRunningOperationProvider
+import io.arkitik.travako.operation.job.operation.MarkJobAsWaitingOperationProvider
+import io.arkitik.travako.operation.job.operation.RegisterJobOperationProvider
+import io.arkitik.travako.operation.job.operation.RemoveRunnerJobsAssigneeOperationProvider
+import io.arkitik.travako.operation.job.operation.RunnerJobsWithDueNextExecutionTimeOperation
+import io.arkitik.travako.operation.job.operation.ServerJobsOperationProvider
+import io.arkitik.travako.operation.job.operation.UnregisterJobOperation
+import io.arkitik.travako.operation.job.operation.UpdateJobOperationProvider
 import io.arkitik.travako.operation.job.roles.JobRegisteredRole
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.JobInstanceSdk
-import io.arkitik.travako.sdk.job.dto.*
+import io.arkitik.travako.sdk.job.dto.AssignedJobsToRunnerDto
+import io.arkitik.travako.sdk.job.dto.JobDetails
+import io.arkitik.travako.sdk.job.dto.JobKeyDto
+import io.arkitik.travako.sdk.job.dto.JobRunnerKeyDto
+import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyNextExecutionDto
+import io.arkitik.travako.sdk.job.dto.UpdateJobParamsDto
+import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
+import io.arkitik.travako.sdk.job.dto.UpdateJobTriggerDto
 import io.arkitik.travako.sdk.job.event.JobEventSdk
 import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.JobInstanceStore
@@ -128,7 +147,8 @@ class JobInstanceSdkImpl(
                 UnregisterJobOperation(
                     jobInstanceStore = jobInstanceStore,
                     serverDomainSdk = serverDomainSdk,
-                    jobEventSdk = jobEventSdk
+                    jobEventSdk = jobEventSdk,
+                    jobInstanceParamStore = jobInstanceParamStore
                 )
             )
         }
