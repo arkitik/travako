@@ -8,7 +8,7 @@
 
 ### To use Travako, follow these steps:
 
-#### (1) include below dependency in your module (Scheduler Module):
+#### (1) Include below dependency in your module (Scheduler Module):
 
 ```xml
 <dependency>
@@ -18,13 +18,13 @@
 </dependency>
 ```
 
-#### (2) Implement interface `JobInstanceBean` as sample as the following:
+#### (2) Implement interface `JobInstanceBean` as a sample as the following:
 
 ```kotlin
-internal class SampleJob : JobInstanceBean {
+internal class SampleJob: JobInstanceBean {
 
   override val trigger = PeriodicTrigger(10_000)  // or CronTrigger("*/10 * * * * *")
-  override val jobKey: String = javaClass.simpleName // should be unique per application, so;
+  override val jobKey: String = javaClass.simpleName // should be unique per application
 
   override fun runJob() {
     // Do the processing here.
@@ -68,7 +68,7 @@ arkitik:
       leader-switch: 1h
 ```
 
-#### (6) Choose one of the following dependencies to configure the datasource for Travako::
+#### (6) Choose one of the following dependencies to configure the data source for Travako::
 
 * Default Spring `entityManagerFactory` option:
 
