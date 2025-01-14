@@ -14,4 +14,6 @@ interface SchedulerRunnerDomainSdk {
     val fetchSchedulerRunner: Operation<RunnerDomainDto, SchedulerRunnerDomain>
     val fetchServerSchedulerRunners: Operation<ServerDomain, List<SchedulerRunnerDomain>>
     val fetchOldestHeartbeatRunner: Operation<ServerDomain, SchedulerRunnerDomain>
+    val fetchServerSchedulerRunningRunners: Operation<ServerDomain, List<SchedulerRunnerDomain>>
+    val countServerSchedulerRunningRunners: Operation<ServerDomain, Long>
 }

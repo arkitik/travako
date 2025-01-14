@@ -44,17 +44,42 @@ internal class RunnerJobEventsProcessor(
 
     init {
         eventProcessors[JobEventType.RESTART.name] = { jobDetails ->
-            jobsSchedulerRegistry.rebootScheduledJob(
-                jobDetails = jobDetails,
-                travakoJob = travakoJobInstanceProvider.provideJobInstance(jobDetails.jobKey, jobDetails.jobClassName)
-            )
+            travakoJobInstanceProvider.runCatching {
+                jobsSchedulerRegistry.rebootScheduledJob(
+                    jobDetails = jobDetails,
+                    travakoJob = provideJobInstance(
+                        jobKey = jobDetails.jobKey,
+                        jobClassName = jobDetails.jobClassName,
+                    )
+                )
+            }.onFailure { throwable ->
+                logger.error(
+                    "Error while rebooting job {}, no provider configured for Job-Class: {}",
+                    jobDetails.jobKey,
+                    jobDetails.jobClassName,
+                    throwable
+                )
+            }
         }
 
         eventProcessors[JobEventType.REGISTER.name] = { jobDetails ->
-            jobsSchedulerRegistry.scheduleJob(
-                jobDetails = jobDetails,
-                travakoJob = travakoJobInstanceProvider.provideJobInstance(jobDetails.jobKey, jobDetails.jobClassName)
-            )
+            travakoJobInstanceProvider.runCatching {
+                jobsSchedulerRegistry.scheduleJob(
+                    jobDetails = jobDetails,
+                    travakoJob = provideJobInstance(
+                        jobKey = jobDetails.jobKey,
+                        jobClassName = jobDetails.jobClassName
+                    )
+                )
+            }.onFailure { throwable ->
+                logger.error(
+                    "Error while registering job {}, no provider configured for Job-Class: {}",
+                    jobDetails.jobKey,
+                    jobDetails.jobClassName,
+                    throwable
+                )
+            }
+
         }
 
         eventProcessors[JobEventType.DELETE.name] = { jobDetails ->
@@ -62,10 +87,23 @@ internal class RunnerJobEventsProcessor(
         }
 
         eventProcessors[JobEventType.RECOVER.name] = { jobDetails ->
-            jobsSchedulerRegistry.rebootScheduledJob(
-                jobDetails = jobDetails,
-                travakoJob = travakoJobInstanceProvider.provideJobInstance(jobDetails.jobKey, jobDetails.jobClassName)
-            )
+            travakoJobInstanceProvider.runCatching {
+                jobsSchedulerRegistry.rebootScheduledJob(
+                    jobDetails = jobDetails,
+                    travakoJob = provideJobInstance(
+                        jobKey = jobDetails.jobKey,
+                        jobClassName = jobDetails.jobClassName
+                    )
+                )
+            }.onFailure { throwable ->
+                logger.error(
+                    "Error while recovering job {}, no provider configured for Job-Class: {}",
+                    jobDetails.jobKey,
+                    jobDetails.jobClassName,
+                    throwable
+                )
+            }
+
         }
     }
 

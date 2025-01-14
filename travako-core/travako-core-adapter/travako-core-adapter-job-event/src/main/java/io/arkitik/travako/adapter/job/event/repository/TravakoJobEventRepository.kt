@@ -10,5 +10,5 @@ import io.arkitik.travako.entity.server.TravakoServer
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 interface TravakoJobEventRepository : RadixRepository<String, TravakoJobEvent> {
-    fun findAllByJobInstanceServerAndProcessedFlagFalse(server: TravakoServer): List<TravakoJobEvent>
+    fun findAllByJobInstanceServerAndProcessedFlagFalseOrderByCreationDateAsc(server: TravakoServer): List<TravakoJobEvent>
 }

@@ -44,4 +44,9 @@ interface TravakoSchedulerRunnerRepository : RadixRepository<String, TravakoSche
         server: ServerDomain,
         instanceState: InstanceState,
     ): List<TravakoSchedulerRunner>
+
+    fun countByServerAndInstanceState(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    ): Long
 }
