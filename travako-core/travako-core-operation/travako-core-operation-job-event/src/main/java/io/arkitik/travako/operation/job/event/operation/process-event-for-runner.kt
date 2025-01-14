@@ -46,10 +46,10 @@ class OperationProviderMarkEventProcessedForRunner(
                     create()
                 }.save()
             }
-            val schedulerRunnerDomains = schedulerRunnerDomainSdk.fetchServerSchedulerRunners
+            val totalSchedulerRunnerDomains = schedulerRunnerDomainSdk.countServerSchedulerRunningRunners
                 .runOperation(server)
             val processedCount = runnerJobEventStateStore.storeQuery.countByEvent(jobEvent)
-            if (schedulerRunnerDomains.size.toLong() == processedCount) {
+            if (totalSchedulerRunnerDomains <= processedCount) {
                 with(jobEventStore) {
                     storeUpdater(jobEvent.identityUpdater()) {
                         processed()

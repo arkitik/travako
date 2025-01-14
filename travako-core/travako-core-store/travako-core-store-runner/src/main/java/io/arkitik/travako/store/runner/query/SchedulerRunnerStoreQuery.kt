@@ -43,4 +43,9 @@ interface SchedulerRunnerStoreQuery : StoreQuery<String, SchedulerRunnerDomain> 
         server: ServerDomain,
         status: InstanceState,
     ): List<SchedulerRunnerDomain>
+
+    fun countByServerAndStatus(
+        server: ServerDomain,
+        status: InstanceState,
+    ): Long
 }

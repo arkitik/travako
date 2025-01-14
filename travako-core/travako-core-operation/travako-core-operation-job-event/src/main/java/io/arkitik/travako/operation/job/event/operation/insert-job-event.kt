@@ -22,17 +22,20 @@ class InsertJobEventOperationProvider(
     private val jobEventStore: JobEventStore,
     private val serverDomainSdk: ServerDomainSdk,
 ) {
-    val insertJobEvent = operationBuilder<JobEventKeyDto, Unit> {
-        mainOperation {
-            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-            val jobInstance = jobDomainSdk.fetchJobInstance.runOperation(JobDomainDto(server, jobKey))
-            with(jobEventStore) {
-                storeCreator(identityCreator()) {
-                    jobInstance.jobInstance()
-                    jobEventType.eventType()
-                    create()
-                }.save()
+    val insertJobEvent =
+        operationBuilder<JobEventKeyDto, Unit> {
+            mainOperation {
+                val server = serverDomainSdk.fetchServer
+                    .runOperation(ServerDomainDto(serverKey))
+                val jobInstance = jobDomainSdk.fetchJobInstance
+                    .runOperation(JobDomainDto(server, jobKey))
+                with(jobEventStore) {
+                    storeCreator(identityCreator()) {
+                        jobInstance.jobInstance()
+                        jobEventType.eventType()
+                        create()
+                    }.save()
+                }
             }
         }
-    }
 }

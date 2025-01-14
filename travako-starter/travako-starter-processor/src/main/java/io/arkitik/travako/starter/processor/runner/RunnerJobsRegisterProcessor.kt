@@ -8,6 +8,7 @@ import io.arkitik.travako.sdk.job.dto.JobServerDto
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
+import org.slf4j.LoggerFactory
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -20,17 +21,32 @@ internal class RunnerJobsRegisterProcessor(
     private val jobInstanceSdk: JobInstanceSdk,
     private val travakoJobInstanceProvider: TravakoJobInstanceProvider,
 ) : Processor<SchedulerRunnerDomain> {
+    companion object {
+        private val logger = LoggerFactory.getLogger(RunnerJobsRegisterProcessor::class.java)
+    }
+
     override val type = SchedulerRunnerDomain::class.java
 
     override fun process() {
         jobInstanceSdk.serverJobs
             .runOperation(JobServerDto(travakoConfig.serverKey))
             .forEach { jobDetails ->
-                val travakoJob = travakoJobInstanceProvider.provideJobInstance(
-                    jobDetails.jobKey,
-                    jobDetails.jobClassName
-                )
-                jobsSchedulerRegistry.scheduleJob(jobDetails, travakoJob)
+                travakoJobInstanceProvider.runCatching {
+                    jobsSchedulerRegistry.scheduleJob(
+                        jobDetails = jobDetails,
+                        travakoJob = provideJobInstance(
+                            jobKey = jobDetails.jobKey,
+                            jobClassName = jobDetails.jobClassName
+                        )
+                    )
+                }.onFailure { throwable ->
+                    logger.error(
+                        "Error while running job {}, no provider configured for Job-Class: {}",
+                        jobDetails.jobKey,
+                        jobDetails.jobClassName,
+                        throwable
+                    )
+                }
             }
     }
 }

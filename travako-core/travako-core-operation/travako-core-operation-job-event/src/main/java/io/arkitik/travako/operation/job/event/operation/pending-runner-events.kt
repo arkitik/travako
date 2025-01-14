@@ -23,28 +23,30 @@ class PendingEventsForRunnerOperationProvider(
     private val runnerJobEventStateStoreQuery: RunnerJobEventStateStoreQuery,
     private val serverDomainSdk: ServerDomainSdk,
 ) {
-    val pendingEventsForRunner = operationBuilder<JobEventRunnerKeyDto, EventsDto> {
-        mainOperation {
-            val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
-            val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner.runOperation(
-                RunnerDomainDto(
-                    server = server,
-                    runnerKey = runnerKey,
-                    runnerHost = runnerHost
-                )
-            )
-            val jobEvents = jobEventStoreQuery.findAllPendingEventsForServer(server)
-            val events = jobEvents
-                .filter { event ->
-                    !runnerJobEventStateStoreQuery.existsByRunnerAndEvent(schedulerRunner, event)
-                }.map { event ->
-                    EventDataDto(
-                        eventUuid = event.uuid,
-                        jobKey = event.jobInstance.jobKey,
-                        eventType = event.eventType.name
+    val pendingEventsForRunner =
+        operationBuilder<JobEventRunnerKeyDto, EventsDto> {
+            mainOperation {
+                val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
+                val schedulerRunner = schedulerRunnerDomainSdk.fetchSchedulerRunner
+                    .runOperation(
+                        RunnerDomainDto(
+                            server = server,
+                            runnerKey = runnerKey,
+                            runnerHost = runnerHost
+                        )
                     )
-                }
-            EventsDto(events)
+                val jobEvents = jobEventStoreQuery.findAllPendingEventsForServer(server)
+                val events = jobEvents
+                    .filter { event ->
+                        !runnerJobEventStateStoreQuery.existsByRunnerAndEvent(schedulerRunner, event)
+                    }.map { event ->
+                        EventDataDto(
+                            eventUuid = event.uuid,
+                            jobKey = event.jobInstance.jobKey,
+                            eventType = event.eventType.name
+                        )
+                    }
+                EventsDto(events)
+            }
         }
-    }
 }
