@@ -7,7 +7,7 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <packaging>pom</packaging>
-    <version>v2.3.2</version>
+    <version>v2.3.3</version>
     <modules>
         <module>travako-core</module>
         <module>travako-starter</module>
@@ -27,7 +27,7 @@
             <name>Ibrahim AlTamimi</name>
             <url>https://www.linkedin.com/in/iloom/</url>
             <email>ibm.iloom@gmail.com</email>
-            <organization>arkitikIO</organization>
+            <organization>arkitik.io</organization>
             <organizationUrl>https://arkitik.io</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -45,10 +45,10 @@
         <java.version>21</java.version>
 
         <spring-boot.groupId>org.springframework.boot</spring-boot.groupId>
-        <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-boot.version>3.4.5</spring-boot.version>
         <spring-cloud.version>2023.0.2</spring-cloud.version>
 
-        <radix.version>v2.0.0</radix.version>
+        <radix.version>v2.4.4</radix.version>
 
         <dokka.version>1.9.10</dokka.version>
         <kotlin.version>1.9.22</kotlin.version>

@@ -5,7 +5,11 @@ import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.CronTrigger
 import org.springframework.scheduling.support.PeriodicTrigger
 import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -17,7 +21,7 @@ class TravakoJobBeanDataBuilder {
     private lateinit var jobTrigger: Trigger
     private val params: MutableMap<String, String?> = mutableMapOf()
 
-    private var firingTime = LocalTime.now()
+    private var firingTime: Instant? = null
 
     private var singleRun = false
 
@@ -32,6 +36,18 @@ class TravakoJobBeanDataBuilder {
     }
 
     fun firingTime(firingTime: LocalTime): TravakoJobBeanDataBuilder {
+        return firingTime(firingTime.atDate(LocalDate.now()))
+    }
+
+    fun firingTime(firingTime: LocalDateTime): TravakoJobBeanDataBuilder {
+        return firingTime(firingTime.atZone(ZoneId.systemDefault()).toInstant())
+    }
+
+    fun firingTime(firingTime: Instant): TravakoJobBeanDataBuilder {
+        return zonedFiringTime(firingTime.atZone(ZoneId.systemDefault()).toInstant())
+    }
+
+    fun zonedFiringTime(firingTime: Instant): TravakoJobBeanDataBuilder {
         this.firingTime = firingTime
         return this
     }

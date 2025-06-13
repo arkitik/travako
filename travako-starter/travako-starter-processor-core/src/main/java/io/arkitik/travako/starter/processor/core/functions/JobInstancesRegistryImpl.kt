@@ -14,8 +14,6 @@ import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
 import io.arkitik.travako.starter.processor.core.job.parseTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 import org.springframework.scheduling.Trigger
-import java.time.LocalDate
-import java.time.ZoneId
 
 
 /**
@@ -32,9 +30,9 @@ internal class JobInstancesRegistryImpl(
 
     override fun registerJob(jobBeanData: TravakoJobBeanData) {
         val jobTrigger = jobBeanData.jobTrigger.parseTrigger()
-        val nextExecution = jobBeanData.jobTrigger.nextTimeToExecution(
-            jobBeanData.firingTime.atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()
-        )
+        val nextExecution = jobBeanData.jobTrigger
+            .nextTimeToExecution(jobBeanData.firingTime)
+
         jobInstanceSdk.registerJob
             .runOperation(
                 CreateJobDto(
