@@ -251,6 +251,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central-sonatype</publishingServerId>
+                    <outputFilename>arkitik-travako-${project.version}.zip</outputFilename>
                 </configuration>
             </plugin>
         </plugins>
