@@ -51,7 +51,7 @@ jobs:
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          ./mvnw -B -DperformRelease=true dokka:javadocJar gpg:sign deploy
+          mvn -B -DperformRelease=true dokka:javadocJar gpg:sign deploy
 
       - name: Collect Release Artifacts
         run: |
