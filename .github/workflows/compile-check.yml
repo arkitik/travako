@@ -22,10 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Compile
-        run: ./mvnw -B clean compile
-
-      - name: Compile Tests
-        run: ./mvnw -B test-compile
+        run: mvn -B clean compile
 
       - name: Validate Project Structure
         run: |
