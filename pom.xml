@@ -244,6 +244,15 @@
                     </dokkaPlugins>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central-sonatype</publishingServerId>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -270,17 +279,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <stagingProfileId>${sonatype.stagingProfileId}</stagingProfileId>
-                            <serverId>s01-ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
