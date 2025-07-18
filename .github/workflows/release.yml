@@ -64,7 +64,7 @@ jobs:
           echo "Using Maven version:" && mvn --version
 
           # Run Maven with debug options for authentication issues
-          mvn -B -X -DperformRelease=true \
+          mvn -DperformRelease=true \
           -Dcentral.username=${{ secrets.CENTRAL_USERNAME }} \
           -Dcentral.password=${{ secrets.CENTRAL_TOKEN }} \
           -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
@@ -73,9 +73,7 @@ jobs:
       - name: Collect Release Artifacts
         run: |
           mkdir -p release-artifacts
-          find . -type f -path "*/target/*.jar" -not -path "*/test-classes/*" -exec cp {} release-artifacts/ \;
-          find . -type f -path "*/target/*.pom" -exec cp {} release-artifacts/ \;
-          find . -type f -path "*/target/*.asc" -exec cp {} release-artifacts/ \;
+          find . -type f -path "target/central-publishing/*.zip" -exec cp {} release-artifacts/ \;
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
