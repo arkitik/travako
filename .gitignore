@@ -30,3 +30,6 @@ artifacts
 app-logs
 app-logs/**
 .deploy/**
+
+
+.history/**

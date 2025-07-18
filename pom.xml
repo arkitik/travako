@@ -7,14 +7,14 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <packaging>pom</packaging>
-    <version>v2.3.3</version>
+    <version>v2.3.4</version>
     <modules>
         <module>travako-core</module>
         <module>travako-starter</module>
         <module>travako-engine</module>
     </modules>
-    <name>Travako Job scheduler framework</name>
-    <description>Job clustered scheduling framework</description>
+    <name>Travako - Distributed Job Scheduler</name>
+    <description>Enterprise-grade distributed job scheduling and execution framework with clustering support</description>
     <url>https://github.com/arkitik/travako</url>
     <licenses>
         <license>

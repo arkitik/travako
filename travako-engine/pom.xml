@@ -6,8 +6,9 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako</artifactId>
-        <version>v2.3.3</version>
+        <version>v2.3.4</version>
     </parent>
+    <name>Travako Engine - Job Execution Engine</name>
 
     <artifactId>travako-engine</artifactId>
     <packaging>pom</packaging>

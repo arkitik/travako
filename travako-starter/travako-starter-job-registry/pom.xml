@@ -6,8 +6,9 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-starter</artifactId>
-        <version>v2.3.3</version>
+        <version>v2.3.4</version>
     </parent>
+    <name>Travako Starter Registry</name>
 
     <artifactId>travako-starter-job-registry</artifactId>
 

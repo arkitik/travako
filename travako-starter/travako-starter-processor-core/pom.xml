@@ -6,8 +6,9 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-starter</artifactId>
-        <version>v2.3.3</version>
+        <version>v2.3.4</version>
     </parent>
+    <name>Travako Starter Core</name>
 
     <artifactId>travako-starter-processor-core</artifactId>
     <dependencies>
@@ -38,7 +39,7 @@
         <dependency>
             <groupId>io.arkitik.travako</groupId>
             <artifactId>travako-core-sdk-job</artifactId>
-            <version>v2.3.3</version>
+            <version>v2.3.4</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
