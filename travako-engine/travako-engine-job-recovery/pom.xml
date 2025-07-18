@@ -6,8 +6,9 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-engine</artifactId>
-        <version>v2.3.3</version>
+        <version>v2.3.4</version>
     </parent>
+    <name>Travako Engine Recovery</name>
 
     <artifactId>travako-engine-job-recovery</artifactId>
     <dependencies>

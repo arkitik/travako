@@ -7,14 +7,14 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <packaging>pom</packaging>
-    <version>v2.3.3</version>
+    <version>v2.3.4</version>
     <modules>
         <module>travako-core</module>
         <module>travako-starter</module>
         <module>travako-engine</module>
     </modules>
-    <name>Travako Job scheduler framework</name>
-    <description>Job clustered scheduling framework</description>
+    <name>Travako - Distributed Job Scheduler</name>
+    <description>Enterprise-grade distributed job scheduling and execution framework with clustering support</description>
     <url>https://github.com/arkitik/travako</url>
     <licenses>
         <license>
@@ -244,6 +244,16 @@
                     </dokkaPlugins>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central-sonatype</publishingServerId>
+                    <outputFilename>arkitik-travako-${project.version}.zip</outputFilename>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -270,17 +280,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <stagingProfileId>${sonatype.stagingProfileId}</stagingProfileId>
-                            <serverId>s01-ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
