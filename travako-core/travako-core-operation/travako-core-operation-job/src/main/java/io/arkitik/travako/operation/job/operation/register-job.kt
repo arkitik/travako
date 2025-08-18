@@ -4,8 +4,8 @@ import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.creator
-import io.arkitik.radix.develop.store.creatorWithSave
-import io.arkitik.radix.develop.store.storeUpdaterWithSave
+import io.arkitik.radix.develop.store.creatorWithInsert
+import io.arkitik.radix.develop.store.storeUpdaterWithUpdate
 import io.arkitik.travako.core.domain.job.embedded.JobInstanceTriggerType
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.operation.job.roles.CheckRegisteredJobRole
@@ -47,7 +47,7 @@ class RegisterJobOperationProvider(
                     jobKey = jobKey
                 )
                 if (oldJobInstanceDomain != null) {
-                    storeUpdaterWithSave(oldJobInstanceDomain.identityUpdater()) {
+                    storeUpdaterWithUpdate(oldJobInstanceDomain.identityUpdater()) {
                         jobClassName.jobClassName()
                         JobStatus.WAITING.jobStatus()
                         nextExecution.nextExecutionTime()
@@ -65,12 +65,12 @@ class RegisterJobOperationProvider(
                                     value.value()
                                     jobInstanceDomain.job()
                                 }
-                            }.save()
+                            }.insertIgnore()
                         }
                     }
 
                 } else {
-                    creatorWithSave(identityCreator()) {
+                    creatorWithInsert(identityCreator()) {
                         jobKey.jobKey()
                         singleRun.singleRun()
                         jobClassName.jobClassName()
@@ -88,7 +88,7 @@ class RegisterJobOperationProvider(
                                     value.value()
                                     jobInstanceDomain.job()
                                 }
-                            }.save()
+                            }.insertIgnore()
                         }
                     }
                 }

@@ -1,5 +1,11 @@
 package io.arkitik.travako.starter.processor.core
 
+import io.arkitik.travako.adapter.leader.LeaderPortContext
+import io.arkitik.travako.port.job.JobInstancePortContext
+import io.arkitik.travako.port.job.event.JobEventPortContext
+import io.arkitik.travako.port.runner.RunnerPortContext
+import io.arkitik.travako.port.server.ServerPortContext
+import io.arkitik.travako.port.shared.SharedPortContext
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
@@ -11,6 +17,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -18,6 +25,16 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 @EnableConfigurationProperties(TravakoConfig::class)
+@Import(
+    value = [
+        SharedPortContext::class,
+        RunnerPortContext::class,
+        JobInstancePortContext::class,
+        ServerPortContext::class,
+        LeaderPortContext::class,
+        JobEventPortContext::class,
+    ]
+)
 class TravakoProcessorCoreStarter {
 
     @Bean

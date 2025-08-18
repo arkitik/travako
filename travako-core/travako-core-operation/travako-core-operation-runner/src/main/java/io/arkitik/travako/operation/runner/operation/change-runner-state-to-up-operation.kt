@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeUpdaterWithSave
+import io.arkitik.radix.develop.store.storeUpdaterWithUpdate
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.operation.runner.roles.CheckRegisteredRole
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
@@ -37,7 +37,7 @@ class ChangeRunnerStateToUpOperationProvider(
                     )
                 )
             with(schedulerRunnerStore) {
-                storeUpdaterWithSave(schedulerRunner.identityUpdater()) {
+                storeUpdaterWithUpdate(schedulerRunner.identityUpdater()) {
                     InstanceState.UP.instanceState()
                     LocalDateTime.now().lastHeartbeatTime()
                     update()

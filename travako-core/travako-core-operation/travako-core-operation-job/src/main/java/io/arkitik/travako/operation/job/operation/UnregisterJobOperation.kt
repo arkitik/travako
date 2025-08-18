@@ -3,7 +3,7 @@ package io.arkitik.travako.operation.job.operation
 import io.arkitik.radix.develop.operation.Operation
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.shared.ext.resourceNotFound
-import io.arkitik.radix.develop.store.storeUpdaterWithSave
+import io.arkitik.radix.develop.store.storeUpdaterWithUpdate
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.operation.job.errors.JobErrors
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
@@ -32,7 +32,7 @@ internal class UnregisterJobOperation(
                 server = server,
                 jobKey = jobKey
             ).resourceNotFound(JobErrors.JOB_IS_NOT_REGISTERED)
-            storeUpdaterWithSave(jobInstanceDomain.identityUpdater()) {
+            storeUpdaterWithUpdate(jobInstanceDomain.identityUpdater()) {
                 JobStatus.DOWN.jobStatus()
                 removeRunnerAssignee()
                 removeNextExecutionTime()

@@ -42,7 +42,7 @@ class AssignJobsToRunnerOperationProvider(
                         schedulerRunner.assignToRunner()
                         update()
                     }
-                }.save()
+                }.updateIgnore()
             }
         }
     }

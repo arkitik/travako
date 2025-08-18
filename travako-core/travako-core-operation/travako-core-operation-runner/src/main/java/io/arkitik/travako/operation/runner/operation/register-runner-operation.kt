@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.runner.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeCreator
+import io.arkitik.radix.develop.store.creatorWithInsert
 import io.arkitik.radix.develop.store.storeUpdater
 import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.operation.runner.roles.CheckUnRegisteredRole
@@ -39,19 +39,18 @@ class RegisterRunnerOperationProvider(
                             )
                         )
                     }.getOrElse {
-                        storeCreator(identityCreator()) {
+                        creatorWithInsert(identityCreator()) {
                             runnerKey.runnerKey()
                             runnerHost.runnerHost()
                             InstanceState.UP.instanceState()
                             server.server()
-                            create()
                         }
                     }
                 storeUpdater(schedulerRunner.identityUpdater()) {
                     InstanceState.UP.instanceState()
                     LocalDateTime.now().lastHeartbeatTime()
                     update()
-                }.save()
+                }.updateIgnore()
             }
         }
     }

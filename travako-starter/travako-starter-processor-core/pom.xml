@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-starter</artifactId>
-        <version>v2.3.4</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Starter Core</name>
 
@@ -31,16 +31,37 @@
             <artifactId>travako-starter-job-source</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-sdk-runner</artifactId>
+            <artifactId>travako-core-port-runner</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.arkitik.travako</groupId>
-            <artifactId>travako-core-sdk-job</artifactId>
-            <version>v2.3.4</version>
-            <scope>compile</scope>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-port-shared</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-port-job</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-port-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-port-leader</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>travako-core-port-job-event</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

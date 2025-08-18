@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-starter</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.3.4</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Starter JPA Default</name>
     <modelVersion>4.0.0</modelVersion>
@@ -19,32 +19,27 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-runner</artifactId>
+            <artifactId>travako-core-port-jpa-runner</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-shared</artifactId>
+            <artifactId>travako-core-port-jpa-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-job</artifactId>
+            <artifactId>travako-core-port-jpa-server</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-server</artifactId>
+            <artifactId>travako-core-port-jpa-leader</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-leader</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-job-event</artifactId>
+            <artifactId>travako-core-port-jpa-job-event</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

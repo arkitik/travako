@@ -58,7 +58,7 @@ class UpdateJobOperationProvider(
                         (JobInstanceTriggerType.DURATION.takeIf { isDuration }
                             ?: JobInstanceTriggerType.CRON).jobTriggerType()
                         update()
-                    }.save()
+                    }.updateIgnore()
                 }
                 jobEventSdk.insertRestartJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
             }
@@ -89,7 +89,7 @@ class UpdateJobOperationProvider(
                                 value.value()
                                 jobInstance.job()
                             }
-                        }.save()
+                        }.insertIgnore()
                     }
                 }
                 jobEventSdk.insertRestartJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))

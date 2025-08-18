@@ -7,11 +7,13 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <packaging>pom</packaging>
-    <version>v2.3.4</version>
+    <version>v2.4.0-BETA</version>
     <modules>
         <module>travako-core</module>
         <module>travako-starter</module>
         <module>travako-engine</module>
+        <module>travako-protocol</module>
+        <module>travako-plugin</module>
     </modules>
     <name>Travako - Distributed Job Scheduler</name>
     <description>Enterprise-grade distributed job scheduling and execution framework with clustering support</description>
@@ -48,11 +50,12 @@
         <spring-boot.version>3.4.5</spring-boot.version>
         <spring-cloud.version>2023.0.2</spring-cloud.version>
 
-        <radix.version>v2.4.4</radix.version>
+        <radix.version>v2.4.5</radix.version>
 
-        <dokka.version>1.9.10</dokka.version>
-        <kotlin.version>1.9.22</kotlin.version>
+        <dokka.version>2.0.0</dokka.version>
+        <kotlin.version>2.2.0</kotlin.version>
 
+        <exposed.version>0.61.0</exposed.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,6 +86,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.jetbrains.exposed</groupId>
+                <artifactId>exposed-bom</artifactId>
+                <version>${exposed.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.arkitik.radix</groupId>
                 <artifactId>radix-dependencies</artifactId>
                 <version>${radix.version}</version>
@@ -103,13 +113,6 @@
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
                 <version>3.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

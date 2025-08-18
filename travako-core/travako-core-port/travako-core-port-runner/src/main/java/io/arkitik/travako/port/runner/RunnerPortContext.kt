@@ -1,7 +1,5 @@
 package io.arkitik.travako.port.runner
 
-import io.arkitik.travako.adapter.runner.SchedulerRunnerStoreImpl
-import io.arkitik.travako.adapter.runner.repository.TravakoSchedulerRunnerRepository
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.operation.runner.SchedulerRunnerDomainSdkImpl
 import io.arkitik.travako.operation.runner.SchedulerRunnerSdkImpl
@@ -20,14 +18,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class RunnerPortContext {
-    @Bean
-    fun schedulerRunnerStore(
-        travakoSchedulerRunnerRepository: TravakoSchedulerRunnerRepository,
-    ): SchedulerRunnerStore = SchedulerRunnerStoreImpl(
-        travakoSchedulerRunnerRepository = travakoSchedulerRunnerRepository
-    )
-
-
     @Bean
     fun schedulerRunnerSdk(
         schedulerRunnerStore: SchedulerRunnerStore,

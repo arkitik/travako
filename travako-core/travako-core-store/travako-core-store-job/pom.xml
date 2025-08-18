@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-store</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.3.4</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Core Store Job</name>
     <modelVersion>4.0.0</modelVersion>

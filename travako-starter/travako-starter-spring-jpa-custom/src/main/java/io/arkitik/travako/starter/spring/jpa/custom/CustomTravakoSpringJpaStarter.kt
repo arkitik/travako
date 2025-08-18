@@ -1,12 +1,11 @@
 package io.arkitik.travako.starter.spring.jpa.custom
 
 import com.zaxxer.hikari.HikariDataSource
-import io.arkitik.travako.adapter.leader.LeaderPortContext
-import io.arkitik.travako.port.job.JobInstancePortContext
-import io.arkitik.travako.port.job.event.JobEventPortContext
-import io.arkitik.travako.port.runner.RunnerPortContext
-import io.arkitik.travako.port.server.ServerPortContext
-import io.arkitik.travako.port.shared.SharedPortContext
+import io.arkitik.travako.port.jpa.job.JobInstanceJpaPortContext
+import io.arkitik.travako.port.jpa.job.event.JobEventJpaPortContext
+import io.arkitik.travako.port.jpa.leader.LeaderJpaPortContext
+import io.arkitik.travako.port.jpa.runner.RunnerJpaPortContext
+import io.arkitik.travako.port.jpa.server.ServerJpaPortContext
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties
@@ -37,12 +36,11 @@ import javax.sql.DataSource
 )
 @Import(
     value = [
-        SharedPortContext::class,
-        RunnerPortContext::class,
-        JobInstancePortContext::class,
-        ServerPortContext::class,
-        LeaderPortContext::class,
-        JobEventPortContext::class,
+        RunnerJpaPortContext::class,
+        JobInstanceJpaPortContext::class,
+        ServerJpaPortContext::class,
+        LeaderJpaPortContext::class,
+        JobEventJpaPortContext::class,
     ]
 )
 class CustomTravakoSpringJpaStarter {

@@ -44,7 +44,7 @@ class OperationProviderMarkEventProcessedForRunner(
                     jobEvent.jobEvent()
                     schedulerRunner.runner()
                     create()
-                }.save()
+                }.insertIgnore()
             }
             val totalSchedulerRunnerDomains = schedulerRunnerDomainSdk.countServerSchedulerRunningRunners
                 .runOperation(server)
@@ -54,7 +54,7 @@ class OperationProviderMarkEventProcessedForRunner(
                     storeUpdater(jobEvent.identityUpdater()) {
                         processed()
                         update()
-                    }.save()
+                    }.updateIgnore()
                 }
             }
         }

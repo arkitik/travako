@@ -1,9 +1,5 @@
 package io.arkitik.travako.port.job.event
 
-import io.arkitik.travako.adapter.job.event.JobEventStoreImpl
-import io.arkitik.travako.adapter.job.event.RunnerJobEventStateStoreImpl
-import io.arkitik.travako.adapter.job.event.repository.TravakoJobEventRepository
-import io.arkitik.travako.adapter.job.event.repository.TravakoRunnerJobEventStateRepository
 import io.arkitik.travako.operation.job.event.JobEventSdkImpl
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
@@ -21,17 +17,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class JobEventPortContext {
-
-    @Bean
-    fun runnerJobEventStateStore(
-        travakoRunnerJobEventStateRepository: TravakoRunnerJobEventStateRepository,
-    ): RunnerJobEventStateStore = RunnerJobEventStateStoreImpl(travakoRunnerJobEventStateRepository)
-
-    @Bean
-    fun jobEventStore(
-        travakoJobEventRepository: TravakoJobEventRepository,
-    ): JobEventStore = JobEventStoreImpl(travakoJobEventRepository)
-
     @Bean
     fun jobEventSdk(
         jobEventStore: JobEventStore,

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.3.4</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Core - Base Components</name>
     <modelVersion>4.0.0</modelVersion>
@@ -22,6 +22,10 @@
         <module>travako-core-port</module>
         <module>travako-core-function</module>
         <module>travako-core-sdk-domain</module>
+        <module>travako-core-port-jpa</module>
+
+        <module>travako-core-entity-exposed</module>
+        <module>travako-core-adapter-exposed</module>
     </modules>
 
 </project>

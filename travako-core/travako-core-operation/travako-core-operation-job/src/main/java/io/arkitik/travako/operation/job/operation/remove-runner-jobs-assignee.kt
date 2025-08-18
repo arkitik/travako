@@ -42,7 +42,7 @@ class RemoveRunnerJobsAssigneeOperationProvider(
                         removeRunnerAssignee()
                         update()
                     }
-                }.save()
+                }.update()
             }
         }
     }

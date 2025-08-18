@@ -34,7 +34,7 @@ class InsertJobEventOperationProvider(
                         jobInstance.jobInstance()
                         jobEventType.eventType()
                         create()
-                    }.save()
+                    }.insertIgnore()
                 }
             }
         }
