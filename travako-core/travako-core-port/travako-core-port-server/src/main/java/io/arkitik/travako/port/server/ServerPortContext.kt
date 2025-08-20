@@ -1,7 +1,5 @@
 package io.arkitik.travako.port.server
 
-import io.arkitik.travako.adapter.server.ServerStoreImpl
-import io.arkitik.travako.adapter.server.repository.TravakoServerRepository
 import io.arkitik.travako.operation.server.ServerDomainSdkImpl
 import io.arkitik.travako.operation.server.ServerSdkImpl
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
@@ -17,12 +15,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class ServerPortContext {
-
-    @Bean
-    fun serverStore(
-        travakoServerRepository: TravakoServerRepository,
-    ): ServerStore = ServerStoreImpl(travakoServerRepository)
-
     @Bean
     fun serverDomainSdk(
         serverStore: ServerStore,

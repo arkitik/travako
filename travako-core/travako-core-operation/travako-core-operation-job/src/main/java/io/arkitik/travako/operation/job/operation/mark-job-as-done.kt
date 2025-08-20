@@ -44,7 +44,7 @@ class MarkJobAsDoneWaitingOperationProvider(
                     LocalDateTime.now().lastRunningTime()
                     removeRunnerAssignee()
                     update()
-                }.save()
+                }.update()
             }
             jobEventSdk.insertDeleteJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
         }

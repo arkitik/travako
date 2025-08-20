@@ -1,9 +1,5 @@
 package io.arkitik.travako.port.job
 
-import io.arkitik.travako.adapter.job.JobInstanceParamStoreImpl
-import io.arkitik.travako.adapter.job.JobInstanceStoreImpl
-import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceParamRepository
-import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceRepository
 import io.arkitik.travako.operation.job.JobDomainSdkImpl
 import io.arkitik.travako.operation.job.JobInstanceSdkImpl
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
@@ -23,16 +19,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class JobInstancePortContext {
-    @Bean
-    fun jobInstanceStore(
-        travakoJobInstanceRepository: TravakoJobInstanceRepository,
-    ): JobInstanceStore = JobInstanceStoreImpl(travakoJobInstanceRepository)
-
-    @Bean
-    fun jobInstanceParamStore(
-        travakoJobInstanceParamRepository: TravakoJobInstanceParamRepository,
-    ): JobInstanceParamStore = JobInstanceParamStoreImpl(travakoJobInstanceParamRepository)
-
     @Bean
     fun jobDomainSdk(
         jobInstanceStore: JobInstanceStore,

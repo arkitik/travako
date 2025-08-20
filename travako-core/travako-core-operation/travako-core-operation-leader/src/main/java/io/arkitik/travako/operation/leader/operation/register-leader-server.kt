@@ -46,7 +46,7 @@ class RegisterLeaderServerOperationProvider(
                     server.server()
                     schedulerRunner.runner()
                     create()
-                }.save()
+                }.insertIgnore()
             }
         }
     }

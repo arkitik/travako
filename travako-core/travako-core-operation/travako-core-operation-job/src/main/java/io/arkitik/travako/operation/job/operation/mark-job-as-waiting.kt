@@ -41,7 +41,7 @@ class MarkJobAsWaitingOperationProvider(
                     LocalDateTime.now().lastRunningTime()
                     nextExecutionTime.nextExecutionTime()
                     update()
-                }.save()
+                }.updateIgnore()
             }
         }
     }

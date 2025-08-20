@@ -40,7 +40,7 @@ class MarkJobAsRunningOperationProvider(
                     JobStatus.RUNNING.jobStatus()
                     nextExecutionTime.nextExecutionTime()
                     update()
-                }.save()
+                }.updateIgnore()
             }
         }
     }

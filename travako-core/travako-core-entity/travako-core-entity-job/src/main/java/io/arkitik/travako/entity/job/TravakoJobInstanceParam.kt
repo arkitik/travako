@@ -38,9 +38,9 @@ class TravakoJobInstanceParam(
         )
     )
     override val job: TravakoJobInstance,
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "field_key")
     override val key: String,
-    @Column
+    @Column(name = "field_value")
     override var value: String?,
     @Column(nullable = false, updatable = false)
     override val creationDate: LocalDateTime = LocalDateTime.now(),

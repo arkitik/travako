@@ -39,7 +39,7 @@ class LogRunnerHeartbeatOperationProvider(
                     LocalDateTime.now().lastHeartbeatTime()
                     InstanceState.UP.instanceState()
                     update()
-                }.save()
+                }.updateIgnore()
             }
         }
     }

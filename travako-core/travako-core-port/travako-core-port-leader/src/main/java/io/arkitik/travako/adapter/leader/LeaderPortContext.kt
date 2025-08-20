@@ -1,6 +1,5 @@
 package io.arkitik.travako.adapter.leader
 
-import io.arkitik.travako.adapter.leader.repository.TravakoLeaderRepository
 import io.arkitik.travako.operation.leader.LeaderDomainSdkImpl
 import io.arkitik.travako.operation.leader.LeaderSdkImpl
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
@@ -18,11 +17,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class LeaderPortContext {
-    @Bean
-    fun leaderStore(
-        travakoLeaderRepository: TravakoLeaderRepository,
-    ): LeaderStore = LeaderStoreImpl(travakoLeaderRepository = travakoLeaderRepository)
-
     @Bean
     fun leaderDomainSdk(
         leaderStore: LeaderStore,

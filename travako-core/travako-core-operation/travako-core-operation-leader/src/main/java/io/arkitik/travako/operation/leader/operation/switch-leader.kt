@@ -2,7 +2,7 @@ package io.arkitik.travako.operation.leader.operation
 
 import io.arkitik.radix.develop.operation.ext.operationBuilder
 import io.arkitik.radix.develop.operation.ext.runOperation
-import io.arkitik.radix.develop.store.storeUpdaterWithSave
+import io.arkitik.radix.develop.store.storeUpdaterWithUpdate
 import io.arkitik.travako.operation.leader.roles.ServerNotRegisteredLeaderRole
 import io.arkitik.travako.sdk.domain.leader.LeaderDomainSdk
 import io.arkitik.travako.sdk.domain.leader.dto.LeaderDomainServerDto
@@ -32,11 +32,11 @@ class SwitchServerOperationProvider(
                 val server = serverDomainSdk.fetchServer.runOperation(ServerDomainDto(serverKey))
                 val leader = leaderDomainSdk.fetchServerLeader.runOperation(LeaderDomainServerDto(server))
                 val schedulerRunner = schedulerRunnerDomainSdk.fetchOldestHeartbeatRunner.runOperation(server)
-                storeUpdaterWithSave(leader.identityUpdater()) {
+                storeUpdaterWithUpdate(leader.identityUpdater()) {
                     schedulerRunner.assignToRunner()
                     LocalDateTime.now().lastModifiedDate()
                     update()
-                }.save()
+                }
                 LeaderRunnerKeyDto(
                     serverKey = serverKey,
                     runnerKey = schedulerRunner.runnerKey,
