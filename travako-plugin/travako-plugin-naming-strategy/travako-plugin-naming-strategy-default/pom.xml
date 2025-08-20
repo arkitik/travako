@@ -9,6 +9,7 @@
         <version>v2.4.0-BETA</version>
     </parent>
 
+    <name>Default Travako Plugin Naming Strategy</name>
     <artifactId>travako-plugin-naming-strategy-default</artifactId>
     <dependencies>
         <dependency>
