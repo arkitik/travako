@@ -47,7 +47,8 @@
         <java.version>21</java.version>
 
         <spring-boot.groupId>org.springframework.boot</spring-boot.groupId>
-        <spring-boot.version>3.4.5</spring-boot.version>
+        <spring-boot.version>3.5.4</spring-boot.version>
+        <spring.version>6.2.10</spring.version>
         <spring-cloud.version>2023.0.2</spring-cloud.version>
 
         <radix.version>v2.4.5</radix.version>
@@ -85,6 +86,13 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.jetbrains.exposed</groupId>
                 <artifactId>exposed-bom</artifactId>

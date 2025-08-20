@@ -26,6 +26,10 @@
 
         <module>travako-core-entity-exposed</module>
         <module>travako-core-adapter-exposed</module>
+
+        <module>travako-core-entity-redis</module>
+        <module>travako-core-adapter-redis</module>
+        <module>travako-core-port-redis</module>
     </modules>
 
 </project>

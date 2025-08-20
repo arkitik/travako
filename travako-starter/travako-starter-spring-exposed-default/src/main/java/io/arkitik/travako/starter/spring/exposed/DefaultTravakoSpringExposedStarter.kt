@@ -1,13 +1,15 @@
 package io.arkitik.travako.starter.spring.exposed
 
-import io.arkitik.travako.adapter.exposed.server.ServerStoreImpl
 import io.arkitik.travako.adapter.exposed.job.JobInstanceParamStoreImpl
 import io.arkitik.travako.adapter.exposed.job.JobInstanceStoreImpl
 import io.arkitik.travako.adapter.exposed.job.event.JobEventStoreImpl
 import io.arkitik.travako.adapter.exposed.job.event.RunnerJobEventStateStoreImpl
 import io.arkitik.travako.adapter.exposed.leader.LeaderStoreImpl
 import io.arkitik.travako.adapter.exposed.runner.SchedulerRunnerStoreImpl
+import io.arkitik.travako.adapter.exposed.server.ServerStoreImpl
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.protocol.naming.strategy.TravakoExposedNamingStrategy
+import io.arkitik.travako.starter.spring.exposed.units.TravakoTransactionalExecutorImpl
 import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.JobInstanceStore
 import io.arkitik.travako.store.job.event.JobEventStore
@@ -90,4 +92,10 @@ class DefaultTravakoSpringExposedStarter {
         database = database,
         travakoExposedNamingStrategy = travakoExposedNamingStrategy
     )
+
+    @Bean
+    fun travakoTransactionalExecutor(
+        @Autowired(required = false) database: Database?,
+    ): TravakoTransactionalExecutor = TravakoTransactionalExecutorImpl(database)
+
 }

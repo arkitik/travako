@@ -39,11 +39,6 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-core-port-shared</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
             <artifactId>travako-core-port-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

@@ -5,7 +5,6 @@ import io.arkitik.travako.port.job.JobInstancePortContext
 import io.arkitik.travako.port.job.event.JobEventPortContext
 import io.arkitik.travako.port.runner.RunnerPortContext
 import io.arkitik.travako.port.server.ServerPortContext
-import io.arkitik.travako.port.shared.SharedPortContext
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
@@ -27,7 +26,6 @@ import org.springframework.context.annotation.Import
 @EnableConfigurationProperties(TravakoConfig::class)
 @Import(
     value = [
-        SharedPortContext::class,
         RunnerPortContext::class,
         JobInstancePortContext::class,
         ServerPortContext::class,

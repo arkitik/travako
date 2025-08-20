@@ -23,5 +23,6 @@
 
         <module>travako-starter-spring-exposed-custom</module>
         <module>travako-starter-spring-exposed-default</module>
+        <module>travako-starter-spring-redis-default</module>
     </modules>
 </project>

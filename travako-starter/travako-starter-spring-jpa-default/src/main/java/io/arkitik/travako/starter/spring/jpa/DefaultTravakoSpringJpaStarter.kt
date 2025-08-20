@@ -1,14 +1,18 @@
 package io.arkitik.travako.starter.spring.jpa
 
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.port.jpa.job.JobInstanceJpaPortContext
 import io.arkitik.travako.port.jpa.job.event.JobEventJpaPortContext
 import io.arkitik.travako.port.jpa.leader.LeaderJpaPortContext
 import io.arkitik.travako.port.jpa.runner.RunnerJpaPortContext
 import io.arkitik.travako.port.jpa.server.ServerJpaPortContext
+import io.arkitik.travako.starter.spring.jpa.units.TravakoTransactionalExecutorImpl
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.transaction.PlatformTransactionManager
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -43,4 +47,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
         "io.arkitik.travako.adapter.leader.repository",
     ]
 )
-class DefaultTravakoSpringJpaStarter
+class DefaultTravakoSpringJpaStarter {
+
+    @Bean
+    fun travakoTransactionalExecutor(
+        transactionManager: PlatformTransactionManager,
+    ): TravakoTransactionalExecutor = TravakoTransactionalExecutorImpl(transactionManager)
+}

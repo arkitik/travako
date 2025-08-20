@@ -1,0 +1,27 @@
+server:
+  port: 8093
+spring:
+  data:
+    redis:
+      database: 1
+      host: localhost
+      port: 6379
+      password:
+      timeout: 60000
+arkitik:
+  travako:
+    config:
+      server-key: travako
+      runner:
+        key: travako-runner-1
+        duplication-detection: true
+        jobs-event: 10s
+      misfiring:
+        enabled: true
+        run-interval-minutes: 1
+        threshold-seconds: 120
+logging:
+  level:
+    io:
+      arkitik: trace
+    Exposed: off
