@@ -1,4 +1,4 @@
-name: Create Tag and Update Version
+name: New Release
 
 on:
   workflow_dispatch:
@@ -94,5 +94,38 @@ jobs:
           echo "Setting Maven version to $VERSION"
           mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
 
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "chore: update version to $VERSION"
           git tag $VERSION
           git push origin $VERSION
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${{ steps.version.outputs.next_version }}"
+          # Get previous tag (second latest)
+          PREV_TAG=$(git tag --list "v*" --sort=-v:refname | sed -n '2p')
+          if [ -z "$PREV_TAG" ]; then
+            RANGE=""
+          else
+            RANGE="$PREV_TAG..$VERSION"
+          fi
+          if [ -z "$RANGE" ]; then
+            NOTES=$(git log --pretty=format:"- %s" $VERSION)
+          else
+            NOTES=$(git log --pretty=format:"- %s" $RANGE)
+          fi
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.next_version }}
+          name: Release ${{ steps.version.outputs.next_version }}
+          body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
