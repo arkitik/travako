@@ -186,11 +186,13 @@ class TravakoProcessorStarter {
         travakoConfig: TravakoConfig,
         jobInstanceSdk: JobInstanceSdk,
         travakoJobInstanceProvider: TravakoJobInstanceProvider,
+        jobInstancesSource: JobInstancesSource,
     ): Processor<SchedulerRunnerDomain> = RunnerJobsRegisterProcessor(
         jobsSchedulerRegistry = jobsSchedulerRegistry,
         travakoConfig = travakoConfig,
         jobInstanceSdk = jobInstanceSdk,
-        travakoJobInstanceProvider = travakoJobInstanceProvider
+        travakoJobInstanceProvider = travakoJobInstanceProvider,
+        jobInstancesSource = jobInstancesSource,
     )
 
     @Bean

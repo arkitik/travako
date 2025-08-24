@@ -43,7 +43,8 @@ internal class JobInstancesRegistryImpl(
                     nextExecution = nextExecution,
                     jobClassName = jobBeanData.jobClass.name,
                     params = jobBeanData.params,
-                    singleRun = jobBeanData.singleRun
+                    singleRun = jobBeanData.singleRun,
+                    publishEvent = true
                 )
             )
         logger.info(

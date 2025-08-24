@@ -10,3 +10,22 @@ services:
       - MYSQL_PASSWORD=travako
       - MYSQL_DATABASE=travako
       - MYSQL_ROOT_PASSWORD=travako
+  travako_redis:
+    image: redis:latest
+    networks:
+      - development-net
+    ports:
+      - "6371:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+volumes:
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ~/.recon/redis/data-tmp
+      o: bind
+networks:
+  development-net:
+    external: true

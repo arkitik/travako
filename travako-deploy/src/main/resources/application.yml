@@ -3,9 +3,9 @@ server:
 spring:
   data:
     redis:
-      database: 1
+      database: 0
       host: localhost
-      port: 6379
+      port: 6371
       password:
       timeout: 60000
 arkitik:
