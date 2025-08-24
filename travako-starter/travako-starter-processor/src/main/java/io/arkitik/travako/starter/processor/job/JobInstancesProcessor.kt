@@ -50,6 +50,7 @@ internal class JobInstancesProcessor(
                                     jobClassName = jobInstanceBean.javaClass.name,
                                     params = mapOf(),
                                     singleRun = jobInstanceBean.singleRun,
+                                    publishEvent = false
                                 )
                             )
                     } catch (e: Exception) {

@@ -16,4 +16,5 @@ data class CreateJobDto(
     val nextExecution: LocalDateTime?,
     val params: Map<String, String?>,
     val singleRun: Boolean,
+    val publishEvent: Boolean,
 )

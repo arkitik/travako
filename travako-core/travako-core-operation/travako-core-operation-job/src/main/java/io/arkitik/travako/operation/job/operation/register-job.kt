@@ -93,7 +93,12 @@ class RegisterJobOperationProvider(
                     }
                 }
             }
-            jobEventSdk.insertRegisterJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
+        }
+
+        after {
+            if (publishEvent) {
+                jobEventSdk.insertRegisterJobEvent.runOperation(JobEventKeyDto(serverKey, jobKey))
+            }
         }
     }
 }
