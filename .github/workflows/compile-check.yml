@@ -17,8 +17,8 @@ jobs:
       - name: Calculate next version
         id: version
         run: |
-          # Get latest tag (assume tags are in format vX.Y.Z)
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          # Get latest tag matching v* pattern (e.g., v2.4.0, v2.4.0-BETA)
+          LATEST_TAG=$(git tag --list "v*" --sort=-v:refname | head -n 1)
           echo "Latest tag: $LATEST_TAG"
           if [ -z "$LATEST_TAG" ]; then
             COMMITS_SINCE=$(git rev-list HEAD --count)
@@ -27,7 +27,8 @@ jobs:
             PATCH=0
           else
             COMMITS_SINCE=$(git rev-list ${LATEST_TAG}..HEAD --count)
-            VERSION_REGEX="^v([0-9]+)\.([0-9]+)\.([0-9]+)$"
+            # Match v2.4.0, v.2.4.0, v2.4.0-BETA, v.2.4.0-BETA
+            VERSION_REGEX="^v\.?([0-9]+)\.([0-9]+)\.([0-9]+)"
             if [[ "$LATEST_TAG" =~ $VERSION_REGEX ]]; then
               MAJOR="${BASH_REMATCH[1]}"
               MINOR="${BASH_REMATCH[2]}"
