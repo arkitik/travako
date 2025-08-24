@@ -21,6 +21,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+      - name: Set Maven Version from Tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Setting Maven version to $VERSION"
+          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
 
       - name: Compile
         run: mvn -B clean compile

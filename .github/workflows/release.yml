@@ -78,7 +78,7 @@ jobs:
           fi
           echo "✓ Maven Central credentials validated"
 
-      - name: Set Maven Version from Tag
+      - name: Build and Deploy
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
