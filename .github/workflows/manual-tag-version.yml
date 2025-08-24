@@ -99,6 +99,8 @@ jobs:
           git add .
           git commit -m "chore: update version to $VERSION"
           git tag $VERSION
+          # Push both tag and main branch to ensure tag is associated with latest commit on main
+          git push origin main
           git push origin $VERSION
 
       - name: Generate release notes
