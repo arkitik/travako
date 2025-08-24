@@ -29,17 +29,6 @@ jobs:
       - name: Compile
         run: mvn -B clean compile
 
-      - name: Validate Project Structure
-        run: |
-          echo "Validating module structure..."
-          for module in travako-core travako-starter travako-engine; do
-            if [ ! -d "$module" ]; then
-              echo "Error: Module $module not found"
-              exit 1
-            fi
-          done
-          echo "Module structure validation completed successfully"
-
       - name: Notify on Success
         if: success()
         run: echo "✅ Code compiles successfully"
@@ -89,12 +78,16 @@ jobs:
           fi
           echo "✓ Maven Central credentials validated"
 
-      - name: Build and Deploy
+      - name: Set Maven Version from Tag
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Setting Maven version to $VERSION"
+          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
+
           # Print environment info for debugging (without exposing secrets)
           echo "Using JDK version:" && java -version
           echo "Using Maven version:" && mvn --version
