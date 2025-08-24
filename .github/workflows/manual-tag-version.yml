@@ -1,0 +1,98 @@
+name: Create Tag and Update Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tag-and-update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Ensure branch is main
+        run: |
+          if [ "${GITHUB_REF##*/}" != "main" ]; then
+            echo "This workflow can only be run from the main branch."
+            exit 1
+          fi
+      - name: Calculate next version
+        id: version
+        run: |
+          git fetch --tags
+
+          # Get latest tag matching v* pattern
+          LATEST_TAG=$(git tag --list "v*" --sort=-v:refname | head -n 1)
+          echo "Latest tag: $LATEST_TAG"
+          if [ -z "$LATEST_TAG" ]; then
+            MAJOR=0
+            MINOR=0
+            PATCH=0
+            RANGE=""
+          else
+            # Match v2.4.0, v.2.4.0, v2.4.0-BETA, v.2.4.0-BETA
+            VERSION_REGEX="^v\.?([0-9]+)\.([0-9]+)\.([0-9]+)"
+            if [[ "$LATEST_TAG" =~ $VERSION_REGEX ]]; then
+              MAJOR="${BASH_REMATCH[1]}"
+              MINOR="${BASH_REMATCH[2]}"
+              PATCH="${BASH_REMATCH[3]}"
+            else
+              MAJOR=0
+              MINOR=0
+              PATCH=0
+            fi
+            RANGE="${LATEST_TAG}..HEAD"
+          fi
+
+          # Get commit messages since last tag (or all if no tag)
+          COMMITS=$(git log --pretty=format:%s $RANGE)
+
+          # Default: no bump
+          BUMP="none"
+
+          # Check for breaking changes (feat! or fix!)
+          if echo "$COMMITS" | grep -qE '^(feat|fix)!'; then
+            BUMP="major"
+          # Check for features
+          elif echo "$COMMITS" | grep -q '^feat'; then
+            BUMP="minor"
+          # Check for fixes or chores
+          elif echo "$COMMITS" | grep -qE '^(fix|chore)'; then
+            BUMP="patch"
+          fi
+
+          # Bump version accordingly
+          if [ "$BUMP" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [ "$BUMP" = "patch" ]; then
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEXT_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "Calculated next version: $NEXT_VERSION"
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+      - name: Create and push tag
+        run: |
+          VERSION="${{ steps.version.outputs.next_version }}"
+          echo "Updating travako readme version to $VERSION"
+          sed -i "s/# travako v[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}/# travako $VERSION/g" README.md
+          echo "Setting Maven version to $VERSION"
+          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
+
+          git tag $VERSION
+          git push origin $VERSION
