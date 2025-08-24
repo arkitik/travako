@@ -16,5 +16,5 @@ class TravakoRunnerConfig(
     @DefaultValue("30s") val jobsEvent: Duration,
     @DefaultValue("false") val duplicationDetection: Boolean,
 ) {
-    val host: String = InetAddress.getLocalHost().toString()
+    val host: String = InetAddress.getLocalHost().hostName
 }
