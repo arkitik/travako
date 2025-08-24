@@ -23,7 +23,7 @@ jobs:
           cache: 'maven'
       - name: Set Maven Version from Tag
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=v1.0.0
           echo "Setting Maven version to $VERSION"
           mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
 
