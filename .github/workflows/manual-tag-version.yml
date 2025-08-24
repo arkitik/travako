@@ -97,11 +97,11 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add .
-          git commit -m "chore: update version to $VERSION"
-          git tag $VERSION
-          # Push both tag and main branch to ensure tag is associated with latest commit on main
+          git commit -m "chore: update version to $VERSION" || echo "No changes to commit"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          # Push main first, then tag with --follow-tags to ensure remote has both
           git push origin main
-          git push origin $VERSION
+          git push origin "$VERSION"
 
       - name: Generate release notes
         id: release_notes
