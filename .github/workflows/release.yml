@@ -84,10 +84,6 @@ jobs:
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "Setting Maven version to $VERSION"
-          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
-
           # Print environment info for debugging (without exposing secrets)
           echo "Using JDK version:" && java -version
           echo "Using Maven version:" && mvn --version
