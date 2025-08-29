@@ -1,10 +1,10 @@
-name: New Release
+name: Manual Release
 
 on:
   workflow_dispatch:
 
 jobs:
-  tag-and-update:
+  release:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -20,114 +20,40 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Ensure branch is main
-        run: |
-          if [ "${GITHUB_REF##*/}" != "main" ]; then
-            echo "This workflow can only be run from the main branch."
-            exit 1
-          fi
-      - name: Calculate next version
-        id: version
-        run: |
-          git fetch --tags
-
-          # Get latest tag matching v* pattern
-          LATEST_TAG=$(git tag --list "v*" --sort=-v:refname | head -n 1)
-          echo "Latest tag: $LATEST_TAG"
-          if [ -z "$LATEST_TAG" ]; then
-            MAJOR=0
-            MINOR=0
-            PATCH=0
-            RANGE=""
-          else
-            # Match v2.4.0, v.2.4.0, v2.4.0-BETA, v.2.4.0-BETA
-            VERSION_REGEX="^v\.?([0-9]+)\.([0-9]+)\.([0-9]+)"
-            if [[ "$LATEST_TAG" =~ $VERSION_REGEX ]]; then
-              MAJOR="${BASH_REMATCH[1]}"
-              MINOR="${BASH_REMATCH[2]}"
-              PATCH="${BASH_REMATCH[3]}"
-            else
-              MAJOR=0
-              MINOR=0
-              PATCH=0
-            fi
-            RANGE="${LATEST_TAG}..HEAD"
-          fi
-
-          # Get commit messages since last tag (or all if no tag)
-          COMMITS=$(git log --pretty=format:%s $RANGE)
-
-          # Default: no bump
-          BUMP="none"
-
-          # Check for breaking changes (feat! or fix!)
-          if echo "$COMMITS" | grep -qE '^(feat|fix)!'; then
-            BUMP="major"
-          # Check for features
-          elif echo "$COMMITS" | grep -q '^feat'; then
-            BUMP="minor"
-          # Check for fixes or chores
-          elif echo "$COMMITS" | grep -qE '^(fix|chore)'; then
-            BUMP="patch"
-          fi
-
-          # Bump version accordingly
-          if [ "$BUMP" = "major" ]; then
-            MAJOR=$((MAJOR + 1))
-            MINOR=0
-            PATCH=0
-          elif [ "$BUMP" = "minor" ]; then
-            MINOR=$((MINOR + 1))
-            PATCH=0
-          elif [ "$BUMP" = "patch" ]; then
-            PATCH=$((PATCH + 1))
-          fi
-
-          NEXT_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
-          echo "Calculated next version: $NEXT_VERSION"
-          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
-      - name: Create and push tag
-        run: |
-          VERSION="${{ steps.version.outputs.next_version }}"
-          echo "Updating travako readme version to $VERSION"
-          sed -i "s/# travako v[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}/# travako $VERSION/g" README.md
-          echo "Setting Maven version to $VERSION"
-          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
-
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add .
-          git commit -m "chore: update version to $VERSION" || echo "No changes to commit"
-          git tag -a "$VERSION" -m "Release $VERSION"
-          # Push main first, then tag with --follow-tags to ensure remote has both
-          git push origin main
-          git push origin "$VERSION"
-
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          VERSION="${{ steps.version.outputs.next_version }}"
-          # Get previous tag (second latest)
-          PREV_TAG=$(git tag --list "v*" --sort=-v:refname | sed -n '2p')
-          if [ -z "$PREV_TAG" ]; then
-            RANGE=""
-          else
-            RANGE="$PREV_TAG..$VERSION"
-          fi
-          if [ -z "$RANGE" ]; then
-            NOTES=$(git log --pretty=format:"- %s" $VERSION)
-          else
-            NOTES=$(git log --pretty=format:"- %s" $RANGE)
-          fi
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          tag_name: ${{ steps.version.outputs.next_version }}
-          name: Release ${{ steps.version.outputs.next_version }}
-          body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+          node-version: '22'
+
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release
+          npm install -g @semantic-release/git
+          npm install -g @semantic-release/changelog
+          npm install -g @semantic-release/exec
+
+      - name: Create .releaserc
+        run: |
+          cat > .releaserc << EOF
+          {
+            "branches": ["main", "master", "fix-release"],
+            "plugins": [
+              "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
+              "@semantic-release/changelog",
+              ["@semantic-release/exec", {
+                "prepareCmd": "./update-version.sh \${nextRelease.version}"
+              }],
+              "@semantic-release/github",
+              ["@semantic-release/git", {
+                "assets": ["CHANGELOG.md", "pom.xml", "**/pom.xml", "README.md"],
+                "message": "chore(release): \${nextRelease.version} [skip ci]\n\n\${nextRelease.notes}"
+              }]
+            ]
+          }
+          EOF
+
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
