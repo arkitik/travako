@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-entity</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.4.1</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Core Entity Runner</name>
     <modelVersion>4.0.0</modelVersion>
