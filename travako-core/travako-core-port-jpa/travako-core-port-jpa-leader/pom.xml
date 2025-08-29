@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-port-jpa</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>2.4.0</version>
+        <version>v2.4.0-BETA</version>
     </parent>
     <name>Travako Core Port Leader</name>
     <modelVersion>4.0.0</modelVersion>

@@ -1,4 +1,4 @@
-# travako 2.4.0-BETA
+# travako
 
 -----
 
@@ -11,24 +11,25 @@
 #### (1) Include below dependency in your module (Scheduler Module):
 
 ```xml
+
 <dependency>
-  <groupId>io.arkitik.travako</groupId>
-  <artifactId>travako-starter-job-bean</artifactId>
-  <version>${arkitik.travako.version}</version>
+    <groupId>io.arkitik.travako</groupId>
+    <artifactId>travako-starter-job-bean</artifactId>
+    <version>${arkitik.travako.version}</version>
 </dependency>
 ```
 
 #### (2) Implement interface `JobInstanceBean` as a sample as the following:
 
 ```kotlin
-internal class SampleJob: JobInstanceBean {
+internal class SampleJob : JobInstanceBean {
 
-  override val trigger = PeriodicTrigger(10_000)  // or CronTrigger("*/10 * * * * *")
-  override val jobKey: String = javaClass.simpleName // should be unique per application
+    override val trigger = PeriodicTrigger(10_000)  // or CronTrigger("*/10 * * * * *")
+    override val jobKey: String = javaClass.simpleName // should be unique per application
 
-  override fun runJob() {
-    // Do the processing here.
-  }
+    override fun runJob() {
+        // Do the processing here.
+    }
 }
 ```
 
@@ -37,8 +38,8 @@ internal class SampleJob: JobInstanceBean {
 ```kotlin
 @Configuration
 class SampleJobPortContext {
-  @Bean
-  fun sampleJob(): JobInstanceBean = SampleJob()
+    @Bean
+    fun sampleJob(): JobInstanceBean = SampleJob()
 }
 ```
 
@@ -47,9 +48,9 @@ class SampleJobPortContext {
 ```xml
 
 <dependency>
-  <groupId>io.arkitik.travako</groupId>
-  <artifactId>travako-starter-processor</artifactId>
-  <version>${arkitik.travako.version}</version>
+    <groupId>io.arkitik.travako</groupId>
+    <artifactId>travako-starter-processor</artifactId>
+    <version>${arkitik.travako.version}</version>
 </dependency>
 ```
 
@@ -92,7 +93,8 @@ arkitik:
   </dependency>
   ```
 
-##### If you choose the custom Spring `entityManagerFactory`, you also need to add the following configuration to your `application.yml`:
+##### If you choose the custom Spring `entityManagerFactory`, you also need to add the following configuration to your
+`application.yml`:
 
 ```yaml
 arkitik:

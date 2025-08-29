@@ -2,16 +2,7 @@ name: Release
 
 on:
   release:
-    types: [published, created]
-  push:
-    tags:
-      - 'v*'
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - 'LICENSE'
-      - '.github/**'
-
+    types: [ published, created, released ]
 jobs:
   compile:
     name: Compile Check
