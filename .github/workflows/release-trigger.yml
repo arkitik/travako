@@ -1,4 +1,4 @@
-name: Manual Release
+name: Release Trigger
 
 on:
   workflow_dispatch:
