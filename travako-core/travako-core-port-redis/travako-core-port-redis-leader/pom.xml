@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-port-redis</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.4.0-BETA</version>
+        <version>2.4.0</version>
     </parent>
     <name>Travako Core Port Leader</name>
     <modelVersion>4.0.0</modelVersion>
