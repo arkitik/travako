@@ -1,4 +1,4 @@
-# travako 2.4.0
+# travako 2.4.0-BETA
 
 -----
 
