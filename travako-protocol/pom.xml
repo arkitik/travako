@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako</artifactId>
-        <version>v2.4.1</version>
+        <version>2.4.0</version>
     </parent>
 
     <name>Travako Protocol</name>
