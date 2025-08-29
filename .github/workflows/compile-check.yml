@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Compile
-        run: mvn -B clean compile
+        run: mvn -B clean compile -T 1C
 
       - name: Validate Project Structure
         run: |
