@@ -24,6 +24,3 @@ mvn versions:set -DnewVersion="$NEW_VERSION" -DgenerateBackupPoms=false
 echo "Version update completed successfully!"
 echo "New version: $NEW_VERSION"
 
-git add .
-
-git commit -m "release: release $NEW_VERSION"
