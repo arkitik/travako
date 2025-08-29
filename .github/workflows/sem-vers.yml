@@ -32,7 +32,7 @@ jobs:
         run: |
           cat > .releaserc << EOF
           {
-            "branches": ["main", "master"],
+            "branches": ["main", "master", "fix-release"],
             "plugins": [
               "@semantic-release/commit-analyzer",
               "@semantic-release/release-notes-generator",
