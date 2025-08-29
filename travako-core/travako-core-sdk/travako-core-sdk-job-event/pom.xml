@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-sdk</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.4.0-BETA</version>
+        <version>v2.4.0</version>
     </parent>
     <name>Travako Core SDK Job Event</name>
     <modelVersion>4.0.0</modelVersion>
