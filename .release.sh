@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to update Maven project version across all modules
-# Usage: ./update-version.sh <new-version>
+# Usage: ./.release.sh <new-version>
 
 set -e
 
@@ -24,3 +24,13 @@ mvn versions:set -DnewVersion="$NEW_VERSION" -DgenerateBackupPoms=false
 echo "Version update completed successfully!"
 echo "New version: $NEW_VERSION"
 
+mvn -q -DperformRelease=true \
+          -Dcentral.username="${CENTRAL_USERNAME}" \
+          -Dcentral.password="${CENTRAL_TOKEN}" \
+          -Dgpg.passphrase="${GPG_PASSPHRASE}" \
+          dokka:javadocJar gpg:sign deploy
+
+# Create release artifacts directory and collect ZIP files
+echo "Collecting release artifacts..."
+mkdir -p release-artifacts
+find . -type f -path "*/target/*.zip" -exec cp {} release-artifacts/ \;
