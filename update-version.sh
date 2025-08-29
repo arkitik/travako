@@ -15,9 +15,6 @@ fi
 
 NEW_VERSION="v$1"
 
-echo "Updating travako readme version to $NEW_VERSION"
-sed -i "s/# travako v[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}/# travako $NEW_VERSION/g" README.md
-
 echo "Updating Maven project version to: $NEW_VERSION"
 
 # Update root pom.xml version
