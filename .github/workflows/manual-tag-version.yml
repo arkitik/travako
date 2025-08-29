@@ -13,12 +13,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -39,32 +39,6 @@ jobs:
           npm install -g @semantic-release/changelog
           npm install -g @semantic-release/exec
 
-      - name: Create .releaserc
-        run: |
-          cat > .releaserc << EOF
-          {
-            "branches": ["main", "master", "fix-release"],
-            "plugins": [
-              "@semantic-release/commit-analyzer",
-              "@semantic-release/release-notes-generator",
-              "@semantic-release/changelog",
-              ["@semantic-release/exec", {
-                "prepareCmd": "./update-version.sh \${nextRelease.version}"
-              }],
-              "@semantic-release/github",
-              ["@semantic-release/git", {
-                "assets": ["CHANGELOG.md", "pom.xml", "**/pom.xml", "README.md"],
-                "message": "chore(release): \${nextRelease.version} [skip ci]\n\n\${nextRelease.notes}"
-              }]
-            ]
-          }
-          EOF
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
-
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
@@ -79,33 +53,43 @@ jobs:
           fi
           echo "✓ Maven Central credentials validated"
 
-      - name: Build and Deploy
+      - name: Create .releaserc
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-          # Print environment info for debugging (without exposing secrets)
-          echo "Using JDK version:" && java -version
-          echo "Using Maven version:" && mvn --version
-
-          # Run Maven with debug options for authentication issues
-          mvn -DperformRelease=true \
-          -Dcentral.username=${{ secrets.CENTRAL_USERNAME }} \
-          -Dcentral.password=${{ secrets.CENTRAL_TOKEN }} \
-          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-          dokka:javadocJar gpg:sign deploy
-
-      - name: Collect Release Artifacts
-        run: |
-          mkdir -p release-artifacts
-          find . -type f -path "*/target/*.zip" -exec cp {} release-artifacts/ \;
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          generate_release_notes: true
-          files: release-artifacts/*
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat > .releaserc << EOF
+          {
+            "branches": ["main", "master", "fix-release"],
+            "plugins": [
+              "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
+              "@semantic-release/changelog",
+              ["@semantic-release/exec", {
+                "prepareCmd": "./.release.sh \${nextRelease.version}"
+              }],
+              ["@semantic-release/github", {
+                "assets": [
+                  {
+                    "path": "release-artifacts/*.zip",
+                    "label": "Distribution Archive"
+                  },
+                ]
+              }],
+              ["@semantic-release/git", {
+                "assets": ["CHANGELOG.md", "pom.xml", "**/pom.xml", "README.md"],
+                "message": "chore(release): \${nextRelease.version} [skip ci]\n\n\${nextRelease.notes}"
+              }]
+            ]
+          }
+          EOF
+
+      - name: Release
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
