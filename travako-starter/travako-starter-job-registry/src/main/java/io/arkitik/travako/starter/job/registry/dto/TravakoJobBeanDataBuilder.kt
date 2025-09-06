@@ -1,6 +1,6 @@
 package io.arkitik.travako.starter.job.registry.dto
 
-import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.CronTrigger
 import org.springframework.scheduling.support.PeriodicTrigger
@@ -10,6 +10,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import kotlin.reflect.KClass
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -17,7 +18,7 @@ import java.time.ZoneId
  */
 class TravakoJobBeanDataBuilder {
     private lateinit var jobKey: String
-    private lateinit var jobClass: Class<out TravakoJob>
+    private lateinit var jobClass: Class<out StatefulTravakoJob>
     private lateinit var jobTrigger: Trigger
     private val params: MutableMap<String, String?> = mutableMapOf()
 
@@ -52,7 +53,7 @@ class TravakoJobBeanDataBuilder {
         return this
     }
 
-    fun jobClass(jobClass: Class<out TravakoJob>): TravakoJobBeanDataBuilder {
+    fun jobClass(jobClass: Class<out StatefulTravakoJob>): TravakoJobBeanDataBuilder {
         this.jobClass = jobClass
         return this
     }
@@ -136,5 +137,8 @@ fun TravakoJobBeanDataBuilder.oneTime(): TravakoJobBeanDataBuilder {
 fun jobBuilder(builder: TravakoJobBeanDataBuilder.() -> Unit) =
     TravakoJobBeanDataBuilder().apply(builder).build()
 
-fun Class<out TravakoJob>.jobBuilder(builder: TravakoJobBeanDataBuilder.() -> Unit) =
+fun KClass<out StatefulTravakoJob>.jobBuilder(builder: TravakoJobBeanDataBuilder.() -> Unit) =
+    this.java.jobBuilder(builder)
+
+fun Class<out StatefulTravakoJob>.jobBuilder(builder: TravakoJobBeanDataBuilder.() -> Unit) =
     TravakoJobBeanDataBuilder().jobClass(this).apply(builder).build()

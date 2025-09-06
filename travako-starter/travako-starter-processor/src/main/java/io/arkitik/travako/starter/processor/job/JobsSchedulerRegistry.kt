@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.job
 
 import io.arkitik.travako.sdk.job.dto.JobDetails
-import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.processor.core.job.asTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.runner.RunnerJobExecutor
@@ -24,12 +24,13 @@ class JobsSchedulerRegistry(
 
     private val jobTriggers = hashMapOf<String, ScheduledFuture<*>?>()
 
-    fun scheduleJob(jobDetails: JobDetails, travakoJob: TravakoJob) {
+    fun scheduleJob(jobDetails: JobDetails, travakoJob: StatefulTravakoJob) {
         logger.debug("Scheduling JOB instance {}", jobDetails.jobKey)
         val trigger = jobDetails.asTrigger()
         if (jobTriggers.containsKey(jobDetails.jobKey)) {
             logger.warn("Job already scheduled, restart job trigger {}", jobDetails.jobKey)
             deleteJob(jobDetails.jobKey)
+            logger.debug("Rescheduling JOB instance {}", jobDetails.jobKey)
         }
         val scheduledFuture = trigger.buildJob(taskScheduler) {
             runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
@@ -42,7 +43,7 @@ class JobsSchedulerRegistry(
         jobTriggers[jobKey]?.cancel(false)
     }
 
-    fun rebootScheduledJob(jobDetails: JobDetails, travakoJob: TravakoJob) {
+    fun rebootScheduledJob(jobDetails: JobDetails, travakoJob: StatefulTravakoJob) {
         jobTriggers[jobDetails.jobKey]?.cancel(false)
         val trigger = jobDetails.asTrigger()
         logger.debug("Restart JOB instance {}", jobDetails.jobKey)

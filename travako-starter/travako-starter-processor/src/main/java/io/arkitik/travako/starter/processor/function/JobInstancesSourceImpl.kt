@@ -1,5 +1,6 @@
 package io.arkitik.travako.starter.processor.function
 
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 
 /**
@@ -9,6 +10,6 @@ import io.arkitik.travako.starter.job.source.JobInstancesSource
 internal class JobInstancesSourceImpl(
     private val sourceUnits: List<JobInstancesSource.SourceUnit>,
 ) : JobInstancesSource {
-    override fun jobs() =
+    override fun jobs(): List<StatefulTravakoJob> =
         sourceUnits.flatMap(JobInstancesSource.SourceUnit::jobs)
 }

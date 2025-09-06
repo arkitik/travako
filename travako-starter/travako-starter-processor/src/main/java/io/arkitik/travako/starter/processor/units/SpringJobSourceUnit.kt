@@ -1,6 +1,7 @@
 package io.arkitik.travako.starter.processor.units
 
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 
 /**
@@ -10,5 +11,5 @@ import io.arkitik.travako.starter.job.source.JobInstancesSource
 internal class SpringJobSourceUnit(
     private val jobInstanceBeans: List<JobInstanceBean>,
 ) : JobInstancesSource.SourceUnit {
-    override fun jobs() = jobInstanceBeans
+    override fun jobs(): List<StatefulTravakoJob> = jobInstanceBeans
 }

@@ -69,6 +69,7 @@ internal class RunnerJobsRegisterProcessor(
                 }.getOrNull()
             } + jobInstanceBeans
         travakoJobs
+            .distinctBy { it.first.jobKey }
             .forEach { (jobDetails, travakoJob) ->
                 jobsSchedulerRegistry.scheduleJob(
                     jobDetails = jobDetails,
