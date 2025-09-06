@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.core.functions
 
 import io.arkitik.radix.develop.shared.ext.internal
-import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
 import io.arkitik.travako.starter.processor.core.errors.TravakoCoreStartupErrors
 import io.arkitik.travako.starter.processor.core.logger.logger
@@ -17,7 +17,7 @@ internal class TravakoJobInstanceProviderImpl(
         private val logger = logger<TravakoJobInstanceProviderImpl>()
     }
 
-    override fun provideJobInstance(jobKey: String, jobClassName: String): TravakoJob {
+    override fun provideJobInstance(jobKey: String, jobClassName: String): StatefulTravakoJob {
         val instanceProviderUnit = providerUnits.firstOrNull {
             it.isSupported(jobKey, jobClassName)
         }

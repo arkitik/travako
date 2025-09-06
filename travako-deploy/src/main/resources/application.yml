@@ -1,13 +1,11 @@
 server:
   port: 8093
 spring:
-  data:
-    redis:
-      database: 0
-      host: localhost
-      port: 6371
-      password:
-      timeout: 60000
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:orclcdb
+    username: arkitik_travako
+    password: arkitik_travako
+    driver-class-name: oracle.jdbc.OracleDriver
 arkitik:
   travako:
     config:
@@ -20,6 +18,13 @@ arkitik:
         enabled: true
         run-interval-minutes: 1
         threshold-seconds: 120
+    database:
+      exposed:
+        datasource:
+          url: jdbc:postgresql://localhost:5432/arkitik_travako
+          username: saturn_pps_central
+          password: saturn_pps_central
+          driver-class-name: org.postgresql.Driver
 logging:
   level:
     io:

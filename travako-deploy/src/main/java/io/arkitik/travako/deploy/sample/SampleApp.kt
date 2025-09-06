@@ -1,4 +1,4 @@
-package sample
+package io.arkitik.travako.deploy.sample
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

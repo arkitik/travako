@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.core.units
 
 import io.arkitik.radix.develop.shared.ext.internalError
-import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
 import io.arkitik.travako.starter.processor.core.errors.TravakoCoreStartupErrors
 import io.arkitik.travako.starter.processor.core.logger.logger
@@ -24,10 +24,10 @@ internal class DefaultTravakoJobInstanceProviderUnit(
             Class.forName(jobClassName)
         }.getOrNull()
 
-        return jobClass != null && TravakoJob::class.java.isAssignableFrom(jobClass)
+        return jobClass != null && StatefulTravakoJob::class.java.isAssignableFrom(jobClass)
     }
 
-    override fun provideJobInstance(jobKey: String, jobClassName: String): TravakoJob {
+    override fun provideJobInstance(jobKey: String, jobClassName: String): StatefulTravakoJob {
         val jobClass = runCatching {
             Class.forName(jobClassName)
         }.getOrNull().internalError(TravakoCoreStartupErrors.JOB_CLASS_NOT_FOUND)
@@ -35,9 +35,9 @@ internal class DefaultTravakoJobInstanceProviderUnit(
     }
 
 
-    private fun fetchOrRegisterJobBean(jobKey: String, clazz: Class<*>): TravakoJob {
+    private fun fetchOrRegisterJobBean(jobKey: String, clazz: Class<*>): StatefulTravakoJob {
         return runCatching {
-            defaultListableBeanFactory.getBean(clazz) as TravakoJob
+            defaultListableBeanFactory.getBean(clazz) as StatefulTravakoJob
         }.getOrElse {
             logger.warn(
                 "Trying to create TravakoJob for [key: {} of type: {}]",
@@ -48,12 +48,12 @@ internal class DefaultTravakoJobInstanceProviderUnit(
         }
     }
 
-    private fun registerAndGetJobBean(jobKey: String, clazz: Class<*>): TravakoJob {
+    private fun registerAndGetJobBean(jobKey: String, clazz: Class<*>): StatefulTravakoJob {
         return runCatching {
             val genericBeanDefinition =
                 BeanDefinitionBuilder.genericBeanDefinition(clazz).beanDefinition
             defaultListableBeanFactory.registerBeanDefinition(jobKey, genericBeanDefinition)
-            defaultListableBeanFactory.getBean(jobKey, clazz) as TravakoJob
+            defaultListableBeanFactory.getBean(jobKey, clazz) as StatefulTravakoJob
         }.onFailure {
             logger.error(
                 "Error while creating TravakoJob for [key: {} of type: {}]",

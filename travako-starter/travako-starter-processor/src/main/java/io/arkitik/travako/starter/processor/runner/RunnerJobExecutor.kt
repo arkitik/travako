@@ -9,8 +9,9 @@ import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
 import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
-import io.arkitik.travako.starter.job.bean.TravakoJob
+import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
 import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
+import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionResult
 import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
@@ -33,7 +34,7 @@ class RunnerJobExecutor(
         private val logger = logger<RunnerJobExecutor>()
     }
 
-    fun executeJob(jobDetails: JobDetails, trigger: Trigger, travakoJob: TravakoJob) {
+    fun executeJob(jobDetails: JobDetails, trigger: Trigger, travakoJob: StatefulTravakoJob) {
         jobInstanceSdk.isJobAssignedToRunner
             .operateRole(
                 request = JobServerRunnerKeyDto(
@@ -47,7 +48,7 @@ class RunnerJobExecutor(
 
                 logger.trace("Start job execution. [key: {}]", jobDetails.jobKey)
                 runCatching {
-                    travakoJob.execute(
+                    travakoJob.executeJob(
                         TravakoJobExecutionData(
                             serverKey = travakoConfig.serverKey,
                             runnerKey = travakoRunnerConfig.key,
@@ -58,13 +59,13 @@ class RunnerJobExecutor(
                     )
                 }.onFailure {
                     logger.error("Error while executing job [key: {}]", jobDetails.jobKey, it)
-                }.onSuccess {
+                }.onSuccess { jobExecutionResult ->
                     logger.trace("Job executed successfully. [key: {}]", jobDetails.jobKey)
-                    if (jobDetails.singleRun) {
+                    if (jobDetails.singleRun && jobExecutionResult is TravakoJobExecutionResult.Companion.Success) {
                         jobDetails.markAsDone()
                     }
-                }.also {
-                    if (!jobDetails.singleRun || !it.isSuccess) {
+                }.also { result ->
+                    if (!jobDetails.singleRun || !result.isSuccess || result.getOrNull() is TravakoJobExecutionResult.Companion.Failure) {
                         val nextExecution = trigger.nextTimeToExecution()
                         jobDetails.markAsWaiting(nextExecution)
                     }
