@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako</artifactId>
-        <version>v2.4.0</version>
+        <version>v2.4.1</version>
     </parent>
     <name>Travako Engine - Job Execution Engine</name>
 

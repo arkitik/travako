@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako-core-entity-exposed</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.4.0</version>
+        <version>v2.4.1</version>
     </parent>
     <name>Travako Core Exposed Entity Job</name>
     <modelVersion>4.0.0</modelVersion>

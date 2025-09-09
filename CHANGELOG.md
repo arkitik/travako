@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/arkitik/travako/compare/v2.4.0...v2.4.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* fix null-pointer exception when updating/creating a new job [#47](https://github.com/arkitik/travako/issues/47) ([fe3cd03](https://github.com/arkitik/travako/commit/fe3cd038d6349cdc2c19710ff11261f63aaaf230))
+
 # [2.4.0](https://github.com/arkitik/travako/compare/v2.3.4...v2.4.0) (2025-09-06)
 
 
