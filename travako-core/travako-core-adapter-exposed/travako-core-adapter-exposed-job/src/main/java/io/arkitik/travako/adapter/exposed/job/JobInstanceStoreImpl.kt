@@ -60,10 +60,11 @@ class JobInstanceStoreImpl(
     }
 
     override fun <K : Any> UpdateBuilder<K>.updateEntity(identity: JobInstanceDomain) {
+        identity as TravakoJobInstance
         this[identityTable.jobTrigger] = identity.jobTrigger
         this[identityTable.jobStatus] = identity.jobStatus
         this[identityTable.jobTriggerType] = identity.jobTriggerType
-        this[identityTable.assignedTo] = identity.map().assignedToUuid
+        this[identityTable.assignedTo] = identity.assignedToUuid
         this[identityTable.lastRunningTime] = identity.lastRunningTime
         this[identityTable.nextExecutionTime] = identity.nextExecutionTime
         this[identityTable.singleRun] = identity.singleRun
