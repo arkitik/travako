@@ -10,7 +10,6 @@ import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceTable
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
@@ -34,8 +33,8 @@ internal class JobInstanceStoreQueryImpl(
         return ensureInTransaction(database) {
             identityTable.selectAll()
                 .where {
-                    identityTable.server eq server.uuid and
-                            (identityTable.jobKey eq jobKey)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.eq(jobKey))
                 }.limit(1).singleOrNull()?.let { identityTable.mapToIdentity(it, database) }
         }
     }
@@ -48,9 +47,9 @@ internal class JobInstanceStoreQueryImpl(
         return ensureInTransaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.jobKey eq jobKey) and
-                            (identityTable.assignedTo eq runner.uuid)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.eq(jobKey))
+                        .and(identityTable.assignedTo.eq(runner.uuid))
                 }.exist()
         }
     }
@@ -64,10 +63,10 @@ internal class JobInstanceStoreQueryImpl(
         return transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.assignedTo eq runner.uuid) and
-                            (identityTable.jobStatus eq status) and
-                            (identityTable.lastRunningTime.isNull() or (identityTable.lastRunningTime lessEq nextExecutionTime))
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.assignedTo.eq(runner.uuid))
+                        .and(identityTable.jobStatus.eq(status))
+                        .and(identityTable.nextExecutionTime.less(nextExecutionTime))
                 }.map { identityTable.mapToIdentity(it, database) }
         }
     }
@@ -80,9 +79,9 @@ internal class JobInstanceStoreQueryImpl(
         return ensureInTransaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.jobKey eq jobKey) and
-                            (identityTable.jobStatus eq status)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.eq(jobKey))
+                        .and(identityTable.jobStatus eq status)
                 }.limit(1).singleOrNull()?.let { identityTable.mapToIdentity(it, database) }
         }
     }
@@ -91,8 +90,8 @@ internal class JobInstanceStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.jobStatus inList statuses)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobStatus.inList(statuses))
                 }.map { identityTable.mapToIdentity(it, database) }
         }
 
@@ -103,8 +102,8 @@ internal class JobInstanceStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.assignedTo eq runner.uuid)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.assignedTo.eq(runner.uuid))
                 }.map { identityTable.mapToIdentity(it, database) }
         }
 
@@ -116,9 +115,9 @@ internal class JobInstanceStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid)
-                        .and(identityTable.jobKey eq jobKey)
-                        .and(identityTable.jobStatus inList statuses)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.eq(jobKey))
+                        .and(identityTable.jobStatus.inList(statuses))
                 }.exist()
         }
 
@@ -126,8 +125,8 @@ internal class JobInstanceStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.jobKey inList jobKeys)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.inList(jobKeys))
                 }.exist()
         }
 
@@ -135,8 +134,8 @@ internal class JobInstanceStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.server eq server.uuid) and
-                            (identityTable.jobKey inList jobKeys)
+                    (identityTable.server.eq(server.uuid))
+                        .and(identityTable.jobKey.inList(jobKeys))
                 }.map { identityTable.mapToIdentity(it, database) }
         }
 }

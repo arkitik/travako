@@ -67,32 +67,33 @@ internal class LeaderJobsAssigneeProcessor(
                         val jobs = jobInstanceSdk.serverJobs
                             .runOperation(JobServerDto(travakoConfig.serverKey))
                         if (jobs.isEmpty()) {
-                            throw StartupErrors.NO_REGISTERED_JOBS.internal()
-                        }
-                        jobs.filterNot(JobDetails::isRunning)
-                            .map { job ->
-                                runners[Random().nextInt(runners.size)] to job
-                            }.groupBy {
-                                it.first.runnerKey to it.first.runnerHost
-                            }
-                            .forEach { (key, value) ->
-                                val jobKeys = value
-                                    .map { it.second.jobKey }
-                                jobInstanceSdk.assignJobsToRunner
-                                    .runOperation(
-                                        AssignJobsToRunnerDto(
-                                            serverKey = travakoConfig.serverKey,
-                                            runnerKey = key.first,
-                                            runnerHost = key.second,
-                                            jobKeys = jobKeys
+                            logger.warn("No jobs have been registered yet.")
+                        } else {
+                            jobs.filterNot(JobDetails::isRunning)
+                                .map { job ->
+                                    runners[Random().nextInt(runners.size)] to job
+                                }.groupBy {
+                                    it.first.runnerKey to it.first.runnerHost
+                                }
+                                .forEach { (key, value) ->
+                                    val jobKeys = value
+                                        .map { it.second.jobKey }
+                                    jobInstanceSdk.assignJobsToRunner
+                                        .runOperation(
+                                            AssignJobsToRunnerDto(
+                                                serverKey = travakoConfig.serverKey,
+                                                runnerKey = key.first,
+                                                runnerHost = key.second,
+                                                jobKeys = jobKeys
+                                            )
                                         )
+                                    logger.info(
+                                        "Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
+                                        "${key.first}-${key.second}",
+                                        jobKeys
                                     )
-                                logger.info(
-                                    "Jobs have been reassigned, [Runner: {}] [Jobs: {}]",
-                                    "${key.first}-${key.second}",
-                                    jobKeys
-                                )
-                            }
+                                }
+                        }
                     }
                 }
         }
