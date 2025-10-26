@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/arkitik/travako/compare/v2.4.1...v2.4.2) (2025-10-26)
+
+
+### Bug Fixes
+
+* fix job query conditions and improve job reassignment handling [#50](https://github.com/arkitik/travako/issues/50) ([6ee55c5](https://github.com/arkitik/travako/commit/6ee55c55a04e1496ea31072361b8ecc671692817))
+
 ## [2.4.1](https://github.com/arkitik/travako/compare/v2.4.0...v2.4.1) (2025-09-09)
 
 
