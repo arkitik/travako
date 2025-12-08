@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/arkitik/travako/compare/v2.4.2...v2.4.3) (2025-12-08)
+
+
+### Bug Fixes
+
+* retrieve misfired jobs ascending by the next execution time [#52](https://github.com/arkitik/travako/issues/52) ([f4b9d0f](https://github.com/arkitik/travako/commit/f4b9d0f9c91d7ed4fdbd658850db2b77a30f9108))
+
 ## [2.4.2](https://github.com/arkitik/travako/compare/v2.4.1...v2.4.2) (2025-10-26)
 
 
