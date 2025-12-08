@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako</artifactId>
-        <version>v2.4.0-BETA</version>
+        <version>v2.4.2</version>
     </parent>
 
     <artifactId>travako-deploy</artifactId>
@@ -15,6 +15,11 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
         <dependency>
@@ -52,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>travako-starter-spring-exposed-custom</artifactId>
+            <artifactId>travako-starter-spring-exposed-default</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

@@ -2,10 +2,13 @@ server:
   port: 8093
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:orclcdb
+    url: jdbc:mysql://192.168.148.2:3306/arkitik_travako
     username: arkitik_travako
     password: arkitik_travako
-    driver-class-name: oracle.jdbc.OracleDriver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
 arkitik:
   travako:
     config:

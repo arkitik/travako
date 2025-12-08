@@ -21,6 +21,10 @@ echo "Updating Maven project version to: $NEW_VERSION"
 echo "Updating root pom.xml..."
 mvn versions:set -DnewVersion="$NEW_VERSION" -DgenerateBackupPoms=false
 
+# Update travako-deploy pom.xml version
+echo "Updating travako-deploy pom.xml..."
+mvn -f travako-deploy/pom.xml versions:update-parent -DparentVersion="$NEW_VERSION" -DgenerateBackupPoms=false -DskipResolution=true
+
 echo "Version update completed successfully!"
 echo "New version: $NEW_VERSION"
 

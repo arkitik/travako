@@ -8,6 +8,8 @@ import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import java.time.LocalDateTime
 
 /**
@@ -78,6 +80,14 @@ class JobInstanceStoreQueryImpl(
         runner = runner,
         nextExecutionTime = nextExecutionTime,
         jobStatus = status,
+        pageable = PageRequest.of(
+            0,
+            Int.MAX_VALUE,
+            Sort.by(
+                Sort.Direction.ASC,
+                JobInstanceDomain::nextExecutionTime.name
+            )
+        )
     )
 
     override fun findByServerAndJobKeyAndStatus(

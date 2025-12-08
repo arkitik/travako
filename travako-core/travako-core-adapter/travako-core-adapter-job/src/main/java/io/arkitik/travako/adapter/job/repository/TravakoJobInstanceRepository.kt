@@ -6,6 +6,7 @@ import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 
 /**
@@ -44,6 +45,7 @@ interface TravakoJobInstanceRepository : RadixRepository<String, TravakoJobInsta
         jobStatus: JobStatus,
         server: ServerDomain,
         runner: SchedulerRunnerDomain,
+        pageable: Pageable,
     ): List<TravakoJobInstance>
 
     fun findFirstByServerAndJobKeyAndJobStatus(
