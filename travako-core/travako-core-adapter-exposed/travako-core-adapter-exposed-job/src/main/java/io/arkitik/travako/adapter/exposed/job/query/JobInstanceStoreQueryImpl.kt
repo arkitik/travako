@@ -9,6 +9,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceTable
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -67,7 +68,10 @@ internal class JobInstanceStoreQueryImpl(
                         .and(identityTable.assignedTo.eq(runner.uuid))
                         .and(identityTable.jobStatus.eq(status))
                         .and(identityTable.nextExecutionTime.less(nextExecutionTime))
-                }.map { identityTable.mapToIdentity(it, database) }
+                }.orderBy(identityTable.nextExecutionTime, SortOrder.ASC)
+                .map {
+                    identityTable.mapToIdentity(it, database)
+                }
         }
     }
 

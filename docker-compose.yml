@@ -6,10 +6,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_USER=travako
-      - MYSQL_PASSWORD=travako
-      - MYSQL_DATABASE=travako
-      - MYSQL_ROOT_PASSWORD=travako
+      - MYSQL_USER=arkitik_travako
+      - MYSQL_PASSWORD=arkitik_travako
+      - MYSQL_DATABASE=arkitik_travako
+      - MYSQL_ROOT_PASSWORD=arkitik_travako
   travako_redis:
     image: redis:latest
     networks:
@@ -28,4 +28,4 @@ volumes:
       o: bind
 networks:
   development-net:
-    external: true
+    driver: local

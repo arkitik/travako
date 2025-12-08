@@ -74,7 +74,7 @@ jobs:
                 "assets": [
                   {
                     "path": "release-artifacts/*.zip",
-                    "label": "travako-\${nextRelease.version}"
+                    "label": "travako-\${nextRelease.version}.zip"
                   },
                 ]
               }],

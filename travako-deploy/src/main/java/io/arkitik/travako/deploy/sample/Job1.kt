@@ -7,11 +7,12 @@ import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionResult
 import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
 import io.arkitik.travako.starter.job.registry.dto.jobBuilder
 import io.arkitik.travako.starter.job.registry.dto.oneTime
-import org.springframework.beans.factory.InitializingBean
+import org.springframework.boot.CommandLineRunner
 import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.PeriodicTrigger
 import org.springframework.stereotype.Service
 import java.time.Duration
+import java.time.LocalTime
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.fetchAndIncrement
@@ -69,17 +70,40 @@ class Job4 : StatefulTravakoJob {
 @Service
 class SampleJobRegistry(
     private val jobInstancesRegistry: JobInstancesRegistry,
-) : InitializingBean {
-    override fun afterPropertiesSet() {
-        if (jobInstancesRegistry.jobRegistered("sample")) {
-            return
+) : CommandLineRunner {
+    override fun run(vararg args: String?) {
+        if (!jobInstancesRegistry.jobRegistered("sample")) {
+            jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
+                jobKey("sample")
+                oneTime()
+                addParam("sample-param", "sample-param")
+                cronTrigger(LocalTime.now().minusSeconds(10))
+            })
         }
-        jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
-            jobKey("sample")
-            oneTime()
-            addParam("sample-param", "sample-param")
-            secondsTrigger(10)
-        })
+        if (!jobInstancesRegistry.jobRegistered("sample-1")) {
+            jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
+                jobKey("sample-1")
+                oneTime()
+                addParam("sample-param", "sample-param-1")
+                cronTrigger(LocalTime.now().minusSeconds(10))
+            })
+        }
+        if (!jobInstancesRegistry.jobRegistered("sample-2")) {
+            jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
+                jobKey("sample-2")
+                oneTime()
+                addParam("sample-param", "sample-param-2")
+                cronTrigger(LocalTime.now().minusSeconds(10))
+            })
+        }
+        if (!jobInstancesRegistry.jobRegistered("sample-3")) {
+            jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
+                jobKey("sample-3")
+                oneTime()
+                addParam("sample-param", "sample-param-3")
+                cronTrigger(LocalTime.now().minusSeconds(10))
+            })
+        }
     }
 
 }

@@ -47,8 +47,8 @@
         <java.version>21</java.version>
 
         <spring-boot.groupId>org.springframework.boot</spring-boot.groupId>
-        <spring-boot.version>3.5.4</spring-boot.version>
-        <spring.version>6.2.10</spring.version>
+        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring.version>6.2.14</spring.version>
         <spring-cloud.version>2023.0.2</spring-cloud.version>
 
         <radix.version>v2.4.5</radix.version>
@@ -94,6 +94,13 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.jetbrains.exposed</groupId>
                 <artifactId>exposed-bom</artifactId>
                 <version>${exposed.version}</version>
@@ -121,13 +128,6 @@
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
                 <version>3.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
