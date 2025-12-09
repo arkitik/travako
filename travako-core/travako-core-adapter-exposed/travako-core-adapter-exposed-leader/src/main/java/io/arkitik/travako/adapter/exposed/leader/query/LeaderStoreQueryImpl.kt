@@ -21,8 +21,8 @@ class LeaderStoreQueryImpl(
     database: Database?,
     identityTable: TravakoLeaderTable,
 ) : ExposedStoreQuery<String, LeaderDomain, TravakoLeaderTable>(
-    identityTable,
-    database
+    identityTable = identityTable,
+    database = database
 ), LeaderStoreQuery {
     override fun findByServer(server: ServerDomain): LeaderDomain? =
         transaction(database) {

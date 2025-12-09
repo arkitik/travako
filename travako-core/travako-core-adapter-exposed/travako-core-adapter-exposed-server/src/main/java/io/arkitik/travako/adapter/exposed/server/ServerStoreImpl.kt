@@ -24,7 +24,8 @@ class ServerStoreImpl(
     database: Database?,
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,
 ) : ExposedStore<String, ServerDomain, TravakoServerTable>(
-    TravakoServerTable(travakoExposedNamingStrategy)
+    identityTable = TravakoServerTable(travakoExposedNamingStrategy),
+    database = database
 ), ServerStore {
 
     private fun ServerDomain.map() = this as TravakoServer
