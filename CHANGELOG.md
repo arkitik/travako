@@ -1,3 +1,10 @@
+## [2.4.4](https://github.com/arkitik/travako/compare/v2.4.3...v2.4.4) (2025-12-09)
+
+
+### Bug Fixes
+
+* expose database parameter to all Travako store implementations [#54](https://github.com/arkitik/travako/issues/54) ([1df0c6d](https://github.com/arkitik/travako/commit/1df0c6d78245cada5ba576eae221dc1b40afe260))
+
 ## [2.4.3](https://github.com/arkitik/travako/compare/v2.4.2...v2.4.3) (2025-12-08)
 
 

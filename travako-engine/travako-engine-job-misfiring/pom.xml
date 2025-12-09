@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-engine</artifactId>
-        <version>v2.4.3</version>
+        <version>v2.4.4</version>
     </parent>
     <name>Travako Engine Misfiring</name>
 
