@@ -24,7 +24,8 @@ class LeaderStoreImpl(
     database: Database?,
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,
 ) : ExposedStore<String, LeaderDomain, TravakoLeaderTable>(
-    TravakoLeaderTable(travakoExposedNamingStrategy)
+    identityTable = TravakoLeaderTable(travakoExposedNamingStrategy),
+    database = database
 ), LeaderStore {
     private fun LeaderDomain.map() = this as TravakoLeader
 

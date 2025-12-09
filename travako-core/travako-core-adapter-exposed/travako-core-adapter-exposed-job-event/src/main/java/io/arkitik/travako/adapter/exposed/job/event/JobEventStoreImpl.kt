@@ -24,7 +24,8 @@ class JobEventStoreImpl(
     database: Database?,
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,
 ) : ExposedStore<String, JobEventDomain, TravakoJobEventTable>(
-    TravakoJobEventTable(travakoExposedNamingStrategy)
+    identityTable = TravakoJobEventTable(travakoExposedNamingStrategy),
+    database = database
 ), JobEventStore {
     private fun JobEventDomain.map() = this as TravakoJobEvent
 

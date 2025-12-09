@@ -24,7 +24,8 @@ class RunnerJobEventStateStoreImpl(
     database: Database?,
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,
 ) : ExposedStore<String, RunnerJobEventStateDomain, TravakoRunnerJobEventStateTable>(
-    TravakoRunnerJobEventStateTable(travakoExposedNamingStrategy)
+    identityTable = TravakoRunnerJobEventStateTable(travakoExposedNamingStrategy),
+    database = database
 ), RunnerJobEventStateStore {
     private fun RunnerJobEventStateDomain.map() = this as TravakoRunnerJobEventState
 

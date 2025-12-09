@@ -24,7 +24,8 @@ class JobInstanceStoreImpl(
     database: Database?,
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,
 ) : ExposedStore<String, JobInstanceDomain, TravakoJobInstanceTable>(
-    TravakoJobInstanceTable(travakoExposedNamingStrategy)
+    identityTable = TravakoJobInstanceTable(travakoExposedNamingStrategy),
+    database = database
 ), JobInstanceStore {
 
     private fun JobInstanceDomain.map() = this as TravakoJobInstance

@@ -19,5 +19,8 @@ class JobEventStoreQueryImpl(
     travakoJobEventRepository
 ), JobEventStoreQuery {
     override fun findAllPendingEventsForServer(server: ServerDomain) =
-        travakoJobEventRepository.findAllByJobInstanceServerAndProcessedFlagFalseOrderByCreationDateAsc(server as TravakoServer)
+        travakoJobEventRepository.findAllByJobInstanceServerAndProcessedFlagOrderByCreationDateAsc(
+            server = server as TravakoServer,
+            processedFlag = false
+        )
 }
