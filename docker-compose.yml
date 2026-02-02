@@ -1,5 +1,15 @@
 version: "3"
 services:
+  postgres:
+    restart: always
+    image: postgres
+    container_name: travako_postgres_db_0
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=arkitik_travako
+      - POSTGRES_USER=arkitik_travako
+      - POSTGRES_PASSWORD=arkitik_travako
   mysql:
     image: mysql:latest
     container_name: travako_mysql_db_0

@@ -43,6 +43,7 @@ class TravakoSchedulerRunnerTable(
             instanceState = resultRow[instanceState],
             runnerHost = resultRow[runnerHost],
             serverUuid = resultRow[server],
+            lastHeartbeatTime = resultRow[lastHeartbeatTime],
             serverTable = serverTable,
             database = database,
             creationDate = resultRow[creationDate]
