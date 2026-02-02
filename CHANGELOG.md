@@ -1,3 +1,10 @@
+## [2.4.5](https://github.com/arkitik/travako/compare/v2.4.4...v2.4.5) (2026-02-02)
+
+
+### Bug Fixes
+
+* in the exposed implementation, multiple nodes keep switching each other to DOWN mode since the last heartbeat was not included on runner table [#56](https://github.com/arkitik/travako/issues/56) ([f1b21b3](https://github.com/arkitik/travako/commit/f1b21b3e6cf45e134076e694b8fd04289bf25bce))
+
 ## [2.4.4](https://github.com/arkitik/travako/compare/v2.4.3...v2.4.4) (2025-12-09)
 
 

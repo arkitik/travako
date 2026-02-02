@@ -5,7 +5,7 @@
     <parent>
         <artifactId>travako</artifactId>
         <groupId>io.arkitik.travako</groupId>
-        <version>v2.4.4</version>
+        <version>v2.4.5</version>
     </parent>
     <name>Travako Starter - Spring Integration</name>
     <modelVersion>4.0.0</modelVersion>
