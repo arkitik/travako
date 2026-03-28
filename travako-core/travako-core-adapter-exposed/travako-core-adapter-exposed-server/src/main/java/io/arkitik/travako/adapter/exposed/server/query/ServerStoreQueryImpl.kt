@@ -5,8 +5,9 @@ import io.arkitik.radix.develop.exposed.table.ensureInTransaction
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.server.TravakoServerTable
 import io.arkitik.travako.store.server.query.ServerStoreQuery
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.selectAll
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

@@ -1,5 +1,6 @@
 package io.arkitik.travako.starter.spring.exposed.custom.units
 
+
 import org.springframework.beans.factory.BeanClassLoaderAware
 import org.springframework.beans.factory.BeanCreationException
 import org.springframework.beans.factory.InitializingBean
@@ -15,31 +16,30 @@ import javax.sql.DataSource
 
 /**
  *
- * @see org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
+ * @see org.springframework.boot.jdbc.autoconfigure.DataSourceProperties
  * @author Ibrahim Al-Tamimi 
  * @since 13:10, Saturday, 06/09/2025
  **/
 @ConfigurationProperties(prefix = "arkitik.travako.database.exposed.datasource")
 class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBean {
-    var classLoader: ClassLoader? = null
-        private set
+    private var classLoader: ClassLoader? = null
 
     /**
      * Whether to generate a random datasource name.
      */
-    var isGenerateUniqueName: Boolean = true
+    private var generateUniqueName = true
 
     /**
      * Datasource name to use if "generate-unique-name" is false. Defaults to "testdb"
      * when using an embedded database, otherwise null.
      */
-    var name: String? = null
+    private var name: String? = null
 
     /**
      * Fully qualified name of the DataSource implementation to use. By default, a
      * connection pool implementation is auto-detected from the classpath.
      */
-    var type: Class<out DataSource?>? = null
+    private var type: Class<out DataSource?>? = null
 
     /**
      * Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
@@ -47,56 +47,33 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
     private var driverClassName: String? = null
 
     /**
-     * Return the configured url or `null` if none was configured.
-     *
-     * @return the configured url
-     * @see .determineUrl
-     */
-    /**
      * JDBC URL of the database.
      */
-    var url: String? = null
+    private var url: String? = null
 
-    /**
-     * Return the configured username or `null` if none was configured.
-     *
-     * @return the configured username
-     * @see .determineUsername
-     */
     /**
      * Login username of the database.
      */
-    var username: String? = null
+    private var username: String? = null
 
-    /**
-     * Return the configured password or `null` if none was configured.
-     *
-     * @return the configured password
-     * @see .determinePassword
-     */
     /**
      * Login password of the database.
      */
-    var password: String? = null
+    private var password: String? = null
 
-    /**
-     * Allows the DataSource to be managed by the container and obtained through JNDI. The
-     * `URL`, `driverClassName`, `username` and `password` fields
-     * will be ignored when using JNDI lookups.
-     *
-     * @param jndiName the JNDI name
-     */
     /**
      * JNDI location of the datasource. Class, url, username and password are ignored when
      * set.
      */
-    var jndiName: String? = null
+    private var jndiName: String? = null
 
     /**
      * Connection details for an embedded database. Defaults to the most suitable embedded
      * database that is available on the classpath.
      */
-    var embeddedDatabaseConnection: EmbeddedDatabaseConnection? = null
+    private var embeddedDatabaseConnection: EmbeddedDatabaseConnection? = null
+
+    private var xa: Xa? = Xa()
 
     private var uniqueName: String? = null
 
@@ -113,38 +90,58 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
 
     /**
      * Initialize a [DataSourceBuilder] with the state of this instance.
-     *
      * @return a [DataSourceBuilder] initialized with the customizations defined on
      * this instance
      */
     fun initializeDataSourceBuilder(): DataSourceBuilder<*> {
-        return DataSourceBuilder.create(this.classLoader)
-            .type(this.type)
+        return DataSourceBuilder.create(getClassLoader())
+            .type(getType())
             .driverClassName(determineDriverClassName())
-            .url(determineUrl())
+            .url(determineUrl()!!)
             .username(determineUsername())
             .password(determinePassword())
     }
 
+    fun isGenerateUniqueName(): Boolean {
+        return this.generateUniqueName
+    }
+
+    fun setGenerateUniqueName(generateUniqueName: Boolean) {
+        this.generateUniqueName = generateUniqueName
+    }
+
+    fun getName(): String? {
+        return this.name
+    }
+
+    fun setName(name: String?) {
+        this.name = name
+    }
+
+    fun getType(): Class<out DataSource?>? {
+        return this.type
+    }
+
+    fun setType(type: Class<out DataSource?>?) {
+        this.type = type
+    }
+
     /**
      * Return the configured driver or `null` if none was configured.
-     *
      * @return the configured driver
      * @see .determineDriverClassName
      */
-    fun getDriverClassName(): String {
-        return this.driverClassName!!
+    fun getDriverClassName(): String? {
+        return this.driverClassName
     }
 
-    fun setDriverClassName(driverClassName: String) {
+    fun setDriverClassName(driverClassName: String?) {
         this.driverClassName = driverClassName
     }
 
     /**
      * Determine the driver to use based on this configuration and the environment.
-     *
      * @return the driver to use
-     * @since 1.4.0
      */
     fun determineDriverClassName(): String {
         val driverClassName = findDriverClassName()
@@ -154,27 +151,27 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
                 this.embeddedDatabaseConnection
             )
         }
-        return driverClassName
-    }
-
-    fun findDriverClassName(): String {
-        if (StringUtils.hasText(this.driverClassName)) {
-            Assert.state(driverClassIsLoadable()) { "Cannot load driver class: " + this.driverClassName }
-            return this.driverClassName!!
-        }
-        var driverClassName: String? = null
-        if (StringUtils.hasText(this.url)) {
-            driverClassName = DatabaseDriver.fromJdbcUrl(this.url).driverClassName
-        }
-        if (!StringUtils.hasText(driverClassName)) {
-            driverClassName = this.embeddedDatabaseConnection!!.driverClassName
-        }
         return driverClassName!!
     }
 
-    private fun driverClassIsLoadable(): Boolean {
+    fun findDriverClassName(): String? {
+        if (StringUtils.hasText(this.driverClassName)) {
+            Assert.state(driverClassIsLoadable(this.driverClassName!!)) { "Cannot load driver class: " + this.driverClassName }
+            return this.driverClassName
+        }
+        var driverClassName: String? = null
+        if (StringUtils.hasText(this.url)) {
+            driverClassName = DatabaseDriver.fromJdbcUrl(this.url).getDriverClassName()
+        }
+        if (!StringUtils.hasText(driverClassName)) {
+            driverClassName = this.embeddedDatabaseConnection!!.getDriverClassName()
+        }
+        return driverClassName
+    }
+
+    private fun driverClassIsLoadable(driverClassName: String): Boolean {
         try {
-            ClassUtils.forName(this.driverClassName!!, null)
+            ClassUtils.forName(driverClassName, null)
             return true
         } catch (ex: UnsupportedClassVersionError) {
             // Driver library has been compiled with a later JDK, propagate error
@@ -185,10 +182,21 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
     }
 
     /**
+     * Return the configured url or `null` if none was configured.
+     * @return the configured url
+     * @see .determineUrl
+     */
+    fun getUrl(): String? {
+        return this.url
+    }
+
+    fun setUrl(url: String?) {
+        this.url = url
+    }
+
+    /**
      * Determine the url to use based on this configuration and the environment.
-     *
      * @return the url to use
-     * @since 1.4.0
      */
     fun determineUrl(): String? {
         if (StringUtils.hasText(this.url)) {
@@ -207,12 +215,10 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
 
     /**
      * Determine the name to used based on this configuration.
-     *
      * @return the database name to use or `null`
-     * @since 2.0.0
      */
     fun determineDatabaseName(): String? {
-        if (this.isGenerateUniqueName) {
+        if (this.generateUniqueName) {
             if (this.uniqueName == null) {
                 this.uniqueName = UUID.randomUUID().toString()
             }
@@ -228,10 +234,21 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
     }
 
     /**
+     * Return the configured username or `null` if none was configured.
+     * @return the configured username
+     * @see .determineUsername
+     */
+    fun getUsername(): String? {
+        return this.username
+    }
+
+    fun setUsername(username: String?) {
+        this.username = username
+    }
+
+    /**
      * Determine the username to use based on this configuration and the environment.
-     *
      * @return the username to use
-     * @since 1.4.0
      */
     fun determineUsername(): String? {
         if (StringUtils.hasText(this.username)) {
@@ -244,10 +261,21 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
     }
 
     /**
+     * Return the configured password or `null` if none was configured.
+     * @return the configured password
+     * @see .determinePassword
+     */
+    fun getPassword(): String? {
+        return this.password
+    }
+
+    fun setPassword(password: String?) {
+        this.password = password
+    }
+
+    /**
      * Determine the password to use based on this configuration and the environment.
-     *
      * @return the password to use
-     * @since 1.4.0
      */
     fun determinePassword(): String? {
         if (StringUtils.hasText(this.password)) {
@@ -259,6 +287,54 @@ class TravakoExposedDataSourceProperties : BeanClassLoaderAware, InitializingBea
         return null
     }
 
+    fun getJndiName(): String? {
+        return this.jndiName
+    }
+
+    /**
+     * Allows the DataSource to be managed by the container and obtained through JNDI. The
+     * `URL`, `driverClassName`, `username` and `password` fields
+     * will be ignored when using JNDI lookups.
+     * @param jndiName the JNDI name
+     */
+    fun setJndiName(jndiName: String?) {
+        this.jndiName = jndiName
+    }
+
+    fun getEmbeddedDatabaseConnection(): EmbeddedDatabaseConnection? {
+        return this.embeddedDatabaseConnection
+    }
+
+    fun setEmbeddedDatabaseConnection(embeddedDatabaseConnection: EmbeddedDatabaseConnection?) {
+        this.embeddedDatabaseConnection = embeddedDatabaseConnection
+    }
+
+    fun getClassLoader(): ClassLoader? {
+        return this.classLoader
+    }
+
+    fun getXa(): Xa? {
+        return this.xa
+    }
+
+    fun setXa(xa: Xa?) {
+        this.xa = xa
+    }
+
+    /**
+     * XA Specific datasource settings.
+     */
+    class Xa {
+        /**
+         * XA datasource fully qualified name.
+         */
+        var dataSourceClassName: String? = null
+
+        /**
+         * Properties to pass to the XA data source.
+         */
+        var properties: MutableMap<String?, String?>? = LinkedHashMap<String?, String?>()
+    }
 
     internal class DataSourceBeanCreationException(
         message: String,

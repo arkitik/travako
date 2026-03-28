@@ -7,10 +7,11 @@ import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunnerTable
 import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

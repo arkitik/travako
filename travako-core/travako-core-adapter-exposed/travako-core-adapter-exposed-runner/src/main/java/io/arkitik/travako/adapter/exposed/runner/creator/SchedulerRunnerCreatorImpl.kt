@@ -7,7 +7,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunnerTable
 import io.arkitik.travako.store.runner.creator.SchedulerRunnerCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.util.*
 
 /**

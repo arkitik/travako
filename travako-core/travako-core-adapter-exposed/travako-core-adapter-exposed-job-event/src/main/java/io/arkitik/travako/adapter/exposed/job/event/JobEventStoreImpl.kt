@@ -12,8 +12,8 @@ import io.arkitik.travako.store.job.event.JobEventStore
 import io.arkitik.travako.store.job.event.creator.JobEventCreator
 import io.arkitik.travako.store.job.event.query.JobEventStoreQuery
 import io.arkitik.travako.store.job.event.updater.JobEventUpdater
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.statements.UpdateBuilder
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

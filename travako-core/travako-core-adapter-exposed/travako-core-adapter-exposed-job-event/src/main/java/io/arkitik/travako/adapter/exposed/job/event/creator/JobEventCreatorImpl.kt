@@ -7,7 +7,7 @@ import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.entity.exposed.job.event.TravakoJobEvent
 import io.arkitik.travako.entity.exposed.job.event.TravakoJobEventTable
 import io.arkitik.travako.store.job.event.creator.JobEventCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.util.*
 
 /**

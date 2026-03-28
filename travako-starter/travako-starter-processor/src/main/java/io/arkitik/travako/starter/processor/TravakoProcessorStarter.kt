@@ -46,6 +46,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -278,4 +279,14 @@ class TravakoProcessorStarter {
         jobInstanceBeans: List<JobInstanceBean>,
     ): JobInstancesSource.SourceUnit =
         SpringJobSourceUnit(jobInstanceBeans)
+
+    @Bean
+    fun travakoThreadPoolTaskScheduler(
+        travakoRunnerConfig: TravakoRunnerConfig,
+    ): ThreadPoolTaskScheduler {
+        val threadPoolTaskScheduler = ThreadPoolTaskScheduler()
+        threadPoolTaskScheduler.setPoolSize(travakoRunnerConfig.threadPool.poolSize)
+        threadPoolTaskScheduler.setThreadNamePrefix(travakoRunnerConfig.threadPool.prefix)
+        return threadPoolTaskScheduler
+    }
 }

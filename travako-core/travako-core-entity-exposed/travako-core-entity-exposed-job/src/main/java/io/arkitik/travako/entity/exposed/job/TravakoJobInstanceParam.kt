@@ -2,7 +2,7 @@ package io.arkitik.travako.entity.exposed.job
 
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.time.LocalDateTime
 
 /**

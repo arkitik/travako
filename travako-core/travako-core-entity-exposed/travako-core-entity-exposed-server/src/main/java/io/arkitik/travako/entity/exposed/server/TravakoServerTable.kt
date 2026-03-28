@@ -3,8 +3,8 @@ package io.arkitik.travako.entity.exposed.server
 import io.arkitik.radix.develop.exposed.table.RadixTable
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.protocol.naming.strategy.TravakoExposedNamingStrategy
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.ResultRow
 
 /**
  * Created By Ibrahim Al-Tamimi 

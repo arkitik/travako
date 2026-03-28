@@ -71,7 +71,7 @@ class Job4 : StatefulTravakoJob {
 class SampleJobRegistry(
     private val jobInstancesRegistry: JobInstancesRegistry,
 ) : CommandLineRunner {
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         if (!jobInstancesRegistry.jobRegistered("sample")) {
             jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
                 jobKey("sample")

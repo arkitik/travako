@@ -15,6 +15,14 @@ class TravakoRunnerConfig(
     @DefaultValue("5s") val heartbeat: Duration,
     @DefaultValue("30s") val jobsEvent: Duration,
     @DefaultValue("false") val duplicationDetection: Boolean,
+    val threadPool: ThreadPoolConfig = ThreadPoolConfig(),
 ) {
     val host: String = InetAddress.getLocalHost().hostName
+
+    data class ThreadPoolConfig(
+        @DefaultValue("10")
+        val poolSize: Int = 10,
+        @DefaultValue("TRVK-")
+        val prefix: String = "TRVK-",
+    )
 }

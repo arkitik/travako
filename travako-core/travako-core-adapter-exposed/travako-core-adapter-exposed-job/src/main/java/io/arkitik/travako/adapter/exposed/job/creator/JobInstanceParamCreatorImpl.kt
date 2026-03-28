@@ -6,7 +6,7 @@ import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceParam
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceParamTable
 import io.arkitik.travako.store.job.creator.JobInstanceParamCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.time.LocalDateTime
 import java.util.*
 
