@@ -12,8 +12,8 @@ import io.arkitik.travako.store.leader.LeaderStore
 import io.arkitik.travako.store.leader.creator.LeaderCreator
 import io.arkitik.travako.store.leader.query.LeaderStoreQuery
 import io.arkitik.travako.store.leader.updater.LeaderUpdater
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.statements.UpdateBuilder
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

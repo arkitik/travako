@@ -7,7 +7,7 @@ import io.arkitik.travako.port.jpa.leader.LeaderJpaPortContext
 import io.arkitik.travako.port.jpa.runner.RunnerJpaPortContext
 import io.arkitik.travako.port.jpa.server.ServerJpaPortContext
 import io.arkitik.travako.starter.spring.jpa.units.TravakoTransactionalExecutorImpl
-import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import

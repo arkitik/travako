@@ -4,8 +4,8 @@ import io.arkitik.radix.develop.exposed.table.RadixTable
 import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunnerTable
 import io.arkitik.travako.protocol.naming.strategy.TravakoExposedNamingStrategy
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.ResultRow
 
 class TravakoRunnerJobEventStateTable(
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,

@@ -12,8 +12,8 @@ import io.arkitik.travako.store.server.ServerStore
 import io.arkitik.travako.store.server.creator.ServerCreator
 import io.arkitik.travako.store.server.query.ServerStoreQuery
 import io.arkitik.travako.store.server.updater.ServerUpdater
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.core.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.jdbc.Database
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

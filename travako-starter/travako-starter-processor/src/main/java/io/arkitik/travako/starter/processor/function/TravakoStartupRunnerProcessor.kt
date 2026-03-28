@@ -15,7 +15,7 @@ internal class TravakoStartupRunnerProcessor(
     private val registeredProcessors: List<Processor<*>>,
     private val travakoTransactionalExecutor: TravakoTransactionalExecutor,
 ) : TravakoStartupProcessor(), CommandLineRunner {
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         travakoTransactionalExecutor.runUnitTransaction {
             val processors = registeredProcessors.filter {
                 it !is PreProcessor

@@ -6,10 +6,11 @@ import io.arkitik.travako.domain.job.event.JobEventDomain
 import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.entity.exposed.job.event.TravakoRunnerJobEventStateTable
 import io.arkitik.travako.store.job.event.query.RunnerJobEventStateStoreQuery
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -30,8 +31,7 @@ internal class RunnerJobEventStateStoreQueryImpl(
         transaction(database) {
             identityTable.selectAll()
                 .where {
-                    (identityTable.runner eq schedulerRunner.uuid) and
-                            (identityTable.jobEvent eq jobEvent.uuid)
+                    (identityTable.runner eq schedulerRunner.uuid).and(identityTable.jobEvent eq jobEvent.uuid)
                 }.exist()
         }
 

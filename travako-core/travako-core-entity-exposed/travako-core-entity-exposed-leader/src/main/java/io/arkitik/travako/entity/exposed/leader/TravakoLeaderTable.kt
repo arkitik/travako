@@ -5,9 +5,9 @@ import io.arkitik.travako.core.domain.leader.LeaderDomain
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunnerTable
 import io.arkitik.travako.entity.exposed.server.TravakoServerTable
 import io.arkitik.travako.protocol.naming.strategy.TravakoExposedNamingStrategy
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.javatime.datetime
 
 class TravakoLeaderTable(
     travakoExposedNamingStrategy: TravakoExposedNamingStrategy,

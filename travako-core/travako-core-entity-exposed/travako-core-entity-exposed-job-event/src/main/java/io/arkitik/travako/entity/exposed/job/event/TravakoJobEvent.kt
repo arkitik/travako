@@ -4,7 +4,7 @@ import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.domain.job.event.JobEventDomain
 import io.arkitik.travako.domain.job.event.embedded.JobEventType
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceTable
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.time.LocalDateTime
 
 /**

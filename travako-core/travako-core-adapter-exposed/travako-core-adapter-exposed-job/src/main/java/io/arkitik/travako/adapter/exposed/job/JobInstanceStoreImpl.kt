@@ -12,8 +12,8 @@ import io.arkitik.travako.store.job.JobInstanceStore
 import io.arkitik.travako.store.job.creator.JobInstanceCreator
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 import io.arkitik.travako.store.job.updater.JobInstanceUpdater
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.statements.UpdateBuilder
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)

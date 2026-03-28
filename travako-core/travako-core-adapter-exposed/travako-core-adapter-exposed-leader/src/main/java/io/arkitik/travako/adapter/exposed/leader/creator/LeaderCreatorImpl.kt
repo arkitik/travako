@@ -7,7 +7,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.leader.TravakoLeader
 import io.arkitik.travako.entity.exposed.leader.TravakoLeaderTable
 import io.arkitik.travako.store.leader.creator.LeaderCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.util.*
 
 /**

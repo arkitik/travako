@@ -19,8 +19,8 @@ import io.arkitik.travako.store.job.event.RunnerJobEventStateStore
 import io.arkitik.travako.store.leader.LeaderStore
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 import io.arkitik.travako.store.server.ServerStore
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.DatabaseConfig
+import org.jetbrains.exposed.v1.core.DatabaseConfig
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties

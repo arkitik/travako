@@ -7,7 +7,7 @@ import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.entity.exposed.job.event.TravakoRunnerJobEventState
 import io.arkitik.travako.entity.exposed.job.event.TravakoRunnerJobEventStateTable
 import io.arkitik.travako.store.job.event.creator.RunnerJobEventStateCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.time.LocalDateTime
 import java.util.*
 

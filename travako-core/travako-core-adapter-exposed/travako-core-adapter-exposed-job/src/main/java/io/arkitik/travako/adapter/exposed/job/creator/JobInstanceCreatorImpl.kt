@@ -9,7 +9,7 @@ import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstance
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceTable
 import io.arkitik.travako.store.job.creator.JobInstanceCreator
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.time.LocalDateTime
 import java.util.*
 
