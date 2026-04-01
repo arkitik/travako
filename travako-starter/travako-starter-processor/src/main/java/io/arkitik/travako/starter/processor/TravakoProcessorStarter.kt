@@ -38,6 +38,7 @@ import io.arkitik.travako.starter.processor.units.SpringJobSourceUnit
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -272,9 +273,10 @@ class TravakoProcessorStarter {
         SpringJobSourceUnit(jobInstanceBeans)
 
     @Bean
+    @ConditionalOnMissingBean(TaskScheduler::class)
     fun travakoThreadPoolTaskScheduler(
         travakoRunnerConfig: TravakoRunnerConfig,
-    ): ThreadPoolTaskScheduler {
+    ): TaskScheduler {
         val threadPoolTaskScheduler = ThreadPoolTaskScheduler()
         threadPoolTaskScheduler.setPoolSize(travakoRunnerConfig.threadPool.poolSize)
         threadPoolTaskScheduler.setThreadNamePrefix(travakoRunnerConfig.threadPool.prefix)
