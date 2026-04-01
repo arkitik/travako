@@ -1,7 +1,7 @@
-package io.arkitik.travako.starter.job.bean
+package io.arkitik.travako.protocol.job
 
-import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
-import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionResult
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionData
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionResult
 
 /**
  * Created By Ibrahim Al-Tamimi 

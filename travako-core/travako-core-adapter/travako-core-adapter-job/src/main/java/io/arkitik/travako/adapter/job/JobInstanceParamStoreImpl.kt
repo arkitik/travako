@@ -6,23 +6,26 @@ import io.arkitik.travako.adapter.job.query.JobInstanceParamStoreQueryImpl
 import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceParamRepository
 import io.arkitik.travako.adapter.job.updater.JobInstanceParamUpdaterImpl
 import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstanceParam
 import io.arkitik.travako.store.job.JobInstanceParamStore
 import io.arkitik.travako.store.job.creator.JobInstanceParamCreator
 import io.arkitik.travako.store.job.query.JobInstanceParamStoreQuery
 import io.arkitik.travako.store.job.updater.JobInstanceParamUpdater
+import java.time.LocalDateTime
 
 /**
  * Created By Ibrahim Al-Tamimi 
  * Created At 1:20 PM, 26/08/2024
  */
 class JobInstanceParamStoreImpl(
-    repository: TravakoJobInstanceParamRepository,
+    private val travakoJobInstanceParamRepository: TravakoJobInstanceParamRepository,
 ) : StoreImpl<String, JobInstanceParamDomain, TravakoJobInstanceParam>(
-    repository
+    travakoJobInstanceParamRepository
 ), JobInstanceParamStore {
     override val storeQuery: JobInstanceParamStoreQuery =
-        JobInstanceParamStoreQueryImpl(repository)
+        JobInstanceParamStoreQueryImpl(travakoJobInstanceParamRepository)
 
     override fun JobInstanceParamDomain.identityUpdater(): JobInstanceParamUpdater =
         JobInstanceParamUpdaterImpl(map())
@@ -31,4 +34,16 @@ class JobInstanceParamStoreImpl(
         JobInstanceParamCreatorImpl()
 
     override fun JobInstanceParamDomain.map() = this as TravakoJobInstanceParam
+
+    override fun deleteAllParamsForJobsByLastRunningDateAndStatus(
+        lastRunningTime: LocalDateTime,
+        statuses: List<JobStatus>,
+        server: ServerDomain,
+    ) {
+        travakoJobInstanceParamRepository.deleteAllByJobLastRunningTimeBeforeAndJobJobStatusInAndJobServer(
+            lastRunningTimeBefore = lastRunningTime,
+            jobStatuses = statuses,
+            server = server
+        )
+    }
 }

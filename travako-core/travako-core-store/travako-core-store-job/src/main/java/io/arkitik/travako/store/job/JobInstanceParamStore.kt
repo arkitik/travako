@@ -2,9 +2,12 @@ package io.arkitik.travako.store.job
 
 import io.arkitik.radix.develop.store.Store
 import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.store.job.creator.JobInstanceParamCreator
 import io.arkitik.travako.store.job.query.JobInstanceParamStoreQuery
 import io.arkitik.travako.store.job.updater.JobInstanceParamUpdater
+import java.time.LocalDateTime
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -16,4 +19,10 @@ interface JobInstanceParamStore : Store<String, JobInstanceParamDomain> {
     override fun identityCreator(): JobInstanceParamCreator
 
     override val storeQuery: JobInstanceParamStoreQuery
+
+    fun deleteAllParamsForJobsByLastRunningDateAndStatus(
+        lastRunningTime: LocalDateTime,
+        statuses: List<JobStatus>,
+        server: ServerDomain,
+    )
 }

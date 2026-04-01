@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.job
 
 import io.arkitik.travako.sdk.job.dto.JobDetails
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
 import io.arkitik.travako.starter.processor.core.job.asTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.runner.RunnerJobExecutor

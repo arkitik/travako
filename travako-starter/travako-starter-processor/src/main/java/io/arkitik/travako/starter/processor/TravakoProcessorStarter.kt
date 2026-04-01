@@ -13,8 +13,6 @@ import io.arkitik.travako.sdk.leader.LeaderSdk
 import io.arkitik.travako.sdk.runner.SchedulerRunnerSdk
 import io.arkitik.travako.sdk.server.ServerSdk
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
-import io.arkitik.travako.starter.job.bean.JobInstanceRestartProcessor
-import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
 import io.arkitik.travako.starter.processor.config.TravakoLeaderConfig
@@ -23,7 +21,6 @@ import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.function.JobInstancesSourceImpl
 import io.arkitik.travako.starter.processor.function.TravakoStartupInitializerProcessor
 import io.arkitik.travako.starter.processor.function.TravakoStartupRunnerProcessor
-import io.arkitik.travako.starter.processor.job.JobInstanceRestartProcessorImpl
 import io.arkitik.travako.starter.processor.job.JobInstancesProcessor
 import io.arkitik.travako.starter.processor.job.JobsSchedulerRegistry
 import io.arkitik.travako.starter.processor.leader.LeaderJobsAssigneeProcessor
@@ -249,12 +246,6 @@ class TravakoProcessorStarter {
         serverSdk = serverSdk,
         travakoTransactionalExecutor = travakoTransactionalExecutor,
     )
-
-    @Bean
-    fun jobInstanceRestartProcessor(
-        jobInstancesRegistry: JobInstancesRegistry,
-    ): JobInstanceRestartProcessor =
-        JobInstanceRestartProcessorImpl(jobInstancesRegistry)
 
     @Bean
     fun shutdownTrigger(

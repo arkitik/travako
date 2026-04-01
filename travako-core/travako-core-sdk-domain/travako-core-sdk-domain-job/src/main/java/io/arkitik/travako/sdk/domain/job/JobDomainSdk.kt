@@ -1,7 +1,10 @@
 package io.arkitik.travako.sdk.domain.job
 
 import io.arkitik.radix.develop.operation.Operation
+import io.arkitik.radix.develop.operation.Operator
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.server.ServerDomain
+import io.arkitik.travako.sdk.domain.job.dto.JobCleanupDto
 import io.arkitik.travako.sdk.domain.job.dto.JobDomainDto
 
 /**
@@ -11,4 +14,8 @@ import io.arkitik.travako.sdk.domain.job.dto.JobDomainDto
  */
 interface JobDomainSdk {
     val fetchJobInstance: Operation<JobDomainDto, JobInstanceDomain>
+
+    val cleanupDoneJobInstances: Operator<JobCleanupDto, Unit>
+
+    val removeAssigneeFromDownRunners: Operator<ServerDomain, Unit>
 }

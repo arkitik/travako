@@ -1,6 +1,6 @@
 package io.arkitik.travako.starter.job.source
 
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
 
 /**
  * Created By Ibrahim Al-Tamimi 

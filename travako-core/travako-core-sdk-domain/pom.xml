@@ -17,5 +17,6 @@
         <module>travako-core-sdk-domain-leader</module>
         <module>travako-core-sdk-domain-runner</module>
         <module>travako-core-sdk-domain-server</module>
+        <module>travako-core-sdk-domain-job-event</module>
     </modules>
 </project>

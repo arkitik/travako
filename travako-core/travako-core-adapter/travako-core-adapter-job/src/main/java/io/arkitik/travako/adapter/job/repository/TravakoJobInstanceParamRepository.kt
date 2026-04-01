@@ -3,7 +3,10 @@ package io.arkitik.travako.adapter.job.repository
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.JobInstanceParamDomain
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstanceParam
+import java.time.LocalDateTime
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -11,4 +14,10 @@ import io.arkitik.travako.entity.job.TravakoJobInstanceParam
  */
 interface TravakoJobInstanceParamRepository : RadixRepository<String, TravakoJobInstanceParam> {
     fun findAllByJob(job: JobInstanceDomain): List<JobInstanceParamDomain>
+
+    fun deleteAllByJobLastRunningTimeBeforeAndJobJobStatusInAndJobServer(
+        lastRunningTimeBefore: LocalDateTime,
+        jobStatuses: List<JobStatus>,
+        server: ServerDomain,
+    )
 }

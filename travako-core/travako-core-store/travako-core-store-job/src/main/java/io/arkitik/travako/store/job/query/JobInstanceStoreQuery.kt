@@ -4,6 +4,7 @@ import io.arkitik.radix.develop.store.query.StoreQuery
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.core.domain.server.ServerDomain
 import java.time.LocalDateTime
 
@@ -63,4 +64,9 @@ interface JobInstanceStoreQuery : StoreQuery<String, JobInstanceDomain> {
         jobKey: String,
         status: JobStatus,
     ): JobInstanceDomain?
+
+    fun findAllByServerAndRunnerStateIs(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    ): List<JobInstanceDomain>
 }

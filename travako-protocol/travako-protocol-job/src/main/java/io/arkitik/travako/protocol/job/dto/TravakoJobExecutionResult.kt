@@ -1,4 +1,4 @@
-package io.arkitik.travako.starter.job.bean.dto
+package io.arkitik.travako.protocol.job.dto
 
 /**
  * Created By Ibrahim Al-Tamimi 
@@ -7,9 +7,9 @@ package io.arkitik.travako.starter.job.bean.dto
 sealed interface TravakoJobExecutionResult {
     companion object {
         object Success : TravakoJobExecutionResult
-        object Failure : TravakoJobExecutionResult
+        class Failure(val throwable: Throwable? = null) : TravakoJobExecutionResult
 
         fun success() = Success
-        fun failure() = Failure
+        fun failure(throwable: Throwable? = null) = Failure(throwable)
     }
 }

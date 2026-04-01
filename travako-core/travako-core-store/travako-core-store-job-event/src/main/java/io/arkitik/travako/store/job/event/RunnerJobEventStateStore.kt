@@ -1,6 +1,8 @@
 package io.arkitik.travako.store.job.event
 
 import io.arkitik.radix.develop.store.Store
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.store.job.event.creator.RunnerJobEventStateCreator
 import io.arkitik.travako.store.job.event.query.RunnerJobEventStateStoreQuery
@@ -17,4 +19,8 @@ interface RunnerJobEventStateStore : Store<String, RunnerJobEventStateDomain> {
     override fun identityCreator(): RunnerJobEventStateCreator
 
     override fun RunnerJobEventStateDomain.identityUpdater(): RunnerJobEventStateUpdater
+
+    fun deleteAllByServerAndEventIsProcessed(server: ServerDomain)
+
+    fun deleteAllByServerAndRunnerStatus(server: ServerDomain, runnerStatus: InstanceState)
 }

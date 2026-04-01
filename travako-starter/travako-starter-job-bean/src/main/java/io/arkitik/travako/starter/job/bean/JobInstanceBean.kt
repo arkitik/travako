@@ -1,6 +1,7 @@
 package io.arkitik.travako.starter.job.bean
 
-import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
+import io.arkitik.travako.protocol.job.TravakoJob
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionData
 import org.springframework.scheduling.Trigger
 
 /**

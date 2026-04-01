@@ -4,6 +4,7 @@ import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
 import org.springframework.data.domain.Pageable
@@ -53,4 +54,15 @@ interface TravakoJobInstanceRepository : RadixRepository<String, TravakoJobInsta
         jobKey: String,
         jobStatus: JobStatus,
     ): JobInstanceDomain?
+
+    fun deleteAllByLastRunningTimeBeforeAndJobStatusInAndServer(
+        lastRunningTimeBefore: LocalDateTime,
+        jobStatuses: List<JobStatus>,
+        server: ServerDomain,
+    )
+
+    fun findAllByServerAndAssignedToInstanceState(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    ): List<TravakoJobInstance>
 }

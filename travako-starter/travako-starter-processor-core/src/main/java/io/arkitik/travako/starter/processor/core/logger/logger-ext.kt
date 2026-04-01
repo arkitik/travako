@@ -8,6 +8,4 @@ import org.slf4j.LoggerFactory
  * Created At 30 10:03 PM, **Thu, December 2021**
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
-inline fun <reified T> logger(): Logger {
-    return LoggerFactory.getLogger(T::class.java)
-}
+inline fun <reified T> logger(): Logger = LoggerFactory.getLogger(T::class.java)

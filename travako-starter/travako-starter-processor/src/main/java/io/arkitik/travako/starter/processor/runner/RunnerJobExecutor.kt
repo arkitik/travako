@@ -9,9 +9,9 @@ import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
 import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
-import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionData
-import io.arkitik.travako.starter.job.bean.dto.TravakoJobExecutionResult
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionData
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionResult
 import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
@@ -60,7 +60,11 @@ class RunnerJobExecutor(
                 }.onFailure {
                     logger.error("Error while executing job [key: {}]", jobDetails.jobKey, it)
                 }.onSuccess { jobExecutionResult ->
-                    logger.trace("Job executed successfully. [key: {}]", jobDetails.jobKey)
+                    if (jobExecutionResult is TravakoJobExecutionResult.Companion.Failure) {
+                        logger.error("Job executed with failure. [key: {}]", jobDetails.jobKey, jobExecutionResult.throwable)
+                    } else {
+                        logger.debug("Job executed with result: {}. [key: {}]", jobExecutionResult, jobDetails.jobKey)
+                    }
                     if (jobDetails.singleRun && jobExecutionResult is TravakoJobExecutionResult.Companion.Success) {
                         jobDetails.markAsDone()
                     }

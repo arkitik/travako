@@ -15,6 +15,7 @@
     <modules>
         <module>travako-engine-job-recovery</module>
         <module>travako-engine-job-misfiring</module>
+        <module>travako-engine-cleanup</module>
     </modules>
 
 </project>

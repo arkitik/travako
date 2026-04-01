@@ -1,6 +1,7 @@
 package io.arkitik.travako.operation.runner
 
 import io.arkitik.radix.develop.operation.Operation
+import io.arkitik.radix.develop.operation.Operator
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
@@ -8,6 +9,7 @@ import io.arkitik.travako.operation.runner.operation.FetchOldestHeartbeatRunnerO
 import io.arkitik.travako.operation.runner.operation.FetchSchedulerRunnerOperationProvider
 import io.arkitik.travako.operation.runner.operation.FetchServerSchedulerRunnerOperationProvider
 import io.arkitik.travako.operation.runner.operation.FetchServerSchedulerRunningRunnersOperationProvider
+import io.arkitik.travako.operation.runner.operators.CleanupDownRunnersOperator
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 
@@ -40,6 +42,12 @@ class SchedulerRunnerDomainSdkImpl(
 
     override val fetchServerSchedulerRunningRunners: Operation<ServerDomain, List<SchedulerRunnerDomain>> =
         runningRunnersOperationProvider.fetchServerSchedulerRunningRunners
+
     override val countServerSchedulerRunningRunners: Operation<ServerDomain, Long> =
         runningRunnersOperationProvider.countServerSchedulerRunningRunners
+
+    override val cleanupDownRunners: Operator<ServerDomain, Unit> =
+        CleanupDownRunnersOperator(
+            schedulerRunnerStore = schedulerRunnerStore
+        )
 }

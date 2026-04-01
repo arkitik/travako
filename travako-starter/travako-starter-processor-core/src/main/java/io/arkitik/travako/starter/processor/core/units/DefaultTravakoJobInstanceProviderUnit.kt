@@ -1,7 +1,7 @@
 package io.arkitik.travako.starter.processor.core.units
 
 import io.arkitik.radix.develop.shared.ext.internalError
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.TravakoJobInstanceProvider
 import io.arkitik.travako.starter.processor.core.errors.TravakoCoreStartupErrors
 import io.arkitik.travako.starter.processor.core.logger.logger

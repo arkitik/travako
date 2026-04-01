@@ -5,6 +5,7 @@ import io.arkitik.radix.develop.exposed.table.ensureInTransaction
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.job.TravakoJobInstanceTable
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
@@ -145,4 +146,20 @@ internal class JobInstanceStoreQueryImpl(
                         .and(identityTable.jobKey.inList(jobKeys))
                 }.map { identityTable.mapToIdentity(it, database) }
         }
+
+    override fun findAllByServerAndRunnerStateIs(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    ): List<JobInstanceDomain> {
+        return transaction(database) {
+            val runnerTable = identityTable.runnerTable
+            identityTable
+                .innerJoin(runnerTable)
+                .selectAll()
+                .where {
+                    (identityTable.server.eq(server.uuid))
+                        .and(runnerTable.instanceState.eq(instanceState))
+                }.map { identityTable.mapToIdentity(it, database) }
+        }
+    }
 }

@@ -2,9 +2,12 @@ package io.arkitik.travako.store.job
 
 import io.arkitik.radix.develop.store.Store
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
+import io.arkitik.travako.core.domain.job.embedded.JobStatus
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.store.job.creator.JobInstanceCreator
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
 import io.arkitik.travako.store.job.updater.JobInstanceUpdater
+import java.time.LocalDateTime
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -17,4 +20,10 @@ interface JobInstanceStore : Store<String, JobInstanceDomain> {
     override fun identityCreator(): JobInstanceCreator
 
     override fun JobInstanceDomain.identityUpdater(): JobInstanceUpdater
+
+    fun deleteAllByLastRunningDateAndStatus(
+        lastRunningTime: LocalDateTime,
+        statuses: List<JobStatus>,
+        server: ServerDomain,
+    )
 }

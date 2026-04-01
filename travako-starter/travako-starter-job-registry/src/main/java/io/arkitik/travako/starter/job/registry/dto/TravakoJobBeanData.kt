@@ -1,6 +1,6 @@
 package io.arkitik.travako.starter.job.registry.dto
 
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
 import org.springframework.scheduling.Trigger
 import java.time.Instant
 

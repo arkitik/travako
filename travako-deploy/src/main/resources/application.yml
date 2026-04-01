@@ -1,14 +1,9 @@
-server:
-  port: 8093
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/arkitik_travako
     username: arkitik_travako
     password: arkitik_travako
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
 arkitik:
   travako:
     config:
@@ -21,13 +16,10 @@ arkitik:
         enabled: true
         run-interval-minutes: 1
         threshold-seconds: 120
-    database:
-      exposed:
-        datasource:
-          url: jdbc:postgresql://localhost:5432/arkitik_travako
-          username: saturn_pps_central
-          password: saturn_pps_central
-          driver-class-name: org.postgresql.Driver
+      cleanup:
+        enabled: false
+        run-interval-hours: 1
+        jobs-age-in-days: 1
 logging:
   level:
     io:
