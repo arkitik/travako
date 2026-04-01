@@ -1,6 +1,6 @@
 package io.arkitik.travako.starter.processor.function
 
-import io.arkitik.travako.starter.job.bean.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 
 /**

@@ -49,4 +49,9 @@ interface TravakoSchedulerRunnerRepository : RadixRepository<String, TravakoSche
         server: ServerDomain,
         instanceState: InstanceState,
     ): Long
+
+    fun deleteAllByServerAndInstanceState(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    )
 }

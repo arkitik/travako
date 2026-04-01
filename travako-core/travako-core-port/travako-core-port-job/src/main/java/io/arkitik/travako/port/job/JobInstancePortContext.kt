@@ -1,5 +1,6 @@
 package io.arkitik.travako.port.job
 
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.operation.job.JobDomainSdkImpl
 import io.arkitik.travako.operation.job.JobInstanceSdkImpl
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
@@ -22,7 +23,13 @@ class JobInstancePortContext {
     @Bean
     fun jobDomainSdk(
         jobInstanceStore: JobInstanceStore,
-    ): JobDomainSdk = JobDomainSdkImpl(jobInstanceStore)
+        jobInstanceParamStore: JobInstanceParamStore,
+        travakoTransactionalExecutor: TravakoTransactionalExecutor,
+    ): JobDomainSdk = JobDomainSdkImpl(
+        jobInstanceStore = jobInstanceStore,
+        jobInstanceParamStore = jobInstanceParamStore,
+        travakoTransactionalExecutor = travakoTransactionalExecutor,
+    )
 
     @Bean
     fun jobInstanceSdk(

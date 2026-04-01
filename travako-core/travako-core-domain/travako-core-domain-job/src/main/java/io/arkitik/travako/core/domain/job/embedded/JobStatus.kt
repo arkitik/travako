@@ -15,5 +15,6 @@ enum class JobStatus(
 
     companion object {
         fun repeatable() = JobStatus.entries.filter { it.repeatable }
+        fun unrepeatable() = JobStatus.entries.filterNot { it.repeatable }
     }
 }

@@ -1,7 +1,10 @@
 package io.arkitik.travako.port.job.event
 
+import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
+import io.arkitik.travako.operation.job.event.JobEventDomainSdkImpl
 import io.arkitik.travako.operation.job.event.JobEventSdkImpl
 import io.arkitik.travako.sdk.domain.job.JobDomainSdk
+import io.arkitik.travako.sdk.domain.job.event.JobEventDomainSdk
 import io.arkitik.travako.sdk.domain.runner.SchedulerRunnerDomainSdk
 import io.arkitik.travako.sdk.domain.server.ServerDomainSdk
 import io.arkitik.travako.sdk.job.event.JobEventSdk
@@ -30,5 +33,16 @@ class JobEventPortContext {
         jobDomainSdk = jobDomainSdk,
         schedulerRunnerDomainSdk = schedulerRunnerDomainSdk,
         serverDomainSdk = serverDomainSdk,
+    )
+
+    @Bean
+    fun jobEventDomainSdk(
+        runnerJobEventStateStore: RunnerJobEventStateStore,
+        jobEventStore: JobEventStore,
+        travakoTransactionalExecutor: TravakoTransactionalExecutor,
+    ): JobEventDomainSdk = JobEventDomainSdkImpl(
+        runnerJobEventStateStore = runnerJobEventStateStore,
+        jobEventStore = jobEventStore,
+        travakoTransactionalExecutor = travakoTransactionalExecutor,
     )
 }

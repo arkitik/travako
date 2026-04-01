@@ -15,5 +15,6 @@
 
     <modules>
         <module>travako-protocol-naming-strategy</module>
+        <module>travako-protocol-job</module>
     </modules>
 </project>

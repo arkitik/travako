@@ -1,6 +1,7 @@
 package io.arkitik.travako.store.job.event
 
 import io.arkitik.radix.develop.store.Store
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.domain.job.event.JobEventDomain
 import io.arkitik.travako.store.job.event.creator.JobEventCreator
 import io.arkitik.travako.store.job.event.query.JobEventStoreQuery
@@ -17,4 +18,6 @@ interface JobEventStore : Store<String, JobEventDomain> {
     override fun identityCreator(): JobEventCreator
 
     override fun JobEventDomain.identityUpdater(): JobEventUpdater
+
+    fun deleteAllByServerAndProcessed(server: ServerDomain)
 }

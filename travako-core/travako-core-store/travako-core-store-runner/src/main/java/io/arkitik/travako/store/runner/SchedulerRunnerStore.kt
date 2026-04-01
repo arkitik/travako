@@ -2,6 +2,8 @@ package io.arkitik.travako.store.runner
 
 import io.arkitik.radix.develop.store.Store
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.store.runner.creator.SchedulerRunnerCreator
 import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 import io.arkitik.travako.store.runner.updater.SchedulerRunnerUpdater
@@ -15,4 +17,6 @@ interface SchedulerRunnerStore : Store<String, SchedulerRunnerDomain> {
     override val storeQuery: SchedulerRunnerStoreQuery
     override fun identityCreator(): SchedulerRunnerCreator
     override fun SchedulerRunnerDomain.identityUpdater(): SchedulerRunnerUpdater
+
+    fun deleteAllByServerAndStatus(server: ServerDomain, status: InstanceState)
 }

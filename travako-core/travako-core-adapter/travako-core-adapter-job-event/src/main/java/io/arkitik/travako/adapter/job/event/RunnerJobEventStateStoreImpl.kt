@@ -5,6 +5,8 @@ import io.arkitik.travako.adapter.job.event.creator.RunnerJobEventStateCreatorIm
 import io.arkitik.travako.adapter.job.event.query.RunnerJobEventStateStoreQueryImpl
 import io.arkitik.travako.adapter.job.event.repository.TravakoRunnerJobEventStateRepository
 import io.arkitik.travako.adapter.job.event.updater.RunnerJobEventStateUpdaterImpl
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.domain.job.event.RunnerJobEventStateDomain
 import io.arkitik.travako.entity.job.event.TravakoRunnerJobEventState
 import io.arkitik.travako.store.job.event.RunnerJobEventStateStore
@@ -15,7 +17,7 @@ import io.arkitik.travako.store.job.event.RunnerJobEventStateStore
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 class RunnerJobEventStateStoreImpl(
-    travakoRunnerJobEventStateRepository: TravakoRunnerJobEventStateRepository,
+    private val travakoRunnerJobEventStateRepository: TravakoRunnerJobEventStateRepository,
 ) : StoreImpl<String, RunnerJobEventStateDomain, TravakoRunnerJobEventState>(
     travakoRunnerJobEventStateRepository
 ), RunnerJobEventStateStore {
@@ -28,5 +30,22 @@ class RunnerJobEventStateStoreImpl(
 
     override fun RunnerJobEventStateDomain.identityUpdater() =
         RunnerJobEventStateUpdaterImpl(map())
+
+    override fun deleteAllByServerAndEventIsProcessed(server: ServerDomain) {
+        travakoRunnerJobEventStateRepository.deleteAllByRunnerServerAndJobEventProcessedFlag(
+            server = server,
+            processedFlag = true,
+        )
+    }
+
+    override fun deleteAllByServerAndRunnerStatus(
+        server: ServerDomain,
+        runnerStatus: InstanceState,
+    ) {
+        travakoRunnerJobEventStateRepository.deleteAllByRunnerServerAndRunnerInstanceState(
+            server = server,
+            instanceState = runnerStatus,
+        )
+    }
 
 }

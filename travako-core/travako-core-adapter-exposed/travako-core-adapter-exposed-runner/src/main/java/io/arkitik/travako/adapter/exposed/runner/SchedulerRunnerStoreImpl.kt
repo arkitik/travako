@@ -1,10 +1,13 @@
 package io.arkitik.travako.adapter.exposed.runner
 
 import io.arkitik.radix.adapter.exposed.ExposedStore
+import io.arkitik.radix.develop.exposed.table.ensureInTransaction
 import io.arkitik.travako.adapter.exposed.runner.creator.SchedulerRunnerCreatorImpl
 import io.arkitik.travako.adapter.exposed.runner.query.SchedulerRunnerStoreQueryImpl
 import io.arkitik.travako.adapter.exposed.runner.updater.SchedulerRunnerUpdaterImpl
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunner
 import io.arkitik.travako.entity.exposed.runner.TravakoSchedulerRunnerTable
 import io.arkitik.travako.protocol.naming.strategy.TravakoExposedNamingStrategy
@@ -12,8 +15,11 @@ import io.arkitik.travako.store.runner.SchedulerRunnerStore
 import io.arkitik.travako.store.runner.creator.SchedulerRunnerCreator
 import io.arkitik.travako.store.runner.query.SchedulerRunnerStoreQuery
 import io.arkitik.travako.store.runner.updater.SchedulerRunnerUpdater
-import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.statements.UpdateBuilder
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -55,5 +61,14 @@ class SchedulerRunnerStoreImpl(
     override fun <K : Any> UpdateBuilder<K>.updateEntity(identity: SchedulerRunnerDomain) {
         this[identityTable.instanceState] = identity.instanceState
         this[identityTable.lastHeartbeatTime] = identity.lastHeartbeatTime
+    }
+
+    override fun deleteAllByServerAndStatus(server: ServerDomain, status: InstanceState) {
+        ensureInTransaction(database) {
+            identityTable.deleteWhere {
+                (identityTable.server.eq(server.uuid))
+                    .and(identityTable.instanceState.eq(status))
+            }
+        }
     }
 }

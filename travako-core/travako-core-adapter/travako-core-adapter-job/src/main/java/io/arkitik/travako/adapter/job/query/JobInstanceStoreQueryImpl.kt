@@ -5,6 +5,7 @@ import io.arkitik.travako.adapter.job.repository.TravakoJobInstanceRepository
 import io.arkitik.travako.core.domain.job.JobInstanceDomain
 import io.arkitik.travako.core.domain.job.embedded.JobStatus
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
 import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.TravakoJobInstance
 import io.arkitik.travako.store.job.query.JobInstanceStoreQuery
@@ -99,5 +100,15 @@ class JobInstanceStoreQueryImpl(
         jobKey,
         status
     )
+
+    override fun findAllByServerAndRunnerStateIs(
+        server: ServerDomain,
+        instanceState: InstanceState,
+    ): List<JobInstanceDomain> {
+        return travakoJobInstanceRepository.findAllByServerAndAssignedToInstanceState(
+            server = server,
+            instanceState = instanceState
+        )
+    }
 
 }

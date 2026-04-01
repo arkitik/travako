@@ -6,6 +6,8 @@ import io.arkitik.travako.adapter.runner.query.SchedulerRunnerStoreQueryImpl
 import io.arkitik.travako.adapter.runner.repository.TravakoSchedulerRunnerRepository
 import io.arkitik.travako.adapter.runner.updater.SchedulerRunnerUpdaterImpl
 import io.arkitik.travako.core.domain.runner.SchedulerRunnerDomain
+import io.arkitik.travako.core.domain.runner.embedded.InstanceState
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.runner.TravakoSchedulerRunner
 import io.arkitik.travako.store.runner.SchedulerRunnerStore
 
@@ -15,7 +17,7 @@ import io.arkitik.travako.store.runner.SchedulerRunnerStore
  * Project *travako* [arkitik.io](https://arkitik.io)
  */
 class SchedulerRunnerStoreImpl(
-    travakoSchedulerRunnerRepository: TravakoSchedulerRunnerRepository,
+    private val travakoSchedulerRunnerRepository: TravakoSchedulerRunnerRepository,
 ) : StoreImpl<String, SchedulerRunnerDomain, TravakoSchedulerRunner>(travakoSchedulerRunnerRepository),
     SchedulerRunnerStore {
     override fun SchedulerRunnerDomain.map() = this as TravakoSchedulerRunner
@@ -27,4 +29,8 @@ class SchedulerRunnerStoreImpl(
 
     override fun SchedulerRunnerDomain.identityUpdater() =
         SchedulerRunnerUpdaterImpl(map())
+
+    override fun deleteAllByServerAndStatus(server: ServerDomain, status: InstanceState) {
+        travakoSchedulerRunnerRepository.deleteAllByServerAndInstanceState(server, status)
+    }
 }

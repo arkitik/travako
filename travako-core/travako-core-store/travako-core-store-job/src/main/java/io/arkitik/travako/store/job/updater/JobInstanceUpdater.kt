@@ -14,6 +14,7 @@ import java.time.LocalDateTime
  */
 interface JobInstanceUpdater : StoreIdentityUpdater<String, JobInstanceDomain> {
     fun removeRunnerAssignee(): JobInstanceUpdater
+
     fun SchedulerRunnerDomain.assignToRunner(): JobInstanceUpdater
 
     fun JobStatus.jobStatus(): JobInstanceUpdater

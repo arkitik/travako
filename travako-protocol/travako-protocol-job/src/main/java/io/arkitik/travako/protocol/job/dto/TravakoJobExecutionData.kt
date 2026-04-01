@@ -1,4 +1,4 @@
-package io.arkitik.travako.starter.job.bean.dto
+package io.arkitik.travako.protocol.job.dto
 
 /**
  * Created By Ibrahim Al-Tamimi 

@@ -1,6 +1,7 @@
 package io.arkitik.travako.adapter.job.event.repository
 
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
+import io.arkitik.travako.core.domain.server.ServerDomain
 import io.arkitik.travako.entity.job.event.TravakoJobEvent
 import io.arkitik.travako.entity.server.TravakoServer
 
@@ -12,6 +13,11 @@ import io.arkitik.travako.entity.server.TravakoServer
 interface TravakoJobEventRepository : RadixRepository<String, TravakoJobEvent> {
     fun findAllByJobInstanceServerAndProcessedFlagOrderByCreationDateAsc(
         server: TravakoServer,
-        processedFlag: Boolean
+        processedFlag: Boolean,
     ): List<TravakoJobEvent>
+
+    fun deleteAllByJobInstanceServerAndProcessedFlag(
+        server: ServerDomain,
+        processedFlag: Boolean,
+    )
 }
