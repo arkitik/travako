@@ -10,4 +10,5 @@
     </parent>
 
     <artifactId>travako-protocol-job</artifactId>
+    <name>travako-protocol-job</name>
 </project>
