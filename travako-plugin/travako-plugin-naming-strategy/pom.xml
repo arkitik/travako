@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.arkitik.travako</groupId>
         <artifactId>travako-plugin</artifactId>
-        <version>v2.4.5</version>
+        <version>v3.0.0</version>
     </parent>
 
     <name>Travako Plugin Naming Strategy</name>

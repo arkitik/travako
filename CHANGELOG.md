@@ -1,3 +1,16 @@
+# [3.0.0](https://github.com/arkitik/travako/compare/v2.4.5...v3.0.0) (2026-04-03)
+
+
+### Features
+
+* Add job cleanup functionality and refactor job-related classes [#58](https://github.com/arkitik/travako/issues/58) ([0826e29](https://github.com/arkitik/travako/commit/0826e294444481fcfe85fb66bfc8c98bd362b12d))
+* Upgrade to latest springboot 4.0.4, exposed 1.1.1 and radix v3 ([4c462ab](https://github.com/arkitik/travako/commit/4c462abf99630d0a9aa6f2d7c16149d6c2081da0))
+
+
+### BREAKING CHANGES
+
+* Upgrade to latest springboot 4.0.4, exposed 1.1.1 and radix v3
+
 ## [2.4.5](https://github.com/arkitik/travako/compare/v2.4.4...v2.4.5) (2026-02-02)
 
 
