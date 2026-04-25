@@ -7,7 +7,7 @@
     <groupId>io.arkitik.travako</groupId>
     <artifactId>travako</artifactId>
     <packaging>pom</packaging>
-    <version>v3.0.1</version>
+    <version>v3.0.2</version>
     <modules>
         <module>travako-core</module>
         <module>travako-starter</module>

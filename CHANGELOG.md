@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/arkitik/travako/compare/v3.0.1...v3.0.2) (2026-04-25)
+
+
+### Bug Fixes
+
+* **logging:** fix logging ([007324d](https://github.com/arkitik/travako/commit/007324dd318811f6b86383f293e9859a31a70540))
+
 ## [3.0.1](https://github.com/arkitik/travako/compare/v3.0.0...v3.0.1) (2026-04-25)
 
 
