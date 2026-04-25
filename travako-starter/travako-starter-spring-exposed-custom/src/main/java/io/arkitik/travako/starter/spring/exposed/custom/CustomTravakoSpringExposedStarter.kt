@@ -1,6 +1,7 @@
 package io.arkitik.travako.starter.spring.exposed.custom
 
 import com.zaxxer.hikari.HikariDataSource
+import io.arkitik.radix.protocol.exposed.ExposedDatabaseConfigCustomizer
 import io.arkitik.travako.adapter.exposed.job.JobInstanceParamStoreImpl
 import io.arkitik.travako.adapter.exposed.job.JobInstanceStoreImpl
 import io.arkitik.travako.adapter.exposed.job.event.JobEventStoreImpl
@@ -37,9 +38,10 @@ import org.springframework.context.annotation.Configuration
 class CustomTravakoSpringExposedStarter {
     @Bean
     @ConditionalOnMissingBean
-    fun databaseConfig() =
+    fun databaseConfig(customizers: List<ExposedDatabaseConfigCustomizer>) =
         DatabaseConfig {
             useNestedTransactions = true
+            customizers.forEach { it.customize(this) }
         }
 
     @Bean
