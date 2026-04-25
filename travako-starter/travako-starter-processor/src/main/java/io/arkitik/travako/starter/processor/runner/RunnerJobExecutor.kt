@@ -63,7 +63,7 @@ class RunnerJobExecutor(
                     if (jobExecutionResult is TravakoJobExecutionResult.Companion.Failure) {
                         logger.error("Job executed with failure. [key: {}]", jobDetails.jobKey, jobExecutionResult.throwable)
                     } else {
-                        logger.debug("Job executed with result: {}. [key: {}]", jobExecutionResult, jobDetails.jobKey)
+                        logger.debug("Job executed with result: [key: {}], result {}", jobExecutionResult, jobDetails.jobKey)
                     }
                     if (jobDetails.singleRun && jobExecutionResult is TravakoJobExecutionResult.Companion.Success) {
                         jobDetails.markAsDone()
