@@ -6,7 +6,7 @@ package io.arkitik.travako.protocol.job.dto
  */
 sealed interface TravakoJobExecutionResult {
     companion object {
-        object Success : TravakoJobExecutionResult
+        data object Success : TravakoJobExecutionResult
         class Failure(val throwable: Throwable? = null) : TravakoJobExecutionResult
 
         fun success() = Success

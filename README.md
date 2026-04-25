@@ -8,7 +8,7 @@
 
 ### To use Travako, follow these steps:
 
-#### (1) Include below dependency in your module (Scheduler Module):
+#### (1) Include the below dependency in your module (Scheduler Module):
 
 ```xml
 
@@ -94,6 +94,7 @@ arkitik:
   ```
 
 ##### If you choose the custom Spring `entityManagerFactory`, you also need to add the following configuration to your
+
 `application.yml`:
 
 ```yaml
