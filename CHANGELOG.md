@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/arkitik/travako/compare/v3.0.0...v3.0.1) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** Upgrade dependencies in pom.xml to latest versions, and remove jpa dependency from exposed modules ([63ba215](https://github.com/arkitik/travako/commit/63ba215901d944bdd1f41a2ac3e1d78cb2044fbf))
+
 # [3.0.0](https://github.com/arkitik/travako/compare/v2.4.5...v3.0.0) (2026-04-03)
 
 
