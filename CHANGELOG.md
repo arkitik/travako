@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/arkitik/travako/compare/v3.0.2...v3.0.3) (2026-09-25)
+
+
+### Bug Fixes
+
+* **scheduler:** respect the provided firing time when scheduling jobs [#65](https://github.com/arkitik/travako/issues/65) ([e13c89d](https://github.com/arkitik/travako/commit/e13c89d855ba56a90344b3855abcbef3cb3e120e))
+
 ## [3.0.2](https://github.com/arkitik/travako/compare/v3.0.1...v3.0.2) (2026-04-25)
 
 
