@@ -10,7 +10,7 @@ import io.arkitik.travako.sdk.job.dto.CreateJobDto
 import io.arkitik.travako.starter.job.bean.JobInstanceBean
 import io.arkitik.travako.starter.job.source.JobInstancesSource
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
-import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
+import io.arkitik.travako.starter.processor.core.job.firstExecutionTime
 import io.arkitik.travako.starter.processor.core.job.parseTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 
@@ -38,7 +38,7 @@ internal class JobInstancesProcessor(
                 .forEach { jobInstanceBean ->
                     try {
                         val jobTrigger = jobInstanceBean.trigger.parseTrigger()
-                        val nextExecution = jobInstanceBean.trigger.nextTimeToExecution()
+                        val nextExecution = jobInstanceBean.trigger.firstExecutionTime()
                         jobInstanceSdk.registerJob
                             .runOperation(
                                 CreateJobDto(

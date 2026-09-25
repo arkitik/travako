@@ -10,7 +10,7 @@ import io.arkitik.travako.sdk.job.dto.UpdateJobTriggerDto
 import io.arkitik.travako.starter.job.registry.JobInstancesRegistry
 import io.arkitik.travako.starter.job.registry.dto.TravakoJobBeanData
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
-import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
+import io.arkitik.travako.starter.processor.core.job.firstExecutionTime
 import io.arkitik.travako.starter.processor.core.job.parseTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 import org.springframework.scheduling.Trigger
@@ -31,7 +31,7 @@ internal class JobInstancesRegistryImpl(
     override fun registerJob(jobBeanData: TravakoJobBeanData) {
         val jobTrigger = jobBeanData.jobTrigger.parseTrigger()
         val nextExecution = jobBeanData.jobTrigger
-            .nextTimeToExecution(jobBeanData.firingTime)
+            .firstExecutionTime(jobBeanData.firingTime)
 
         jobInstanceSdk.registerJob
             .runOperation(
@@ -86,7 +86,7 @@ internal class JobInstancesRegistryImpl(
 
     override fun updateJobTrigger(jobKey: String, jobTrigger: Trigger) {
         val triggerPair = jobTrigger.parseTrigger()
-        val nextExecution = jobTrigger.nextTimeToExecution()
+        val nextExecution = jobTrigger.firstExecutionTime()
         jobInstanceSdk.updateJobTrigger
             .runOperation(
                 UpdateJobTriggerDto(

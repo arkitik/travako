@@ -5,8 +5,11 @@ import io.arkitik.travako.protocol.job.StatefulTravakoJob
 import io.arkitik.travako.starter.processor.core.job.asTrigger
 import io.arkitik.travako.starter.processor.core.logger.logger
 import io.arkitik.travako.starter.processor.runner.RunnerJobExecutor
+import io.arkitik.travako.starter.processor.scheduler.FirstExecutionTrigger
 import io.arkitik.travako.starter.processor.scheduler.buildJob
 import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.Trigger
+import java.time.ZoneId
 import java.util.concurrent.ScheduledFuture
 
 /**
@@ -32,7 +35,7 @@ class JobsSchedulerRegistry(
             deleteJob(jobDetails.jobKey)
             logger.debug("Rescheduling JOB instance {}", jobDetails.jobKey)
         }
-        val scheduledFuture = trigger.buildJob(taskScheduler) {
+        val scheduledFuture = trigger.withFirstExecution(jobDetails).buildJob(taskScheduler) {
             runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
         }
         jobTriggers[jobDetails.jobKey] = scheduledFuture
@@ -48,7 +51,7 @@ class JobsSchedulerRegistry(
         val trigger = jobDetails.asTrigger()
         logger.debug("Restart JOB instance {}", jobDetails.jobKey)
         try {
-            val newScheduledFuture = trigger.buildJob(taskScheduler) {
+            val newScheduledFuture = trigger.withFirstExecution(jobDetails).buildJob(taskScheduler) {
                 runnerJobExecutor.executeJob(jobDetails, trigger, travakoJob)
             }
             jobTriggers[jobDetails.jobKey] = newScheduledFuture
@@ -60,4 +63,10 @@ class JobsSchedulerRegistry(
             )
         }
     }
+
+    private fun Trigger.withFirstExecution(jobDetails: JobDetails): Trigger =
+        FirstExecutionTrigger(
+            delegate = this,
+            firstExecution = jobDetails.nextExecutionTime?.atZone(ZoneId.systemDefault())?.toInstant()
+        )
 }

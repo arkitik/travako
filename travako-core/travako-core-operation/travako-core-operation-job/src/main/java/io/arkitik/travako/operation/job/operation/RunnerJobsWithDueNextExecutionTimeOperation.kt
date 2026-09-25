@@ -50,6 +50,7 @@ internal class RunnerJobsWithDueNextExecutionTimeOperation(
                 lastRunningTime = job.lastRunningTime,
                 params = jobInstanceParams,
                 singleRun = job.singleRun,
+                nextExecutionTime = job.nextExecutionTime,
             )
         }
     }

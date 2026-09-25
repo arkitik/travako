@@ -8,6 +8,7 @@ import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.CronTrigger
 import org.springframework.scheduling.support.PeriodicTrigger
 import org.springframework.scheduling.support.SimpleTriggerContext
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -66,6 +67,34 @@ fun Trigger.nextTimeToExecution(instant: Instant? = Instant.now()): LocalDateTim
                     currentInstant,
                 )
             ).atZone(ZoneId.systemDefault())?.toLocalDateTime()
+        }
+
+        else -> null
+    }
+}
+
+/**
+ * Resolves the time of the first execution of a newly registered/updated job:
+ * - with a [firingTime]: the job fires at [firingTime] (or the first cron match at/after it).
+ * - without a [firingTime]: the first execution the [TaskScheduler][org.springframework.scheduling.TaskScheduler] would perform.
+ */
+fun Trigger.firstExecutionTime(firingTime: Instant? = null): LocalDateTime? {
+    return when (this) {
+        is CronTrigger -> {
+            val startInstant = firingTime?.minusNanos(1) ?: Instant.now()
+            nextExecution(
+                SimpleTriggerContext(
+                    startInstant,
+                    startInstant,
+                    startInstant,
+                )
+            )?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+        }
+
+        is PeriodicTrigger -> {
+            (firingTime ?: Instant.now().plus(initialDelayDuration ?: Duration.ZERO))
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
         }
 
         else -> null

@@ -4,14 +4,14 @@ import io.arkitik.radix.develop.operation.ext.operateRole
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.travako.function.transaction.TravakoTransactionalExecutor
 import io.arkitik.travako.function.transaction.runUnitTransaction
+import io.arkitik.travako.protocol.job.StatefulTravakoJob
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionData
+import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionResult
 import io.arkitik.travako.sdk.job.JobInstanceSdk
 import io.arkitik.travako.sdk.job.dto.JobDetails
 import io.arkitik.travako.sdk.job.dto.JobKeyDto
 import io.arkitik.travako.sdk.job.dto.JobServerRunnerKeyDto
 import io.arkitik.travako.sdk.job.dto.UpdateJobRequest
-import io.arkitik.travako.protocol.job.StatefulTravakoJob
-import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionData
-import io.arkitik.travako.protocol.job.dto.TravakoJobExecutionResult
 import io.arkitik.travako.starter.processor.config.TravakoRunnerConfig
 import io.arkitik.travako.starter.processor.core.config.TravakoConfig
 import io.arkitik.travako.starter.processor.core.job.nextTimeToExecution
@@ -46,7 +46,7 @@ class RunnerJobExecutor(
             ).takeIf { it }?.also {
                 jobDetails.markAsRunning(null)
 
-                logger.trace("Start job execution. [key: {}]", jobDetails.jobKey)
+                logger.trace("Start job execution. [key: {}, params: {}]", jobDetails.jobKey, jobDetails.params)
                 runCatching {
                     travakoJob.executeJob(
                         TravakoJobExecutionData(
@@ -58,12 +58,27 @@ class RunnerJobExecutor(
                         )
                     )
                 }.onFailure {
-                    logger.error("Error while executing job [key: {}]", jobDetails.jobKey, it)
+                    logger.error(
+                        "Error while executing job [key: {}, params: {}]",
+                        jobDetails.jobKey,
+                        jobDetails.params,
+                        it
+                    )
                 }.onSuccess { jobExecutionResult ->
                     if (jobExecutionResult is TravakoJobExecutionResult.Companion.Failure) {
-                        logger.error("Job executed with failure. [key: {}]", jobDetails.jobKey, jobExecutionResult.throwable)
+                        logger.error(
+                            "Job executed with failure. [key: {}, params: {}]",
+                            jobDetails.jobKey,
+                            jobDetails.params,
+                            jobExecutionResult.throwable
+                        )
                     } else {
-                        logger.debug("Job executed with result: [key: {}, result {}],", jobDetails.jobKey, jobExecutionResult)
+                        logger.debug(
+                            "Job executed with result: [key: {}, params: {}, result {}],",
+                            jobDetails.jobKey,
+                            jobDetails.params,
+                            jobExecutionResult
+                        )
                     }
                     if (jobDetails.singleRun && jobExecutionResult is TravakoJobExecutionResult.Companion.Success) {
                         jobDetails.markAsDone()
