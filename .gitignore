@@ -33,3 +33,6 @@ app-logs/**
 
 
 .history/**
+.claude/**
+graphify-out/**
+CLAUDE.md

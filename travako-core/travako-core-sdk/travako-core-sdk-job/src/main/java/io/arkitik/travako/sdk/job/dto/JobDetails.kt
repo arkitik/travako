@@ -16,4 +16,5 @@ data class JobDetails(
     val lastRunningTime: LocalDateTime?,
     val params: Map<String, String?>,
     val singleRun: Boolean,
+    val nextExecutionTime: LocalDateTime? = null,
 )

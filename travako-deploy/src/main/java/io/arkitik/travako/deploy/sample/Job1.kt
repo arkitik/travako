@@ -12,6 +12,7 @@ import org.springframework.scheduling.Trigger
 import org.springframework.scheduling.support.PeriodicTrigger
 import org.springframework.stereotype.Service
 import java.time.Duration
+import java.time.LocalTime
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.fetchAndIncrement
@@ -71,12 +72,13 @@ class SampleJobRegistry(
     private val jobInstancesRegistry: JobInstancesRegistry,
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
-        if (!jobInstancesRegistry.jobRegistered("sample")) {
+        if (!jobInstancesRegistry.jobRegistered("sample2")) {
             jobInstancesRegistry.registerJob(Job4::class.jobBuilder {
-                jobKey("sample")
+                jobKey("sample2")
                 oneTime()
                 addParam("sample-param", "sample-param")
                 periodicTrigger(Duration.ofSeconds(10))
+                firingTime(LocalTime.now().plusMinutes(2))
             })
         }
     }
